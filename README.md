@@ -22,7 +22,7 @@ Human:   review edited.mp4 + report.md → publish, or send notes ("drop cue-3")
 
 ## Quick start
 
-Requirements: Node 20+, ffmpeg, and for real videos Whisper (`pip install openai-whisper`, or whisper.cpp). Tesseract is optional; it enables OCR-based spelling and accuracy checks.
+Requirements: Node 20+ and ffmpeg. Whisper comes with `npm install` (it runs in Node via [Transformers.js](https://huggingface.co/docs/transformers.js)); the speech model downloads from Hugging Face on the first transcription and is cached in `.cache/models/`. Tesseract is optional; it enables OCR-based spelling and accuracy checks.
 
 ```bash
 npm install
@@ -49,7 +49,7 @@ The [`edit-video` skill](.claude/skills/edit-video/SKILL.md) runs the whole pipe
 | `.claude/agents/` | `analyst`, `editor`, `critic`, `checker`: separate agents so none grades its own work |
 | `editorial/STANDARD.md` | The editorial standard: the gap test, design rules, accuracy, cutting rules |
 | `editorial/rules.yaml` | Numeric thresholds, enforced by `npm run validate` |
-| `editorial/GLOSSARY.md` | Correct spellings of technical terms; prompts Whisper and catches mis-hearings |
+| `editorial/GLOSSARY.md` | Correct spellings of technical terms; fixes mis-hearings in transcripts and catches them on screen |
 | `editorial/LEARNINGS.md` | Patterns from human review, promoted into the standard over time |
 | `templates/` | anime.js overlay templates, the brand theme, and the stage used to render them |
 | `scripts/` | ingest, frames, validate, render-overlays, compose, check, report, build, metrics, demo |
