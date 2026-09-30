@@ -55,3 +55,12 @@ test('build refuses to render an edit list with errors', { skip }, async () => {
   assert.ok(!fs.existsSync(path.join(dir, 'edited.mp4')));
   assert.match(fs.readFileSync(path.join(dir, 'report.md'), 'utf8'), /has not been checked yet/);
 });
+
+test('an edit list with no edits hands back the original file untouched', { skip, timeout: 120000 }, async () => {
+  const dir = await prepareDemo(tmpDir('dva-none-'));
+  fs.writeFileSync(path.join(dir, 'edits.yaml'), 'video: demo.mp4\nobjectives:\n  - Find the TTL\ncuts: []\ncues: []\n');
+  const result = await build(dir, { log: () => {} });
+  assert.deepEqual(result.issues, []);
+  assert.ok(fs.readFileSync(path.join(dir, 'edited.mp4')).equals(fs.readFileSync(path.join(dir, 'demo.mp4'))));
+  assert.ok(result.frames.some((f) => f.id === 'overview-middle'), 'the checker still gets frames to look at');
+});

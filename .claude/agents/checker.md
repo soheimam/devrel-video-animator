@@ -22,6 +22,9 @@ For cue frames:
 - **Spelled right?** Compare every term with the glossary and the on-screen text.
 - **Fits the moment?** Does what's on screen at that time match the cue's intent?
 
+For `overview-*` frames (always present, even when there are no edits):
+- Does the output look like the source: no artefacts, correct framing, nothing missing?
+
 For cut frames (before and after each cut):
 - Does the join look clean, or does something jump in a confusing way (a half-typed line suddenly complete, a window vanishing)?
 

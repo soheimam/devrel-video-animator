@@ -69,6 +69,12 @@ export async function compose(outDir, { log = console.log } = {}) {
   const source = readJson(path.join(outDir, 'source.json'));
   const edl = normalizeEdl(readYaml(path.join(outDir, 'edits.yaml')));
   const output = path.join(outDir, 'edited.mp4');
+  // "No changes" hands back the original, bit for bit, not a re-encode.
+  if (!edl.cues.length && !edl.cuts.length) {
+    fs.copyFileSync(source.path, output);
+    log(`  no edits: copied the source to ${output}`);
+    return output;
+  }
   for (const cue of overlayCues(edl)) {
     if (!fs.existsSync(path.join(outDir, 'overlays', `${cue.id}.mov`))) {
       throw new Error(`Missing overlay for ${cue.id}. Run render-overlays first.`);
