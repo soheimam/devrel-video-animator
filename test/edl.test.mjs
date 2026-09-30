@@ -172,6 +172,20 @@ describe('validation: placement', () => {
   });
 });
 
+describe('validation: captions', () => {
+  test('captions are never burned in from a low-accuracy transcript', () => {
+    const low = ctx({ transcriptNote: 'PocketSphinx fallback' });
+    assert.ok(rulesHit(validateEdl(baseEdl(), low), 'accuracy'));
+    assert.ok(!rulesHit(validateEdl(baseEdl({ captions: { burn: false } }), low), 'accuracy'));
+    assert.ok(!rulesHit(validateEdl(baseEdl(), ctx()), 'accuracy'));
+  });
+
+  test('the caption avoid box must be inside the frame', () => {
+    assert.ok(rulesHit(validateEdl(baseEdl({ captions: { avoid: { x: 1800, y: 900, w: 400, h: 200 } } }), ctx()), 'placement'));
+    assert.deepEqual(validateEdl(baseEdl({ captions: { avoid: { x: 1300, y: 700, w: 600, h: 380 } } }), ctx()).errors, []);
+  });
+});
+
 describe('validation: accuracy', () => {
   test('overlays never introduce numbers the video did not contain', () => {
     const ok = flow({ template: 'callout', gap: 'shown-not-findable', params: { text: 'TTL 300 seconds' }, anchor: { x: 400, y: 300 } });

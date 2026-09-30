@@ -7,7 +7,7 @@ description: Edit a DevRel recording end to end. Takes an MP4 and produces an ed
 
 A human records a video and uploads the MP4 to `videos/`. You run this pipeline and hand back `out/<video>/edited.mp4` and `out/<video>/report.md`. A human reviews both before anything is published.
 
-**The quality bar is the point.** Every edit must close a real gap in understanding (`editorial/STANDARD.md`). Few, precise edits beat many. "No changes needed" is a valid outcome, and so is a report that says so.
+**The quality bar is the point.** Every edit must close a real gap in understanding (`editorial/STANDARD.md`), and decoration never makes the cut. But a finished edit visibly improves the video: it always has **captions** and a **tightening pass**, plus visuals for every real gap. Candidates with uncertain timing are kept and flagged for the reviewer, not silently dropped (STANDARD §0).
 
 ## Setup (first run)
 
@@ -29,7 +29,7 @@ Run the stages in order. Stages 2, 3, 4 and 6 are judgment: delegate each to its
 | 2 | Understand | **analyst** subagent | `content-map.md` |
 | 3 | Propose | **editor** subagent | `edits.yaml` |
 | 4 | Critique | **critic** subagent | `edits.yaml` (failures moved to `rejected:`) |
-| 5 | Render | `npm run build -- out/<video>` | `overlays/*.mov`, `edited.mp4`, `check.json`, `check/*.jpg`, `report.md` |
+| 5 | Render | `npm run build -- out/<video>` | `overlays/*.mov`, `edited.mp4` (captions burned in), `captions.srt`/`.vtt`, `check.json`, `check/*.jpg`, `preview/*.gif`, `report.md` |
 | 6 | Check | **checker** subagent | `findings` in `check.json` |
 | 7 | Report | `npm run report -- out/<video>` | final `report.md` |
 
@@ -37,13 +37,19 @@ Run the stages in order. Stages 2, 3, 4 and 6 are judgment: delegate each to its
 
 - **1 Ingest.** Options: `--out out/<name>`, `--model base|small|<hugging face id>` (larger is more accurate on jargon, but slower; also `WHISPER_MODEL`), `--language en`, `--engine transformers|whisper|whisper-cpp|pocketsphinx`, `--transcript file.json`, `--every 10` (seconds between sampled frames), `--no-ocr`. Before transcribing, make sure `editorial/GLOSSARY.md` has the video's product names and their known mis-hearings; the transcript is corrected against it (`corrections` in `transcript.json`).
 - **2–4.** Give each subagent the video's folder (`out/<video>`). Wait for each to finish before starting the next. After the critic, `npm run validate -- out/<video>` must pass with no errors.
-- **5 Build** runs validate → render overlays (Chromium seeks each anime.js timeline frame by frame; only the cue's seconds are rendered) → compose (one ffmpeg pass: constant frame rate → zooms → overlays → cuts) → automated checks → report.
+- **5 Build** runs validate → render overlays (Chromium seeks each anime.js timeline frame by frame; only the cue's seconds are rendered) → compose (one ffmpeg pass: constant frame rate → zooms → overlays → cuts → captions) → automated checks → a GIF preview of every visual edit → report.
 - **6 Check.** If the checker returns `fix` findings, apply them to `edits.yaml` (anchors, timing, wording, or move the cue to `rejected:`), then re-run stage 5 and stage 6. Allow at most two rounds. If problems remain, leave them as findings for the human; don't hide them.
 - **7 Report** again after the checker, so its findings appear in `report.md`.
 
 ## Handing over
 
-Tell the human, briefly:
+Open a **review PR** for the edit (one per run), with `git add -f` on the output folder since `out/` is ignored. It must let the reviewer *see* the edit without downloading anything:
+
+- Commit `edited.mp4`, `report.md`, `edits.yaml`, `content-map.md`, `captions.srt`/`.vtt`, `check/` and `preview/*.gif`.
+- In the PR description, link the video directly (`https://github.com/<owner>/<repo>/raw/<branch>/out/<video>/edited.mp4`) and **embed every preview GIF** (`![cue-1](https://github.com/<owner>/<repo>/blob/<branch>/out/<video>/preview/cue-1.gif?raw=true)`) with one line on what it does and why.
+- If the transcript is low-accuracy, say plainly that captions are missing and what's needed (a Whisper transcript).
+
+Then tell the human, briefly:
 - where `edited.mp4` and `report.md` are
 - the length change, the number of edits and rejections
 - anything the checker flagged, and any accuracy concerns from the content map
@@ -87,4 +93,5 @@ The human review before publishing still applies. The loop only prepares the edi
 - Never cut content that carries information. When unsure, keep the footage.
 - Never put a number, fact or claim on screen that the video doesn't contain.
 - Never skip the critic or the checker, even for a "simple" video.
+- Never burn in captions from a low-accuracy transcript.
 - Never publish. Humans publish.

@@ -14,4 +14,8 @@ Format:
 
 ---
 
-_No reviews yet. The first reviewed videos will seed this file._
+## 2026-09-30: An edit must visibly improve the video
+- Video: out/vibetnet-opus (PR #9) and out/vibetnet-sonnet (PR #8)
+- Note: "No animations were added for the video at all… and no close captions either even though we had video transcript. And no editing." Also: "I can't give feedback if I can't see the video with animations."
+- Pattern: (1) captions on every video; (2) a tightening pass on every video; (3) under uncertainty, surface candidates for the reviewer instead of rejecting everything, since an empty edit gives the reviewer nothing to judge; (4) review PRs must show the animations (GIF per cue) and include the edited video.
+- Status: promoted to STANDARD.md §0, §5a and §6, to the critic and editor roles, and to the skill's hand-over step.

@@ -20,6 +20,7 @@ export function validateDir(outDir) {
     rules: loadRules(),
     video: source,
     transcriptText: fullText(transcript),
+    transcriptNote: transcript.engine_note,
     ocrText: ocr.map((o) => o.text).join(' '),
     glossary: loadGlossary(),
   });

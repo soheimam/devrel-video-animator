@@ -24,7 +24,7 @@ function describe(cue) {
   }
 }
 
-export function buildReport({ source, edl, validation, check, transcript }) {
+export function buildReport({ source, edl, validation, check, transcript, captions, previewExists = () => false }) {
   const kept = editedDuration(edl.cuts, source.duration);
   const removed = source.duration - kept;
   const L = [];
@@ -44,6 +44,11 @@ export function buildReport({ source, edl, validation, check, transcript }) {
       L.push(`| ${c.id} | ${formatTime(mapTime(c.start, edl.cuts))} | ${formatTime(c.start)} | ${c.template} | ${cell(describe(c))} | ${c.gap} | ${c.objective} | ${cell(c.rationale)} |`);
     }
     L.push('');
+    const previews = [...edl.cues].sort((a, b) => a.start - b.start).filter((c) => previewExists(c.id));
+    if (previews.length) {
+      L.push('### Previews', '');
+      for (const c of previews) L.push(`**${c.id}** · ${c.template} · ${formatTime(mapTime(c.start, edl.cuts))}`, '', `![${c.id}](preview/${c.id}.gif)`, '');
+    }
   }
 
   L.push('## Cuts', '');
@@ -55,6 +60,13 @@ export function buildReport({ source, edl, validation, check, transcript }) {
     }
     L.push('');
   }
+
+  L.push('## Captions', '');
+  if (captions?.burned) L.push(`✓ ${captions.count} captions burned into the video, timed to the edit. Sidecar files for YouTube and players: ${captions.files.map((f) => `\`${f}\``).join(', ')}.`, '');
+  else if (captions?.low_accuracy) L.push('✗ **Not added.** The transcript is low-accuracy, so captions would show wrong words. Re-transcribe with Whisper and rebuild to add them.', '');
+  else if (captions?.files?.length) L.push(`Not burned in (\`captions.burn: false\`). Sidecar files: ${captions.files.map((f) => `\`${f}\``).join(', ')}.`, '');
+  else if (captions) L.push('_No captions: the transcript has no words._', '');
+  else L.push('_Not built yet._', '');
 
   L.push('## Rejected candidates', '', 'Ideas the agents considered and dropped, and the rule that dropped them.', '');
   if (!edl.rejected.length) L.push('_None recorded._', '');
@@ -89,6 +101,8 @@ export function writeReport(outDir, { log = console.log } = {}) {
     validation: readJson(path.join(outDir, 'validation.json'), null),
     check: readJson(path.join(outDir, 'check.json'), null),
     transcript: readJson(path.join(outDir, 'transcript.json'), null),
+    captions: readJson(path.join(outDir, 'captions.json'), null),
+    previewExists: (id) => fs.existsSync(path.join(outDir, 'preview', `${id}.gif`)),
   });
   const file = path.join(outDir, 'report.md');
   fs.writeFileSync(file, report);

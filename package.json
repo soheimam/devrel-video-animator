@@ -12,6 +12,7 @@
     "compose": "node scripts/compose.mjs",
     "check": "node scripts/check.mjs",
     "report": "node scripts/report.mjs",
+    "previews": "node scripts/previews.mjs",
     "build": "node scripts/build.mjs",
     "metrics": "node scripts/metrics.mjs"
   },

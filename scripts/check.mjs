@@ -57,6 +57,17 @@ export async function check(outDir, { log = console.log } = {}) {
     await still(video, t, file);
     frames.push({ id: cue.id, t: formatTime(t), file: path.relative(outDir, file), look_for: 'legible, anchored to the right thing, covers nothing important, spelled correctly' });
   }
+  // Burned-in captions: a few samples across the video.
+  const captions = readJson(path.join(outDir, 'captions.json'), null);
+  if (captions?.burned && captions.cues.length) {
+    const picks = [...new Set([0.15, 0.5, 0.85].map((f) => Math.floor(f * (captions.cues.length - 1))))];
+    for (const i of picks) {
+      const c = captions.cues[i];
+      const file = path.join(dir, `caption-${i + 1}.jpg`);
+      await still(video, (c.start + c.end) / 2, file);
+      frames.push({ id: `caption-${i + 1}`, t: formatTime((c.start + c.end) / 2), file: path.relative(outDir, file), look_for: `caption reads "${c.text}": legible, spelled right, covers nothing important (webcam, content being discussed)` });
+    }
+  }
   for (const cut of edl.cuts) {
     const t = mapTime(cut.start, edl.cuts);
     for (const [side, at] of [['before', t - 0.3], ['after', t + 0.3]]) {

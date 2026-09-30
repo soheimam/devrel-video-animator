@@ -36,3 +36,16 @@ layout:
 theme:
   # WCAG AA for text on panels.
   min_contrast: 4.5
+
+captions:
+  # Burned into every edited video unless edits.yaml sets captions.burn: false.
+  burn_by_default: true
+  font: "Liberation Sans"
+  # Design pixels (short side = 1080).
+  font_px: 52
+  max_chars_per_line: 42
+  max_lines: 2
+  max_seconds: 6
+  min_seconds: 1
+  # A pause longer than this starts a new caption.
+  break_on_pause_seconds: 0.8

@@ -29,6 +29,12 @@ test('a low-accuracy transcript is flagged at the top of the report', () => {
   assert.match(report.split('\n').slice(0, 4).join('\n'), /Transcript quality:\*\* PocketSphinx fallback\./);
 });
 
+test('the report says whether captions were added, and why not', () => {
+  const base = { source: { path: 'x.mp4', duration: 10 }, edl: normalizeEdl({ objectives: ['a'] }) };
+  assert.match(buildReport({ ...base, captions: { burned: true, count: 12, files: ['captions.srt', 'captions.vtt'] } }), /✓ 12 captions burned into the video/);
+  assert.match(buildReport({ ...base, captions: { burned: false, low_accuracy: true, files: [] } }), /Not added\.\*\* The transcript is low-accuracy/);
+});
+
 test('a video with no edits says so plainly', () => {
   const report = buildReport({ source: { path: 'x.mp4', duration: 10 }, edl: normalizeEdl({ objectives: ['a'] }) });
   assert.match(report, /None\. The video already teaches clearly/);

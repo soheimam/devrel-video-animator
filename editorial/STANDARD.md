@@ -6,9 +6,15 @@ The standard is grounded in multimedia learning research (Mayer's principles, co
 
 ---
 
-## 0. The default is no edit
+## 0. What a finished edit includes
 
-A DevRel video that already teaches clearly needs nothing added. **"No changes" is a valid, respectable result.** An edit that doesn't help understanding hurts it, because it spends the viewer's attention.
+Every edit must earn its place, and decoration never does: an edit that doesn't help understanding spends the viewer's attention for nothing. But a finished edit is expected to **visibly improve the video** (reviewer feedback, `LEARNINGS.md` 2026-09-30). It always includes:
+
+1. **Captions** (§5a). Accessibility, and many developers watch muted.
+2. **A tightening pass** (§6). Dead air, false starts and waiting, shortened.
+3. **Visuals wherever the gap test finds a gap** (§1). A product walkthrough almost always has several: a term the page doesn't explain, a mechanism described but never drawn, a value too small to read.
+
+"No visual edits" is still possible, but only with an explicit justification in the report. It is not the safe default. When a candidate passes the gap test but its timing or wording is uncertain, **keep it and flag the uncertainty** for the reviewer; don't silently drop it.
 
 ## 1. The gap test
 
@@ -64,19 +70,27 @@ Nothing loses a developer audience faster than a typo in a technical term or a n
 - Never cover what the viewer needs to see: the code being discussed, the terminal output, the presenter's face. Check the grid frames for a clear area before choosing an anchor or panel position.
 - Meaning is never carried by colour alone.
 
+## 5a. Captions
+
+- **Every edited video gets captions**, burned in (`captions.burn`, on by default), plus `captions.srt` / `captions.vtt` sidecars for YouTube and players.
+- **Only from an accurate transcript.** Captions repeat the narration word for word, so a wrong word is an accuracy failure in front of every viewer. The validator refuses to burn in captions from a low-accuracy transcript (e.g. the PocketSphinx fallback). Get a Whisper transcript instead.
+- **Spelling** follows `GLOSSARY.md` (corrections are applied to the transcript automatically). Add product names to the glossary before transcribing.
+- **Placement:** bottom centre, inside the caption zone, on a dark box. If a webcam or anything else important sits in the caption band, set `captions.avoid: {x, y, w, h}` (design px) and the captions centre in the space that's left.
+- Overlays never enter the caption zone, so captions and animations never collide.
+
 ## 6. Cutting rules
 
-Cuts are in scope, but conservative. **When in doubt, keep the footage.**
+Every video gets a **tightening pass**: dead air is cut, long pauses are shortened, false starts are removed. What stays conservative is cutting **content**: when a cut might remove information, keep the footage.
 
 **May be cut** (`kind:`):
-- `dead-air`: silence with nothing changing on screen. Leave ~0.3–0.5s either side so the pacing breathes.
+- `dead-air`: silence with nothing changing on screen, including the lead-in before the first word and the tail after the sign-off. Leave ~0.3–0.5s either side so the pacing breathes. Pauses over ~1.5s mid-video are shortened to ~0.5s unless they're reading time.
 - `false-start`: the presenter restarts the same point. Cut the abandoned attempt and keep the clean one.
 - `filler`: throat-clearing, "um, so, let me just…" that carries nothing.
 - `wait`: installs, builds, page loads. **Shorten, don't remove**: keep enough that the viewer knows time passed.
 
 **Never cut:**
 - Anything that carries information, even if it's said clumsily.
-- **Pauses while code, a diagram or output is on screen.** That's the viewer's reading time.
+- **The reading time in a pause while code, a diagram or output is on screen.** Keep enough to read what's there (about `1s + 0.3s × words` of the key text, typically 2–3s), and trim the rest of a long pause.
 - Deliberate pauses for emphasis.
 - Steps that make the video reproducible: a command the viewer must type, a setting they must change, even if it's boring.
 - Anything a later part of the video refers back to ("like we saw earlier").
