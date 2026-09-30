@@ -1,21 +1,122 @@
 {
   "ok": true,
-  "expected_duration": 155.80100000000002,
-  "actual_duration": 155.818,
+  "expected_duration": 149.55100000000002,
+  "actual_duration": 149.568,
   "issues": [],
   "frames": [
     {
+      "id": "overview-start",
+      "t": "00:15.0",
+      "file": "check/overview-start.jpg",
+      "look_for": "the video looks like the source: no artefacts, correct framing"
+    },
+    {
+      "id": "overview-middle",
+      "t": "01:14.8",
+      "file": "check/overview-middle.jpg",
+      "look_for": "the video looks like the source: no artefacts, correct framing"
+    },
+    {
+      "id": "overview-end",
+      "t": "02:14.6",
+      "file": "check/overview-end.jpg",
+      "look_for": "the video looks like the source: no artefacts, correct framing"
+    },
+    {
+      "id": "cue-1",
+      "t": "01:07.2",
+      "file": "check/cue-1.jpg",
+      "look_for": "legible, anchored to the right thing, covers nothing important, spelled correctly"
+    },
+    {
+      "id": "cue-2",
+      "t": "01:47.3",
+      "file": "check/cue-2.jpg",
+      "look_for": "legible, anchored to the right thing, covers nothing important, spelled correctly"
+    },
+    {
+      "id": "cue-3",
+      "t": "02:02.3",
+      "file": "check/cue-3.jpg",
+      "look_for": "legible, anchored to the right thing, covers nothing important, spelled correctly"
+    },
+    {
+      "id": "cue-4",
+      "t": "02:10.6",
+      "file": "check/cue-4.jpg",
+      "look_for": "legible, anchored to the right thing, covers nothing important, spelled correctly"
+    },
+    {
       "id": "cut-1",
-      "t": "02:35.5",
+      "t": "00:00.0",
       "file": "check/cut-1-before.jpg",
       "look_for": "the cut joins cleanly; no sentence or on-screen step is lost"
     },
     {
       "id": "cut-1",
-      "t": "02:36.1",
+      "t": "00:00.3",
       "file": "check/cut-1-after.jpg",
+      "look_for": "the cut joins cleanly; no sentence or on-screen step is lost"
+    },
+    {
+      "id": "cut-2",
+      "t": "00:17.2",
+      "file": "check/cut-2-before.jpg",
+      "look_for": "the cut joins cleanly; no sentence or on-screen step is lost"
+    },
+    {
+      "id": "cut-2",
+      "t": "00:17.8",
+      "file": "check/cut-2-after.jpg",
+      "look_for": "the cut joins cleanly; no sentence or on-screen step is lost"
+    },
+    {
+      "id": "cut-3",
+      "t": "00:47.5",
+      "file": "check/cut-3-before.jpg",
+      "look_for": "the cut joins cleanly; no sentence or on-screen step is lost"
+    },
+    {
+      "id": "cut-3",
+      "t": "00:48.1",
+      "file": "check/cut-3-after.jpg",
+      "look_for": "the cut joins cleanly; no sentence or on-screen step is lost"
+    },
+    {
+      "id": "cut-4",
+      "t": "02:12.4",
+      "file": "check/cut-4-before.jpg",
+      "look_for": "the cut joins cleanly; no sentence or on-screen step is lost"
+    },
+    {
+      "id": "cut-4",
+      "t": "02:13.0",
+      "file": "check/cut-4-after.jpg",
+      "look_for": "the cut joins cleanly; no sentence or on-screen step is lost"
+    },
+    {
+      "id": "cut-5",
+      "t": "02:29.3",
+      "file": "check/cut-5-before.jpg",
+      "look_for": "the cut joins cleanly; no sentence or on-screen step is lost"
+    },
+    {
+      "id": "cut-5",
+      "t": "02:29.9",
+      "file": "check/cut-5-after.jpg",
       "look_for": "the cut joins cleanly; no sentence or on-screen step is lost"
     }
   ],
-  "findings": []
+  "findings": [
+    {
+      "id": "cue-4",
+      "severity": "note",
+      "finding": "The outlined \"Coming soon in Base Cobalt\" text is still too small to read on a phone; the outline shows where to look but does not make it legible. A zoom would, but the recording zoomed there 1s earlier."
+    },
+    {
+      "id": "cue-1",
+      "severity": "note",
+      "finding": "The webcam leaves the frame for the 5s zoom (cue-2: 5.9s). Nothing is covered, but the presenter is hidden."
+    }
+  ]
 }
