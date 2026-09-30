@@ -1,0 +1,36 @@
+video: vibetnet.mp4
+
+objectives:
+  - "Know what Vibenet is: an ephemeral Base developer network for testing in-flight features"
+  - "Know the demo areas on the overview page: Accounts, Tokens, Validity Transactions"
+  - "See what the Tokens and Validity Transactions pages contain"
+
+cuts: []
+
+cues: []
+
+rejected:
+  - id: cand-1
+    kind: cue
+    summary: zoom or highlight-region on the "Connect to Vibenet" box (Chain ID, RPC URL, Explorer) on the Overview page
+    rule: "gap honesty: the presenter's cursor never visits the box, and the narration is unreadable, so there is no evidence it is discussed; a zoom there would be a guess"
+  - id: cand-2
+    kind: cue
+    summary: zoom on the Tokens demo card (about 01:53-01:56) while the cursor rests on it
+    rule: "timing: the cursor rests there only to click through, the page changes within ~3s, and the source recording already punches in on the next page (STANDARD 3: do not zoom on something about to change)"
+  - id: cand-3
+    kind: cue
+    summary: zooms on the Tokens and Validity pages' six-card feature grids
+    rule: "coherence / signalling: the source recording already applies its own cursor-follow zoom on these pages (frames 01:57.5, 02:10.0); stacking ours would fight it"
+  - id: cand-4
+    kind: cue
+    summary: term-definition for Vibenet, B20, Base Cobalt or Validity Transactions
+    rule: "redundancy: each term is defined in the page text on screen, and the narration is unknown (transcript unusable), so a definition could only repeat the screen or invent a claim"
+  - id: cand-5
+    kind: cut
+    summary: dead-air cut of roughly 02:13.0-02:17.9 (about 5s of near-silence on the Validity page, presenter looking down)
+    rule: "never cut / reading time: the six-card Validity page is on screen and small at viewing size; the stretch may be reading time and the screen still changes slightly (cursor moves). When unsure, keep the footage"
+  - id: cand-6
+    kind: cut
+    summary: trim 1.3s silence at 00:18.2-00:19.5 and 1.8s pause at 00:48.3-00:50.8
+    rule: "below value: under 2s, inside natural pacing, nothing gained that justifies any risk of cutting speech the transcript cannot confirm"
