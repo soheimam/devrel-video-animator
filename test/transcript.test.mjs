@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fromOpenAIWhisper, fromWhisperCpp, toMarkdown, fullText } from '../lib/transcript.js';
+import { fromOpenAIWhisper, fromWhisperCpp, fromPocketsphinx, toMarkdown, fullText } from '../lib/transcript.js';
 import { parseGlossary, whisperPrompt, findMisspellings, loadGlossary } from '../lib/glossary.js';
 import { normalizeAny } from '../scripts/transcribe.mjs';
 import { ROOT } from '../lib/paths.js';
@@ -68,4 +68,17 @@ test('the repo glossary never flags its own correct spellings', () => {
 
 test('the repo glossary parses', () => {
   assert.ok(loadGlossary().length > 0);
+});
+
+test('PocketSphinx utterances become readable segments of at most 15 words', () => {
+  const words = Array.from({ length: 20 }, (_, i) => ({ word: `w${i}`, start: i * 0.3, end: i * 0.3 + 0.25 }));
+  const t = fromPocketsphinx({ utterances: [{ start: 0, end: 6, words }, { start: 9, end: 10, words: [{ word: 'base', start: 9, end: 9.4 }] }] });
+  assert.deepEqual(t.segments.map((s) => s.words.length), [15, 5, 1]);
+  assert.equal(t.segments[1].start, 4.5);
+  assert.equal(t.segments[2].text, 'base');
+});
+
+test('an engine note is shown at the top of the markdown transcript', () => {
+  const md = toMarkdown({ engine_note: 'Low accuracy.', segments: [] });
+  assert.match(md, /> \*\*Note:\*\* Low accuracy\./);
 });

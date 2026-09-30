@@ -2,7 +2,7 @@
 // Stage 1: prepares out/<video>/ for the agents: source.json (probe), transcript, frames.
 //
 // Usage: node scripts/ingest.mjs videos/<video>.mp4 [--out out/<name>]
-//        [--engine transformers|whisper|whisper-cpp] [--model base] [--language en]
+//        [--engine transformers|whisper|whisper-cpp|pocketsphinx] [--model base] [--language en]
 //        [--transcript existing.json] [--every 10] [--no-ocr]
 import fs from 'node:fs';
 import path from 'node:path';

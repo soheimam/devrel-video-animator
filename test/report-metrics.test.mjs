@@ -24,6 +24,11 @@ test('report lists objectives, every edit, every rejection and how to give notes
   assert.match(report, /restore cut-1/);
 });
 
+test('a low-accuracy transcript is flagged at the top of the report', () => {
+  const report = buildReport({ source: { path: 'x.mp4', duration: 10 }, edl: normalizeEdl({ objectives: ['a'] }), transcript: { engine_note: 'PocketSphinx fallback.' } });
+  assert.match(report.split('\n').slice(0, 4).join('\n'), /Transcript quality:\*\* PocketSphinx fallback\./);
+});
+
 test('a video with no edits says so plainly', () => {
   const report = buildReport({ source: { path: 'x.mp4', duration: 10 }, edl: normalizeEdl({ objectives: ['a'] }) });
   assert.match(report, /None\. The video already teaches clearly/);

@@ -17,7 +17,7 @@ ffmpeg -version                  # required
 tesseract --version              # optional: OCR of on-screen text, used for spelling and accuracy checks
 ```
 
-Whisper runs in Node through Transformers.js; there is nothing else to install. The model (`onnx-community/whisper-base_timestamped` by default, ~300 MB) downloads from huggingface.co on the first transcription and is cached in `.cache/models/`. If that host is blocked, use `--engine whisper` (openai-whisper) or `--engine whisper-cpp`, or pass an existing transcript with `--transcript`.
+Whisper runs in Node through Transformers.js; there is nothing else to install. The model (`onnx-community/whisper-base_timestamped` by default, ~300 MB) downloads from huggingface.co on the first transcription and is cached in `.cache/models/`. If that host is blocked, use `--engine whisper` (openai-whisper) or `--engine whisper-cpp`, or pass an existing transcript with `--transcript`. As a last resort, `--engine pocketsphinx` (`pip install pocketsphinx`) works fully offline, but gets many words wrong: when a transcript carries its `engine_note`, take wording from the screen (frames, OCR) and use the transcript mainly for timing, and say so in the report.
 
 ## The pipeline
 
@@ -35,7 +35,7 @@ Run the stages in order. Stages 2, 3, 4 and 6 are judgment: delegate each to its
 
 ### Stage notes
 
-- **1 Ingest.** Options: `--out out/<name>`, `--model base|small|<hugging face id>` (larger is more accurate on jargon, but slower; also `WHISPER_MODEL`), `--language en`, `--engine transformers|whisper|whisper-cpp`, `--transcript file.json`, `--every 10` (seconds between sampled frames), `--no-ocr`. Before transcribing, make sure `editorial/GLOSSARY.md` has the video's product names and their known mis-hearings; the transcript is corrected against it (`corrections` in `transcript.json`).
+- **1 Ingest.** Options: `--out out/<name>`, `--model base|small|<hugging face id>` (larger is more accurate on jargon, but slower; also `WHISPER_MODEL`), `--language en`, `--engine transformers|whisper|whisper-cpp|pocketsphinx`, `--transcript file.json`, `--every 10` (seconds between sampled frames), `--no-ocr`. Before transcribing, make sure `editorial/GLOSSARY.md` has the video's product names and their known mis-hearings; the transcript is corrected against it (`corrections` in `transcript.json`).
 - **2–4.** Give each subagent the video's folder (`out/<video>`). Wait for each to finish before starting the next. After the critic, `npm run validate -- out/<video>` must pass with no errors.
 - **5 Build** runs validate → render overlays (Chromium seeks each anime.js timeline frame by frame; only the cue's seconds are rendered) → compose (one ffmpeg pass: constant frame rate → zooms → overlays → cuts) → automated checks → report.
 - **6 Check.** If the checker returns `fix` findings, apply them to `edits.yaml` (anchors, timing, wording, or move the cue to `rejected:`), then re-run stage 5 and stage 6. Allow at most two rounds. If problems remain, leave them as findings for the human; don't hide them.

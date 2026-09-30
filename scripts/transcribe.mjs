@@ -7,22 +7,25 @@
 //                 The model downloads from Hugging Face on first use.
 //   whisper       openai-whisper CLI (`pip install openai-whisper`)
 //   whisper-cpp   whisper.cpp's `whisper-cli`, with WHISPER_CPP_MODEL=/path/to/ggml-model.bin
+//   pocketsphinx  `pip install pocketsphinx`; model bundled, so it works offline, but it is far
+//                 less accurate than Whisper. A fallback for when no model host is reachable.
 // Or import an existing transcript with --from (any of the formats above, or normalised JSON).
 //
 // Usage: node scripts/transcribe.mjs <video> out/<video>
-//          [--engine transformers|whisper|whisper-cpp] [--model base|small|<hf-id>]
+//          [--engine transformers|whisper|whisper-cpp|pocketsphinx] [--model base|small|<hf-id>]
 //          [--language en] [--from file.json]
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { run, FFMPEG } from '../lib/ffmpeg.js';
 import { readJson, writeJson } from '../lib/files.js';
-import { fromOpenAIWhisper, fromWhisperCpp, toMarkdown } from '../lib/transcript.js';
+import { fromOpenAIWhisper, fromWhisperCpp, fromPocketsphinx, toMarkdown } from '../lib/transcript.js';
 import { loadGlossary, whisperPrompt, applyGlossary } from '../lib/glossary.js';
 import { transcribeWithTransformers } from '../lib/whisper.js';
 import { isMain, parseArgs } from '../lib/cli.js';
+import { ROOT } from '../lib/paths.js';
 
-export const ENGINES = ['transformers', 'whisper', 'whisper-cpp'];
+export const ENGINES = ['transformers', 'whisper', 'whisper-cpp', 'pocketsphinx'];
 
 export function normalizeAny(json) {
   if (json.transcription) return fromWhisperCpp(json);
@@ -53,6 +56,17 @@ async function withWhisperCpp(video, prompt, language) {
   return fromWhisperCpp(readJson(path.join(tmp, 'out.json')));
 }
 
+async function withPocketsphinx(video) {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-'));
+  const raw = path.join(tmp, 'audio.raw');
+  await run(FFMPEG, ['-y', '-loglevel', 'error', '-i', video, '-vn', '-ac', '1', '-ar', '16000', '-f', 's16le', raw]);
+  const script = path.join(ROOT, 'scripts', 'engines', 'pocketsphinx_transcribe.py');
+  const { stdout } = await run(process.env.PYTHON || 'python3', [script, raw]).catch((e) => {
+    throw new Error(`PocketSphinx failed (is it installed? pip install pocketsphinx)\n${e.message}`);
+  });
+  return fromPocketsphinx(JSON.parse(stdout));
+}
+
 export async function transcribe(video, outDir, { engine = 'transformers', model, language, from, log = console.log } = {}) {
   const glossary = loadGlossary();
   let transcript;
@@ -64,6 +78,9 @@ export async function transcribe(video, outDir, { engine = 'transformers', model
     transcript = await withOpenAIWhisper(video, model, whisperPrompt(glossary), language);
   } else if (engine === 'whisper-cpp') {
     transcript = await withWhisperCpp(video, whisperPrompt(glossary), language);
+  } else if (engine === 'pocketsphinx') {
+    transcript = await withPocketsphinx(video);
+    transcript.engine_note = 'PocketSphinx fallback: expect many wrong words. Trust on-screen text (frames, OCR) over this transcript; use it mainly for timing.';
   } else {
     throw new Error(`Unknown engine "${engine}". Use one of: ${ENGINES.join(', ')}.`);
   }
@@ -78,7 +95,7 @@ export async function transcribe(video, outDir, { engine = 'transformers', model
 if (isMain(import.meta.url)) {
   const { positional: [video, outDir], flags } = parseArgs(process.argv.slice(2));
   if (!video || !outDir) {
-    console.error('Usage: node scripts/transcribe.mjs <video> out/<video> [--engine transformers|whisper|whisper-cpp] [--model base] [--language en] [--from file.json]');
+    console.error('Usage: node scripts/transcribe.mjs <video> out/<video> [--engine transformers|whisper|whisper-cpp|pocketsphinx] [--model base] [--language en] [--from file.json]');
     process.exit(2);
   }
   fs.mkdirSync(outDir, { recursive: true });

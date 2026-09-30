@@ -24,11 +24,12 @@ function describe(cue) {
   }
 }
 
-export function buildReport({ source, edl, validation, check }) {
+export function buildReport({ source, edl, validation, check, transcript }) {
   const kept = editedDuration(edl.cuts, source.duration);
   const removed = source.duration - kept;
   const L = [];
   L.push(`# Edit report: ${edl.video || path.basename(source.path)}`, '');
+  if (transcript?.engine_note) L.push(`> ⚠️ **Transcript quality:** ${transcript.engine_note}`, '');
   L.push(`**${formatTime(source.duration)} → ${formatTime(kept)}** (${removed.toFixed(1)}s removed) · ${edl.cues.length} visual edit(s) · ${edl.cuts.length} cut(s) · ${edl.rejected.length} candidate(s) rejected`, '');
 
   L.push('## Learning objectives', '', 'What the agents understood this video to teach. Every edit serves one of these.', '');
@@ -87,6 +88,7 @@ export function writeReport(outDir, { log = console.log } = {}) {
     edl: normalizeEdl(readYaml(path.join(outDir, 'edits.yaml'))),
     validation: readJson(path.join(outDir, 'validation.json'), null),
     check: readJson(path.join(outDir, 'check.json'), null),
+    transcript: readJson(path.join(outDir, 'transcript.json'), null),
   });
   const file = path.join(outDir, 'report.md');
   fs.writeFileSync(file, report);
