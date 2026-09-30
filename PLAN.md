@@ -183,7 +183,7 @@ Showing the rejected candidates matters. It lets the reviewer see the agents' ju
 
 | Need | Tool |
 |---|---|
-| Transcription | Whisper with a glossary prompt, word-level timestamps |
+| Transcription | Whisper in Node (Transformers.js, an npm dependency), word-level timestamps, glossary corrections |
 | Visual understanding | ffmpeg scene detection plus frames at every cue candidate; Claude looks at them; OCR for on-screen text |
 | Animation | anime.js templates, with the timeline paused and jumped to exact moments (`tl.seek(ms)`) so renders are deterministic |
 | Overlay rendering | Headless Chromium (Playwright) screenshots overlay frames with a transparent background, only for the seconds around each cue |
