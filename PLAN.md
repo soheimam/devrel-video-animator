@@ -23,14 +23,14 @@ DevRel engineers already know how to record. The part they hate is the edit. A 1
 
 | Human | Agents |
 |---|---|
-| Records the video, drops the MP4 in `inbox/` | Transcribe, understand, propose, critique, render, check |
+| Records the video, uploads the MP4 to `videos/` | Transcribe, understand, propose, critique, render, check |
 | Maintains the editorial standard and glossary | Apply the standard to every video |
 | Reviews the edited MP4 and report before publishing | Revise based on review notes |
 
 ## User flow
 
 ```
-Human:   drop video.mp4 in inbox/
+Human:   upload video.mp4 to videos/
            │
 Agents:  1. Ingest      transcript with word-level timestamps, frames, text read off the screen
          2. Understand  content map: objectives, segments, terms, steps, code on screen
@@ -212,7 +212,7 @@ scripts/
   frames                         # scene detection, frame capture, OCR
   render-overlays                # Playwright → transparent clips per cue
   compose                        # ffmpeg: cuts, zooms, overlays → edited.mp4
-inbox/                           # humans drop MP4s here
+videos/                          # humans upload MP4s here
 out/<video>/                     # edited.mp4, edits.yaml, report.md, content-map.md
 ```
 
@@ -249,7 +249,7 @@ There is no benchmark yet. It gets built from real use:
 - **v0: Judgment.** MP4 in → content map, `edits.yaml` (cuts + cues), critique, `report.md`. No rendering yet. The judgment is the product, so prove it first.
 - **v1: Render.** Templates, overlay rendering, cuts and zooms, the check step → `edited.mp4`.
 - **v2: Revision loop.** The human gives notes, the agents re-render. Review decisions are logged, and the benchmark is built from them.
-- **v3: Hands-off delivery and extras.** Watch `inbox/` with a loop so "drop an MP4, get an edited MP4" happens automatically. Then the marketing extras: chapter markers, YouTube descriptions, captions, short vertical clips.
+- **v3: Hands-off delivery and extras.** Watch `videos/` with a loop so "upload an MP4, get an edited MP4" happens automatically. Then the marketing extras: chapter markers, YouTube descriptions, captions, short vertical clips.
 
 ## Open questions
 

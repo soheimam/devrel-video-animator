@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Stage 1: prepares out/<video>/ for the agents: source.json (probe), transcript, frames.
 //
-// Usage: node scripts/ingest.mjs inbox/<video>.mp4 [--out out/<name>] [--model small]
+// Usage: node scripts/ingest.mjs videos/<video>.mp4 [--out out/<name>] [--model small]
 //        [--transcript existing.json] [--every 10] [--no-ocr]
 import fs from 'node:fs';
 import path from 'node:path';
@@ -27,7 +27,7 @@ export async function ingest(video, { out, model, transcript, every, ocr = true,
 if (isMain(import.meta.url)) {
   const { positional: [video], flags } = parseArgs(process.argv.slice(2));
   if (!video) {
-    console.error('Usage: node scripts/ingest.mjs inbox/<video>.mp4 [--out out/<name>] [--model small] [--transcript file.json]');
+    console.error('Usage: node scripts/ingest.mjs videos/<video>.mp4 [--out out/<name>] [--model small] [--transcript file.json]');
     process.exit(2);
   }
   ingest(video, {

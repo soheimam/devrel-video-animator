@@ -1,11 +1,11 @@
 ---
 name: edit-video
-description: Edit a DevRel recording end to end. Takes an MP4 and produces an edited MP4 with conservative cuts, zooms and educational anime.js overlays, plus a report explaining every decision, for human review before publishing. Use when someone drops a video in inbox/, asks to edit or animate a recording, or sends review notes on an edited video ("drop cue-3", "restore cut-1").
+description: Edit a DevRel recording end to end. Takes an MP4 and produces an edited MP4 with conservative cuts, zooms and educational anime.js overlays, plus a report explaining every decision, for human review before publishing. Use when someone uploads a video to videos/, asks to edit or animate a recording, or sends review notes on an edited video ("drop cue-3", "restore cut-1").
 ---
 
 # edit-video
 
-A human records a video and drops the MP4 in `inbox/`. You run this pipeline and hand back `out/<video>/edited.mp4` and `out/<video>/report.md`. A human reviews both before anything is published.
+A human records a video and uploads the MP4 to `videos/`. You run this pipeline and hand back `out/<video>/edited.mp4` and `out/<video>/report.md`. A human reviews both before anything is published.
 
 **The quality bar is the point.** Every edit must close a real gap in understanding (`editorial/STANDARD.md`). Few, precise edits beat many. "No changes needed" is a valid outcome, and so is a report that says so.
 
@@ -26,7 +26,7 @@ Run the stages in order. Stages 2, 3, 4 and 6 are judgment: delegate each to its
 
 | # | Stage | Who | Produces (in `out/<video>/`) |
 |---|---|---|---|
-| 1 | Ingest | `npm run ingest -- inbox/<file>.mp4` | `source.json`, `transcript.json`, `transcript.md`, `frames/` (+ grid copies, `ocr.json`) |
+| 1 | Ingest | `npm run ingest -- videos/<file>.mp4` | `source.json`, `transcript.json`, `transcript.md`, `frames/` (+ grid copies, `ocr.json`) |
 | 2 | Understand | **analyst** subagent | `content-map.md` |
 | 3 | Propose | **editor** subagent | `edits.yaml` |
 | 4 | Critique | **critic** subagent | `edits.yaml` (failures moved to `rejected:`) |
@@ -75,10 +75,10 @@ The human reviews `edited.mp4` and `report.md`, then replies with notes by id.
 
 ## Hands-off mode
 
-To process new recordings automatically, run this skill on a loop over the inbox:
+To process new recordings automatically, run this skill on a loop over `videos/`:
 
 ```
-/loop 30m Run the edit-video skill on any MP4 in inbox/ that has no out/<name>/report.md yet.
+/loop 30m Run the edit-video skill on any MP4 in videos/ that has no out/<name>/report.md yet.
 ```
 
 The human review before publishing still applies. The loop only prepares the edit.
