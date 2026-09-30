@@ -1,0 +1,97 @@
+/* Brand theme. Every overlay reads its colours, type and spacing from here, so a
+   rebrand is a one-file change. Sizes are design pixels (short side = 1080). */
+:root {
+  --font-sans: "Inter", "Segoe UI", "Helvetica Neue", "Liberation Sans", "DejaVu Sans", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+
+  --panel-bg: #0f1117;          /* text sits on solid panels: contrast never depends on the video */
+  --panel-bg-alpha: 0.94;
+  --panel-border: #2a2f3a;
+  --text: #f5f7fa;
+  --text-muted: #b8c0cc;
+  --accent: #8ab4ff;            /* the one colour that means "look here" */
+  --accent-soft: #1e2a44;
+  --dim: #000000;
+  --dim-opacity: 0.62;
+
+  --fs-title: 52px;
+  --fs-body: 40px;
+  --fs-label: 36px;
+  --radius: 16px;
+  --pad: 28px;
+  --stroke: 5px;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+#root {
+  position: absolute;
+  inset: 0;
+  font-family: var(--font-sans);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.layer { position: absolute; left: 0; top: 0; overflow: visible; }
+
+.panel {
+  position: absolute;
+  box-sizing: border-box;
+  padding: var(--pad) calc(var(--pad) * 1.2);
+  background: rgb(15 17 23 / var(--panel-bg-alpha));
+  border: 2px solid var(--panel-border);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.35);
+  font-size: var(--fs-body);
+  line-height: 1.25;
+  max-width: 760px;
+}
+
+.label { font-size: var(--fs-label); font-weight: 600; }
+.title { font-size: var(--fs-title); font-weight: 700; line-height: 1.1; }
+.muted { color: var(--text-muted); }
+.mono { font-family: var(--font-mono); }
+
+/* callout */
+.leader { stroke: var(--accent); stroke-width: var(--stroke); fill: none; stroke-linecap: round; }
+.dot { fill: var(--accent); }
+.ring { fill: none; stroke: var(--accent); stroke-width: 4px; }
+
+/* highlight-region / code-focus */
+.outline { fill: none; stroke: var(--accent); stroke-width: var(--stroke); }
+.outline-thin { fill: none; stroke: var(--accent); stroke-width: 3px; }
+.dim { fill: var(--dim); fill-opacity: var(--dim-opacity); fill-rule: evenodd; }
+
+/* term-definition */
+.term-panel { padding-left: calc(var(--pad) * 1.6); }
+.term-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: var(--accent);
+  border-radius: var(--radius) 0 0 var(--radius); transform-origin: top; }
+.term { font-size: var(--fs-title); font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+
+/* step-list */
+.steps { list-style: none; margin: 16px 0 0; padding: 0; }
+.step { display: flex; align-items: baseline; gap: 18px; margin-top: 14px; }
+.badge { flex: none; width: 52px; height: 52px; border-radius: 50%; background: var(--accent);
+  color: var(--panel-bg); font-weight: 800; font-size: var(--fs-label); display: flex;
+  align-items: center; justify-content: center; transform: translateY(6px); }
+
+/* flow-diagram */
+.flow { display: flex; align-items: center; gap: 0; margin-top: 12px; }
+.flow.down { flex-direction: column; }
+.node { padding: 18px 26px; border: 3px solid var(--accent); border-radius: 12px;
+  background: var(--accent-soft); font-weight: 700; font-size: var(--fs-label); white-space: nowrap; }
+.arrow { flex: none; overflow: visible; }
+.arrow path { stroke: var(--text-muted); stroke-width: 4px; fill: none; stroke-linecap: round; }
+.arrow .head { fill: var(--text-muted); stroke: none; }
+
+/* comparison */
+.compare { display: flex; gap: 40px; }
+.column { min-width: 300px; }
+.column ul { margin: 12px 0 0; padding-left: 1.1em; }
+.column li { margin-top: 10px; }
+.divider { width: 3px; background: var(--panel-border); align-self: stretch; }

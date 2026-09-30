@@ -1,0 +1,38 @@
+# Numeric thresholds for the editorial standard (editorial/STANDARD.md).
+# scripts/validate.mjs enforces these; the critic agent applies the judgment rules.
+
+reading:
+  # Text must stay on screen for at least base + words * seconds_per_word.
+  seconds_per_word: 0.3
+  base_seconds: 1.0
+
+cues:
+  # How often to animate follows from the gaps, not the clock. These are ceilings.
+  max_per_minute: 4
+  min_gap_seconds: 2.0
+  min_duration_seconds: 1.5
+  max_duration_seconds: 15
+
+zoom:
+  max_factor: 3.0
+  # Fraction of the region's size added as breathing room around it.
+  padding: 0.15
+  ramp_seconds: 0.4
+  min_duration_seconds: 2.0
+
+cuts:
+  min_seconds: 0.3
+  # Longer cuts are allowed but flagged so the critic double-checks no content is lost.
+  warn_over_seconds: 20
+
+layout:
+  # Bottom fraction of the frame kept clear for captions.
+  caption_zone: 0.15
+  # Minimum distance from the frame edge, in design pixels.
+  margin: 48
+  # Smallest text allowed, in design pixels (1080 short side). Readable on a phone.
+  min_font_px: 32
+
+theme:
+  # WCAG AA for text on panels.
+  min_contrast: 4.5
