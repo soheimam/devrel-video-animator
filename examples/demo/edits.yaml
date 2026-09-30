@@ -1,0 +1,52 @@
+# Example edit decision list for the demo video (npm run demo).
+# All times are source-video time. Coordinates are design pixels (short side = 1080).
+video: demo.mp4
+
+objectives:
+  - Find where the cache TTL is configured
+  - Understand that the edge answers requests before the origin does
+
+cuts:
+  - id: cut-1
+    from: 00:05.0
+    to: 00:07.0
+    kind: dead-air
+    reason: Two seconds of silence on an unchanged screen between sentences. The half-second either side is kept so the pacing still breathes.
+
+cues:
+  - id: cue-1
+    at: 00:08.6            # just before "TTL" (08.9)
+    duration: 3.0s
+    template: zoom
+    params:
+      region: { x: 160, y: 300, w: 820, h: 66 }   # the orange TTL line
+    gap: shown-not-findable
+    objective: 1
+    rationale: The TTL value is on screen but is a thin line of small text at 720p, unreadable on a phone. Punching in makes the thing being discussed legible.
+
+  - id: cue-2
+    at: 00:16.3            # "client" is said at 16.5
+    duration: 5.5s
+    template: flow-diagram
+    params:
+      nodes:
+        - Client
+        - { label: Edge, at: 00:17.7 }
+        - { label: Origin, at: 00:20.1 }
+    gap: said-not-shown
+    objective: 2
+    rationale: The request path is described in words but never drawn. Each node appears on the word that names it, so the picture builds with the sentence.
+
+rejected:
+  - id: cand-3
+    kind: cue
+    summary: Callout "TTL 300 seconds" on the TTL line at 00:12.0
+    rule: "coherence: cue-1's zoom already made the value readable; a second pointer at the same line adds nothing"
+  - id: cand-4
+    kind: cue
+    summary: term-definition for TTL
+    rule: "redundancy: the presenter defines TTL out loud at 00:11.0; repeating it on screen adds reading load, not understanding"
+  - id: cand-5
+    kind: cut
+    summary: Trim the 1s pause at 00:13.5
+    rule: "never cut: the config is still on screen; the pause is the viewer's reading time"

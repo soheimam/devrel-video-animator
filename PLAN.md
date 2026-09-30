@@ -1,6 +1,6 @@
 # DevRel Video Animator: Plan
 
-> Status: draft plan, pre-code. Nothing is built yet.
+> Status: v0 (judgment) and v1 (render) are built. v2's revision loop and metrics are in the skill and scripts, v3's hands-off mode is a documented `/loop`. The marketing extras are not started. See README.md.
 
 ## The idea in one line
 
