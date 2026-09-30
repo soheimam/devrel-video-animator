@@ -9,7 +9,7 @@ There is no app, server or database. It's a Claude Code skill, four subagents, a
 ## How it works
 
 ```
-Human:   drop video.mp4 in inbox/
+Human:   upload video.mp4 to videos/
 Agents:  1. Ingest      Whisper transcript (word timestamps), frames, OCR     npm run ingest
          2. Understand  content map: objectives, terms, landmarks            analyst
          3. Propose     cuts, zooms, overlays → edits.yaml                   editor
@@ -32,18 +32,19 @@ npm test
 
 To edit a real recording, open Claude Code in this repo and say:
 
-> Edit inbox/my-talk.mp4
+> Edit videos/my-talk.mp4
 
 The [`edit-video` skill](.claude/skills/edit-video/SKILL.md) runs the whole pipeline. To process new recordings automatically:
 
 ```
-/loop 30m Run the edit-video skill on any MP4 in inbox/ that has no out/<name>/report.md yet.
+/loop 30m Run the edit-video skill on any MP4 in videos/ that has no out/<name>/report.md yet.
 ```
 
 ## What's where
 
 | Path | What it is |
 |---|---|
+| `videos/` | Upload recordings here to be edited (see `videos/README.md`) |
 | `.claude/skills/edit-video/SKILL.md` | The pipeline the orchestrating agent follows, including revising from review notes |
 | `.claude/agents/` | `analyst`, `editor`, `critic`, `checker`: separate agents so none grades its own work |
 | `editorial/STANDARD.md` | The editorial standard: the gap test, design rules, accuracy, cutting rules |
