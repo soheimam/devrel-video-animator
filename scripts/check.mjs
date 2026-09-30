@@ -42,6 +42,14 @@ export async function check(outDir, { log = console.log } = {}) {
   }
 
   const frames = [];
+  // A few frames of the whole video, so there is always something to look at, even when
+  // there are no edits.
+  for (const [name, frac] of [['overview-start', 0.1], ['overview-middle', 0.5], ['overview-end', 0.9]]) {
+    const t = edited.duration * frac;
+    const file = path.join(dir, `${name}.jpg`);
+    await still(video, t, file);
+    frames.push({ id: name, t: formatTime(t), file: path.relative(outDir, file), look_for: 'the video looks like the source: no artefacts, correct framing' });
+  }
   for (const cue of edl.cues) {
     // Late in the cue, when everything has been revealed.
     const t = mapTime(cue.start + Math.max((cue.end - cue.start) * 0.75, (cue.end - cue.start) - 1), edl.cuts);

@@ -69,6 +69,14 @@ describe('validation: the gap test and explanations', () => {
     assert.ok(rulesHit(validateEdl(baseEdl({ objectives: [] }), ctx()), 'objectives'));
   });
 
+  test('objectives must be plain text (the YAML ": " trap)', async () => {
+    const { default: YAML } = await import('yaml');
+    const parsed = YAML.parse('objectives:\n  - Know what Vibenet is: a developer network\n');
+    assert.equal(typeof parsed.objectives[0], 'object', 'unquoted ": " really does parse as a map');
+    assert.ok(validateEdl(baseEdl({ objectives: parsed.objectives }), ctx()).errors.some((e) => e.rule === 'schema' && /quote/.test(e.message)));
+    assert.deepEqual(validateEdl(baseEdl({ objectives: ['Know what Vibenet is: a developer network'] }), ctx()).errors, []);
+  });
+
   test('every cue and cut explains itself', () => {
     const result = validateEdl(
       baseEdl({ cues: [flow({ rationale: '' })], cuts: [{ id: 'cut-1', from: 1, to: 2 }] }),

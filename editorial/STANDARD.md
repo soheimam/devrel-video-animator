@@ -45,6 +45,7 @@ Every cue must also serve one of the video's learning objectives (`objective:`).
 - **Reading time:** text stays up for at least `1s + 0.3s × words` (enforced). Longer is fine while the narration is still about it; take the cue down when the narration moves on.
 - **Frequency** follows the gaps, not the clock. `rules.yaml` sets ceilings (per minute, minimum spacing), not targets.
 - Zooms ease in over 0.4s, hold while the thing is discussed (≥ 2s), and ease out. Don't zoom on something that's about to scroll or change.
+- **Check whether the recording already zooms.** Screen recorders like Screen Studio add automatic cursor-follow zooms. Look at consecutive frames for sudden changes of scale. Never stack a `zoom` on footage that is already punched in, or during the recorder's own zoom transitions. Where the recording already magnifies the thing being discussed, the gap is already closed.
 
 ## 4. Accuracy
 
