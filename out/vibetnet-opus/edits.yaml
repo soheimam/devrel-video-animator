@@ -1,0 +1,63 @@
+# Edit decision list for vibetnet.mp4. Source-video time; design px (1662x1080).
+# Transcript is PocketSphinx: used for timing only. No overlay text is used at all.
+video: vibetnet.mp4
+
+objectives:
+  - "Know what Vibenet is and how to connect to it: an ephemeral Base developer network for testing in-flight features, with Chain ID, RPC URL, Explorer and Faucet"
+  - "Know which demos Vibenet offers and where to find them: Accounts, Tokens (B20) and Validity Transactions"
+  - "Know that Validity Transactions are coming soon in Base Cobalt, and that viewers are invited to test and report what breaks"
+
+cuts:
+  - id: cut-1
+    from: 02:35.8
+    to: 02:37.46
+    kind: dead-air
+    reason: "Tail after the sign-off: last word ends 155.43 and the wave is done by 155.5; from 155.8 the presenter leans in, blurred, to stop the recorder. No speech, nothing new on screen. 0.37s kept after the last word. Critic: silencedetect -35 dB confirms silence 155.37 to end; at -50 dB only faint rustle/clicks (155.67-155.72, 156.01-156.37), no speech. Frames 155.8-157.3 show only the cursor heading off and the presenter leaning in; kept."
+
+cues: []
+
+rejected:
+  - id: cue-1
+    kind: cue
+    summary: "5s zoom at 01:06.3 on the Connect to Vibenet panel (Chain ID, RPC URL, Explorer), region {x:1150, y:345, w:365, h:128}"
+    rule: "temporal contiguity / deletion test: no on-screen evidence ties 66.3s to the panel (cursor parked on the tagline 22-92s, nothing moves); ASR context 'behaves differently ... chains ... pc responses gas' reads as how the network behaves, not how to connect. The values are never spoken and nothing is configured in the video, so a zoom at an arbitrary moment pulls the eye away from the narration and drops the webcam face for 5s. A gentler region that keeps the bubble (about 1.47x) only lifts the text from ~14 to ~21 design px, still not worth an unanchored motion. When unsure, reject."
+  - id: cand-2
+    kind: cue
+    summary: "Zoom or highlight on the tagline \"Vibenet is an ephemeral Base developer network...\" at 00:22"
+    rule: "deletion test: the tagline is ~27 design px (the largest body text on the page) and the presenter's cursor already points at it for 70s; signalling is already there"
+  - id: cand-3
+    kind: cue
+    summary: "term-definition for \"ephemeral\" / \"Vibenet\""
+    rule: "redundancy: the page defines Vibenet on screen in one sentence; ephemeral is never confirmed as spoken or reused"
+  - id: cand-4
+    kind: cue
+    summary: "highlight-region or zoom on \"Coming soon in Base Cobalt\" at ASR \"cobalt\" 131.87"
+    rule: "coherence / never stack: the recording's own auto-zoom magnified exactly this line at 128-130.7, one second earlier; a second emphasis adds nothing"
+  - id: cand-5
+    kind: cue
+    summary: "flow-diagram of the Validity Transactions mechanism (sign, pending, sequencer checks conditions, include or expire)"
+    rule: "nothing new: the flow is inferred from page copy; the narration can't be verified to describe it, and the page already shows the description and six feature cards"
+  - id: cand-6
+    kind: cue
+    summary: "step-list of the three demos (Accounts, Tokens, Validity Transactions) during the 95-116s tour"
+    rule: "coherence: the three cards with their titles are on screen and hovered one by one; no clear area without covering cards or webcam"
+  - id: cand-7
+    kind: cue
+    summary: "zoom on the Tokens feature grid (11 design px descriptions) at 122-125"
+    rule: "never stack / split attention: the recording auto-zoomed this grid at 116.3-119.8, and the page is scrolling and about to navigate Back at 125.6"
+  - id: cand-8
+    kind: cut
+    summary: "Cut the near-silent run 132.5-139.5 on the Validity page"
+    rule: "never cut reading time: the Validity page (description plus six feature cards) has just unzoomed at 130.8 and this is the viewer's only unhurried look at it; speech can't be verified either way, so keep"
+  - id: cand-9
+    kind: cut
+    summary: "Cut the 1.8s pause at 48.97-50.77 and the 1.3s pause at 18.2-19.5"
+    rule: "when in doubt keep: silencedetect did not confirm 48.97-50.77 as silence (low-level sound), and both are mid-explanation breaths that may be deliberate"
+  - id: cand-10
+    kind: cut
+    summary: "Trim the 1.4s silent lead-in at 0-1.4"
+    rule: "deletion test: trimming ~1s of opening gains nothing and risks a clipped first word"
+  - id: cand-11
+    kind: cut
+    summary: "Cut ASR repetitions (\"i've i've\" 27.7, \"all have all have\" 89.0, \"actually actually\" 144.3, \"it's it's\" 149.6) as false starts"
+    rule: "never cut what can't be confirmed: PocketSphinx output is unreliable, so these may not be repetitions at all"

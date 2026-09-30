@@ -1,0 +1,21 @@
+{
+  "ok": true,
+  "expected_duration": 155.80100000000002,
+  "actual_duration": 155.818,
+  "issues": [],
+  "frames": [
+    {
+      "id": "cut-1",
+      "t": "02:35.5",
+      "file": "check/cut-1-before.jpg",
+      "look_for": "the cut joins cleanly; no sentence or on-screen step is lost"
+    },
+    {
+      "id": "cut-1",
+      "t": "02:36.1",
+      "file": "check/cut-1-after.jpg",
+      "look_for": "the cut joins cleanly; no sentence or on-screen step is lost"
+    }
+  ],
+  "findings": []
+}
