@@ -1,0 +1,54 @@
+# ANIMATION PREVIEW for human review, not a final edit.
+# These are candidate animations rendered so the reviewer can judge them. The Opus critic
+# rejected cue-1 (see out/vibetnet-opus/edits.yaml); cue-2 and cue-3 are new candidates.
+# Keep or drop each one in review notes. Design px, source time.
+video: vibetnet.mp4
+
+objectives:
+  - "Know what Vibenet is and how to connect to it: Chain ID, RPC URL, Explorer"
+  - "Know which demos Vibenet offers: Accounts, Tokens (B20), Validity Transactions"
+  - "Know how Validity Transactions work, and that they are coming soon in Base Cobalt"
+
+cuts:
+  - id: cut-1
+    from: 02:35.8
+    to: 02:37.46
+    kind: dead-air
+    reason: "Tail after the sign-off wave: the presenter leans in to stop the recorder. Silence from 155.37s (kept from the Opus run)."
+
+cues:
+  - id: cue-1
+    at: 01:06.3
+    duration: 5s
+    template: zoom
+    params:
+      region: { x: 1140, y: 340, w: 380, h: 135 }
+    gap: shown-not-findable
+    objective: 1
+    rationale: "PREVIEW (critic rejected: no on-screen anchor for the timing). The Chain ID and RPC URL a viewer needs to connect are ~14 design px, unreadable on a phone. The screen is static here, so the zoom competes with nothing."
+
+  - id: cue-2
+    at: 02:11.0
+    duration: 2.5s
+    template: highlight-region
+    params:
+      region: { x: 428, y: 462, w: 194, h: 28 }
+    gap: shown-not-findable
+    objective: 3
+    rationale: "PREVIEW. \"Coming soon in Base Cobalt\" is ~12 design px. It is outlined as the presenter says \"Cobalt\" (131.9s), just after the recording's own zoom ends. No label, because the text itself is the message."
+
+  - id: cue-3
+    at: 02:15.5
+    duration: 6s
+    template: step-list
+    params:
+      steps:
+        - { text: "Submit with conditions", at: 02:15.8 }
+        - { text: "Sequencer checks them", at: 02:17.1 }
+        - { text: "Included only while valid", at: 02:18.4 }
+    anchor: { x: 300, y: 500 }
+    gap: said-not-shown
+    objective: 3
+    rationale: "PREVIEW. The page describes the mechanism in one long sentence (\"Submit transactions with onchain conditions, then let the sequencer include them only while those conditions are valid\"). The step-list breaks it into its three steps, in the clear area left of the feature grid, during the quiet stretch when the viewer is reading the page. Wording condensed from the on-screen sentence."
+
+rejected: []
