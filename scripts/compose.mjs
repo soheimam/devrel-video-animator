@@ -45,7 +45,9 @@ export function buildCommand({ source, edl, rules, outDir, output, captionsFile 
   // Captions are timed to the edited video, so they are drawn after the cuts.
   const burn = captionsFile ? `ass=filename='${captionsFile.replace(/'/g, "\\'")}',` : '';
   if (cuts.length) {
-    const drop = cuts.map((c) => `between(t,${c.start.toFixed(4)},${c.end.toFixed(4)})`).join('+');
+    // Half-open [start, end): between() includes both ends and drops one extra frame per
+    // cut, which makes the audio drift behind the picture.
+    const drop = cuts.map((c) => `gte(t,${c.start.toFixed(4)})*lt(t,${c.end.toFixed(4)})`).join('+');
     graph.push(`[${last}]select='not(${drop})',setpts=N/(${fps}*TB),${burn}format=yuv420p[vout]`);
     if (source.hasAudio) {
       graph.push(`[0:a]aselect='not(${drop})',asetpts=N/SR/TB[aout]`);
