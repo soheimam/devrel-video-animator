@@ -11,7 +11,7 @@ window.stage = {
   ctx: null,
 
   async load(spec) {
-    const { template, params = {}, anchor, duration, cueStart = 0, design, layout } = spec;
+    const { template, params = {}, anchor, duration, cueStart = 0, lead = 0, design, layout } = spec;
     document.body.style.width = `${design.w}px`;
     document.body.style.height = `${design.h}px`;
     root.innerHTML = '';
@@ -21,11 +21,12 @@ window.stage = {
     const mod = await import(`./${template}.js`);
     const durationMs = duration * 1000;
     const tl = createTimeline({ autoplay: false, defaults: { ease: EASE, duration: ENTER } });
-    // Converts an absolute source timecode to ms since the cue started.
+    // Converts an absolute source timecode (the word's time) to ms since the cue started,
+    // leading by the same amount as the cue itself.
     const at = (timecode, fallbackMs) =>
       timecode === undefined || timecode === null
         ? fallbackMs
-        : Math.max(0, (parseTime(timecode) - cueStart) * 1000);
+        : Math.max(0, (parseTime(timecode) - lead - cueStart) * 1000);
 
     const ctx = { root, params, anchor, tl, design, layout, durationMs, at };
     mod.build(ctx);

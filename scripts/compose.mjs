@@ -94,7 +94,7 @@ export function writeCaptions(outDir, { source, edl, rules }) {
 
 export async function compose(outDir, { log = console.log } = {}) {
   const source = readJson(path.join(outDir, 'source.json'));
-  const edl = normalizeEdl(readYaml(path.join(outDir, 'edits.yaml')));
+  const edl = normalizeEdl(readYaml(path.join(outDir, 'edits.yaml')), loadRules().timing.lead_seconds);
   const rules = loadRules();
   const output = path.join(outDir, 'edited.mp4');
   const captions = writeCaptions(outDir, { source, edl, rules });

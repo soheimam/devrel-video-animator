@@ -9,6 +9,7 @@ import { readJson, readYaml } from '../lib/files.js';
 import { normalizeEdl, mapTime, editedDuration } from '../lib/edl.js';
 import { formatTime } from '../lib/time.js';
 import { isMain } from '../lib/cli.js';
+import { loadRules } from '../lib/rules.js';
 
 const cell = (s) => String(s ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
 
@@ -96,7 +97,7 @@ export function buildReport({ source, edl, validation, captions, previewExists =
 export function writeReport(outDir, { log = console.log } = {}) {
   const report = buildReport({
     source: readJson(path.join(outDir, 'source.json')),
-    edl: normalizeEdl(readYaml(path.join(outDir, 'edits.yaml'))),
+    edl: normalizeEdl(readYaml(path.join(outDir, 'edits.yaml')), loadRules().timing.lead_seconds),
     validation: readJson(path.join(outDir, 'validation.json'), null),
     captions: readJson(path.join(outDir, 'captions.json'), null),
     previewExists: (id) => fs.existsSync(path.join(outDir, 'preview', `${id}.gif`)),

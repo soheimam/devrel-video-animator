@@ -10,9 +10,10 @@ import { readYaml } from '../lib/files.js';
 import { normalizeEdl, mapTime } from '../lib/edl.js';
 import { FFMPEG, run, probe } from '../lib/ffmpeg.js';
 import { isMain } from '../lib/cli.js';
+import { loadRules } from '../lib/rules.js';
 
 export async function makePreviews(outDir, { width = 720, fps = 12, log = console.log } = {}) {
-  const edl = normalizeEdl(readYaml(path.join(outDir, 'edits.yaml')));
+  const edl = normalizeEdl(readYaml(path.join(outDir, 'edits.yaml')), loadRules().timing.lead_seconds);
   const video = path.join(outDir, 'edited.mp4');
   const dir = path.join(outDir, 'preview');
   fs.rmSync(dir, { recursive: true, force: true });

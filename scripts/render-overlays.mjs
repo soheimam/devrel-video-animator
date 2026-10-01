@@ -35,7 +35,7 @@ const write = (stream, buf) =>
 
 export async function renderOverlays(outDir, { log = console.log } = {}) {
   const source = readJson(path.join(outDir, 'source.json'));
-  const edl = normalizeEdl(readYaml(path.join(outDir, 'edits.yaml')));
+  const edl = normalizeEdl(readYaml(path.join(outDir, 'edits.yaml')), loadRules().timing.lead_seconds);
   const rules = loadRules();
   const design = designSpace(source.width, source.height);
   const cues = overlayCues(edl);
@@ -57,6 +57,7 @@ export async function renderOverlays(outDir, { log = console.log } = {}) {
           anchor: cue.anchor,
           duration,
           cueStart: cue.start,
+          lead: rules.timing.lead_seconds,
           design,
           layout: rules.layout,
         });
