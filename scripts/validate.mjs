@@ -10,6 +10,7 @@ import { validateEdl, normalizeEdl } from '../lib/edl.js';
 import { loudness } from '../lib/ffmpeg.js';
 import { loadRules } from '../lib/rules.js';
 import { fullText } from '../lib/transcript.js';
+import { sourceVideo } from '../lib/paths.js';
 import { isMain } from '../lib/cli.js';
 
 // Transcript gaps are not pauses: transcribers drop sentences. Every cut is measured.
@@ -31,7 +32,9 @@ export async function validateDir(outDir) {
   const raw = readYaml(path.join(outDir, 'edits.yaml'));
   const rules = loadRules();
   const result = validateEdl(raw, { rules, video: source, transcriptText: fullText(transcript) });
-  if (fs.existsSync(source.path)) result.errors.push(...(await checkCutsAudio(source, raw, rules)));
+  // The audio guard never skips silently: a missing recording is an error.
+  source.path = sourceVideo(source);
+  result.errors.push(...(await checkCutsAudio(source, raw, rules)));
   writeJson(path.join(outDir, 'validation.json'), result);
   return result;
 }

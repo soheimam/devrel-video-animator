@@ -28,7 +28,8 @@ export async function ingest(video, { out, from, language, every, log = console.
   fs.mkdirSync(outDir, { recursive: true });
   log(`ingest → ${outDir}`);
   const source = await probe(path.resolve(video));
-  writeJson(path.join(outDir, 'source.json'), source);
+  // Stored relative to the repo, so a pushed source.json works on another machine.
+  writeJson(path.join(outDir, 'source.json'), { ...source, path: path.relative(ROOT, source.path) });
   log(`  source: ${source.width}x${source.height} @ ${source.fps}fps, ${source.duration.toFixed(1)}s, audio: ${source.hasAudio ? 'yes' : 'no'}`);
   await transcribe(source.path, outDir, { from, language, log });
   await captureFrames(outDir, { every, log });

@@ -1,0 +1,141 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:05.500
+Hi everyone Sohee here So today we're
+going to be talking about Vibenet we're
+
+00:00:05.500 --> 00:00:09.740
+going to be talking about hard forks and
+how you can get started So let's get into
+
+00:00:09.740 --> 00:00:14.740
+it So first off let's answer
+the question what is a hard fork
+
+00:00:15.440 --> 00:00:20.100
+So every Base hard fork changes how
+the chain works or introduces brand new
+
+00:00:20.100 --> 00:00:25.360
+features to the chain For example we just
+upgraded to Cobalt and that introduced
+
+00:00:25.360 --> 00:00:30.160
+brand new features for B20 tokens
+and also validity transactions
+
+00:00:31.000 --> 00:00:36.700
+So with all these upgrades and changes how
+do you make sure that your apps or that
+
+00:00:36.700 --> 00:00:42.540
+your experiences of Base continue being
+How can they be better How can you use
+
+00:00:42.540 --> 00:00:48.080
+the brand new features or how will
+they impact your current app That is
+
+00:00:48.080 --> 00:00:49.920
+what Vibenet is for
+
+00:00:50.740 --> 00:00:56.560
+So Vibenet is experimental
+preview network So new hard
+
+00:00:56.560 --> 00:01:02.120
+fork features go live on
+Vibenet generally weeks
+
+00:01:02.120 --> 00:01:05.700
+prior to Sepolia or Mainnet
+sometimes even months prior
+
+00:01:06.740 --> 00:01:12.540
+So a good example of this is that our
+next hard fork will be Denim We'll be
+
+00:01:12.540 --> 00:01:17.880
+introducing 200 millisecond blocks in
+that hard fork But if you wanted to test
+
+00:01:17.880 --> 00:01:23.520
+200 millisecond blocks today you're
+able to do that on Vibenet So
+
+00:01:23.520 --> 00:01:29.120
+you're able to test with your own app by
+pointing it at the Vibenet RPC You can
+
+00:01:29.120 --> 00:01:33.940
+deploy your contracts and transactions
+check your indexes make sure that
+
+00:01:33.940 --> 00:01:39.020
+everything works in your user flows Maybe
+you want to you want to test out how
+
+00:01:39.020 --> 00:01:44.600
+EIP-8130 can improve your user experience
+That's also available on Vibenet as
+
+00:01:44.600 --> 00:01:50.040
+well Getting on Vibenet takes
+less than a minute You can go
+
+00:01:50.040 --> 00:01:55.940
+to chain Base org slash Vibenet
+and add the network chain RPC
+
+00:01:57.040 --> 00:02:03.020
+grab some testnet Vibenet ETH from
+the faucet And if you're working with
+
+00:02:03.020 --> 00:02:08.180
+AI install the Vibenet skill and
+I'll put the links down below for
+
+00:02:08.180 --> 00:02:09.180
+that
+
+00:02:09.940 --> 00:02:14.720
+One thing to keep in mind is that Vibenet
+is for experiments so our features are
+
+00:02:14.720 --> 00:02:20.260
+still in progress and the network can
+reset without notice And that's the point
+
+00:02:21.160 --> 00:02:26.140
+The features on Vibenet aren't finished So
+what makes them so great for you to test
+
+00:02:26.140 --> 00:02:28.720
+out is that your feedback
+can still change them
+
+00:02:29.700 --> 00:02:34.560
+If you hit something unexpected you can
+tell us in our Base Discord include your
+
+00:02:34.560 --> 00:02:37.980
+transaction hash what you
+expected and the exact error
+
+00:02:39.200 --> 00:02:44.800
+So Vibenet is the ground zero for what's
+next on Base Test early tell us what
+
+00:02:44.800 --> 00:02:48.980
+breaks and be ready for day one I'm so
+excited to see what you guys build on
+
+00:02:48.980 --> 00:02:49.980
+Vibenet
+
+00:02:50.340 --> 00:02:54.220
+Please post whatever you build on Vibenet
+below and I will go and test out your
+
+00:02:54.220 --> 00:02:55.940
+demos Thanks guys Bye

@@ -4,7 +4,7 @@
     {
       "start": 0,
       "end": 30.15999984741211,
-      "text": "Hi everyone Sohee here So today we're going to be talking about VibeNet we're going to be talking about hard forks and how you can get started So let's get into it So first off let's answer the question what is a hard fork So every base hard fork changes how the chain works or introduces brand new features to the chain For example we just upgraded to Cobalt and that introduced brand new features for B20 tokens and also validity transactions",
+      "text": "Hi everyone Sohee here So today we're going to be talking about Vibenet we're going to be talking about hard forks and how you can get started So let's get into it So first off let's answer the question what is a hard fork So every Base hard fork changes how the chain works or introduces brand new features to the chain For example we just upgraded to Cobalt and that introduced brand new features for B20 tokens and also validity transactions",
       "words": [
         {
           "word": "Hi",
@@ -67,7 +67,7 @@
           "end": 4.820000171661377
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 4.820000171661377,
           "end": 5.199999809265137
         },
@@ -237,7 +237,7 @@
           "end": 16.360000610351562
         },
         {
-          "word": "base",
+          "word": "Base",
           "start": 16.360000610351562,
           "end": 16.68000030517578
         },
@@ -421,7 +421,7 @@
     {
       "start": 31.700000762939453,
       "end": 66.4000015258789,
-      "text": "So with all these upgrades and changes how do you make sure that your apps or that your experiences of base continue being How can they be better How can you use the brand new features or how will they impact your current app That is what VibeNet is for So VibeNet is experimental preview network So new hard fork features go live on VibeNet generally weeks prior to Sopolio or Mainnet sometimes even months prior",
+      "text": "So with all these upgrades and changes how do you make sure that your apps or that your experiences of Base continue being How can they be better How can you use the brand new features or how will they impact your current app That is what Vibenet is for So Vibenet is experimental preview network So new hard fork features go live on Vibenet generally weeks prior to Sepolia or Mainnet sometimes even months prior",
       "words": [
         {
           "word": "So",
@@ -524,7 +524,7 @@
           "end": 39.15999984741211
         },
         {
-          "word": "base",
+          "word": "Base",
           "start": 39.15999984741211,
           "end": 39.41999816894531
         },
@@ -659,7 +659,7 @@
           "end": 49.400001525878906
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 49.400001525878906,
           "end": 49.52000045776367
         },
@@ -679,7 +679,7 @@
           "end": 51.459999084472656
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 51.459999084472656,
           "end": 51.560001373291016
         },
@@ -744,7 +744,7 @@
           "end": 59.86000061035156
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 59.86000061035156,
           "end": 60.060001373291016
         },
@@ -769,7 +769,7 @@
           "end": 63.880001068115234
         },
         {
-          "word": "Sopolio",
+          "word": "Sepolia",
           "start": 63.880001068115234,
           "end": 64.19999694824219
         },
@@ -808,7 +808,7 @@
     {
       "start": 67.44000244140625,
       "end": 116.63999938964844,
-      "text": "So a good example of this is that our next hard fork will be Denim We'll be introducing 200 millisecond blocks in that hard fork But if you wanted to test 200 millisecond blocks today you're able to do that on VibeNet So you're able to test with your own app by pointing it at the VibeNet RPC You can deploy your contracts and transactions check your indexes make sure that everything works in your user flows Maybe you want to you want to test out how 8130 can improve your user experience That's also available on VibeNet as well Getting on VibeNet takes less than a minute You can go to chain base org slash VibeNet and add the network chain RPC",
+      "text": "So a good example of this is that our next hard fork will be Denim We'll be introducing 200 millisecond blocks in that hard fork But if you wanted to test 200 millisecond blocks today you're able to do that on Vibenet So you're able to test with your own app by pointing it at the Vibenet RPC You can deploy your contracts and transactions check your indexes make sure that everything works in your user flows Maybe you want to you want to test out how EIP-8130 can improve your user experience That's also available on Vibenet as well Getting on Vibenet takes less than a minute You can go to chain Base org slash Vibenet and add the network chain RPC",
       "words": [
         {
           "word": "So",
@@ -1016,7 +1016,7 @@
           "end": 82.80000305175781
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 82.80000305175781,
           "end": 82.80000305175781
         },
@@ -1091,7 +1091,7 @@
           "end": 88
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 88,
           "end": 88.18000030517578
         },
@@ -1246,7 +1246,7 @@
           "end": 99.72000122070312
         },
         {
-          "word": "8130",
+          "word": "EIP-8130",
           "start": 99.72000122070312,
           "end": 101.04000091552734
         },
@@ -1296,7 +1296,7 @@
           "end": 104.87999725341797
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 104.87999725341797,
           "end": 104.87999725341797
         },
@@ -1321,7 +1321,7 @@
           "end": 107.87999725341797
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 107.87999725341797,
           "end": 108
         },
@@ -1376,7 +1376,7 @@
           "end": 111.9800033569336
         },
         {
-          "word": "base",
+          "word": "Base",
           "start": 111.9800033569336,
           "end": 112.37999725341797
         },
@@ -1391,7 +1391,7 @@
           "end": 113.4000015258789
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 113.4000015258789,
           "end": 113.4800033569336
         },
@@ -1430,7 +1430,7 @@
     {
       "start": 117.73999786376953,
       "end": 158.67999267578125,
-      "text": "grab some testnet VibeNet ETH from the faucet And if you're working with AI install the VibeNet skill and I'll put the links down below for that One thing to keep in mind is that VibeNet is for experiments so our features are still in progress and the network can reset without notice And that's the point The features on VibeNet aren't finished So what makes them so great for you to test out is that your feedback can still change them If you hit something unexpected you can tell us in our base discord include your transaction hash what you expected and the exact error",
+      "text": "grab some testnet Vibenet ETH from the faucet And if you're working with AI install the Vibenet skill and I'll put the links down below for that One thing to keep in mind is that Vibenet is for experiments so our features are still in progress and the network can reset without notice And that's the point The features on Vibenet aren't finished So what makes them so great for you to test out is that your feedback can still change them If you hit something unexpected you can tell us in our Base Discord include your transaction hash what you expected and the exact error",
       "words": [
         {
           "word": "grab",
@@ -1448,7 +1448,7 @@
           "end": 118.66000366210938
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 118.66000366210938,
           "end": 120.19999694824219
         },
@@ -1513,7 +1513,7 @@
           "end": 125.5199966430664
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 125.5199966430664,
           "end": 125.68000030517578
         },
@@ -1608,7 +1608,7 @@
           "end": 132.77999877929688
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 132.77999877929688,
           "end": 132.94000244140625
         },
@@ -1733,7 +1733,7 @@
           "end": 142.55999755859375
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 142.55999755859375,
           "end": 142.55999755859375
         },
@@ -1898,12 +1898,12 @@
           "end": 153.86000061035156
         },
         {
-          "word": "base",
+          "word": "Base",
           "start": 153.86000061035156,
           "end": 153.9600067138672
         },
         {
-          "word": "discord",
+          "word": "Discord",
           "start": 153.9600067138672,
           "end": 154.39999389648438
         },
@@ -1967,7 +1967,7 @@
     {
       "start": 159.89999389648438,
       "end": 169.9199981689453,
-      "text": "So VibeNet is the ground zero for what's next on base Test early tell us what breaks and be ready for day one I'm so excited to see what you guys build on VibeNet",
+      "text": "So Vibenet is the ground zero for what's next on Base Test early tell us what breaks and be ready for day one I'm so excited to see what you guys build on Vibenet",
       "words": [
         {
           "word": "So",
@@ -1975,7 +1975,7 @@
           "end": 159.97999572753906
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 159.97999572753906,
           "end": 160.10000610351562
         },
@@ -2020,7 +2020,7 @@
           "end": 163.05999755859375
         },
         {
-          "word": "base",
+          "word": "Base",
           "start": 163.05999755859375,
           "end": 163.10000610351562
         },
@@ -2135,7 +2135,7 @@
           "end": 169.67999267578125
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 169.67999267578125,
           "end": 169.9199981689453
         }
@@ -2144,7 +2144,7 @@
     {
       "start": 171.0399932861328,
       "end": 176.63999938964844,
-      "text": "Please post whatever you build on VibeNet below and I will go and test out your demos Thanks guys Bye",
+      "text": "Please post whatever you build on Vibenet below and I will go and test out your demos Thanks guys Bye",
       "words": [
         {
           "word": "Please",
@@ -2177,7 +2177,7 @@
           "end": 172.39999389648438
         },
         {
-          "word": "VibeNet",
+          "word": "Vibenet",
           "start": 172.39999389648438,
           "end": 172.66000366210938
         },
