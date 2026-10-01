@@ -3,7 +3,7 @@
 A DevRel engineer uploads a recording; the agent suggests animations, zooms, cuts and captions, shows each as a GIF, and renders the human's picks.
 
 - **Animating a video, or applying review picks** → follow `.claude/skills/animate-video/SKILL.md`.
-- **What makes a suggestion good** → `editorial/STANDARD.md` (one page).
+- **What makes a suggestion good** → `editorial/STANDARD.md` (when), `editorial/STYLE.md` (look), `editorial/MOTION.md` (motion). One page each.
 - **Tests:** `npm test` (browser and ffmpeg tests skip if those aren't installed). `npm run demo` runs the pipeline on a synthetic video.
 
 ## Conventions

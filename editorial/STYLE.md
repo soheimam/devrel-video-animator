@@ -51,7 +51,7 @@ A neutral grotesque sans for text (a Base brand typeface can replace it in `temp
 
 ## Motion
 
-Unhurried but alive. Entrances about 550 ms: fast start, long settle, a touch of overshoot (`outBack(1.2)`) so cards and nodes arrive with weight; pills pop (`outBack(1.5)`); arrows draw with `inOutQuart`. Never linear, never elastic bounce, nothing loops. Steps and nodes appear one at a time, about 0.9 s apart unless they're timed to words. Every element enters 0.25 s before the word it belongs to, so it has landed when the word is said (the renderer applies this; write the word's time).
+The full principles are in `MOTION.md`. In short: unhurried but alive. Entrances about 550 ms: fast start, long settle, a touch of overshoot (`outBack(1.2)`) so cards and nodes arrive with weight; pills pop (`outBack(1.5)`); arrows draw with `inOutQuart`. Never linear, never elastic bounce, nothing loops. Steps and nodes appear one at a time, about 0.9 s apart unless they're timed to words. Every element enters 0.25 s before the word it belongs to, so it has landed when the word is said (the renderer applies this; write the word's time).
 
 ## Words on screen
 

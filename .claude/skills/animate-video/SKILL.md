@@ -41,7 +41,7 @@ Then go through the video and ask, every 20–30 seconds: **what would a viewer 
 | Dead air, a false start, a long wait, the tail after the sign-off | a cut |
 
 Rules of thumb:
-- **Follow `editorial/STYLE.md`** (Base look: white cards, one blue, mono labels, `01 /` numbering, equal boxes) and `editorial/STANDARD.md` (when a visual helps). Before designing a slide, a flow or a comparison, **open the three reference images in `editorial/references/`** and match them: same density, same shapes, same restraint.
+- **Follow `editorial/STYLE.md`** (Base look: white cards, one blue, mono labels, `01 /` numbering, equal boxes) `editorial/MOTION.md` (how things move) and `editorial/STANDARD.md` (when a visual helps). Before designing a slide, a flow or a comparison, **open the three reference images in `editorial/references/`** and match them: same density, same shapes, same restraint.
 - **Prefer visible overlays** (callout, term card, step-list, diagram) to crops. A zoom alone leaves the video looking unedited. When the idea needs a real diagram (a flow, a timeline, a before/after), use a `slide`: a full-frame explainer that replaces the recording for a few seconds.
 - **Write the word's time, not an earlier one.** `at` and every reveal `at` are the exact time of the word they belong to (`transcript.json`). The renderer starts each element 0.25s earlier so it has landed when the word is said. Same lead everywhere, by construction.
 - **An animation that fills a pause owns the pause.** If a cue plays during dead air, add a cut from about 0.4s after the cue ends to the next word, so the pause ends with the animation instead of hanging. If the pause is shorter than the cue, there's nothing to cut.
