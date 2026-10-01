@@ -76,7 +76,12 @@ export function pickProvider(env = process.env) {
   if (env.TRANSCRIBE_PROVIDER) {
     const name = env.TRANSCRIBE_PROVIDER;
     if (!PROVIDERS[name]) throw new Error(`Unknown TRANSCRIBE_PROVIDER "${name}". Use one of: ${keys.join(', ')}.`);
-    if (!env[PROVIDERS[name].key]) throw new Error(`TRANSCRIBE_PROVIDER=${name} but ${PROVIDERS[name].key} is not set in .env.`);
+    if (!env[PROVIDERS[name].key]) {
+      const other = keys.find((k) => env[PROVIDERS[k].key]);
+      throw new Error(other
+        ? `.env sets TRANSCRIBE_PROVIDER=${name} but has ${PROVIDERS[other].key}, not ${PROVIDERS[name].key}. Remove the TRANSCRIBE_PROVIDER line (or set it to ${other}).`
+        : `TRANSCRIBE_PROVIDER=${name} but ${PROVIDERS[name].key} is not set in .env.`);
+    }
     return name;
   }
   const withKey = keys.filter((k) => env[PROVIDERS[k].key]);

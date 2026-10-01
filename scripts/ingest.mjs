@@ -35,12 +35,25 @@ export async function ingest(video, { out, from, language, every, log = console.
   return outDir;
 }
 
+// With no argument, use the one recording in videos/ (npm sometimes swallows arguments).
+export function defaultVideo() {
+  const dir = path.join(ROOT, 'videos');
+  const found = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => /\.(mp4|mov|m4v)$/i.test(f)) : [];
+  if (found.length === 1) return path.join(dir, found[0]);
+  if (found.length === 0) throw new Error('No recording given and videos/ is empty. Copy an MP4 into videos/ or pass a path:\n  node scripts/ingest.mjs videos/<file>.mp4');
+  throw new Error(`Which recording? videos/ has: ${found.join(', ')}\n  node scripts/ingest.mjs videos/<file>.mp4`);
+}
+
 if (isMain(import.meta.url)) {
-  const { positional: [video], flags } = parseArgs(process.argv.slice(2));
-  if (!video) {
-    console.error('Usage: node scripts/ingest.mjs videos/<video>.mp4 [--out out/<name>] [--from captions.srt] [--language en]');
+  const { positional: [given], flags } = parseArgs(process.argv.slice(2));
+  let video;
+  try {
+    video = given || defaultVideo();
+  } catch (e) {
+    console.error(e.message);
     process.exit(2);
   }
+  if (!given) console.log(`No path given; using ${path.relative(process.cwd(), video)}`);
   ingest(video, {
     out: flags.out,
     from: flags.from,
