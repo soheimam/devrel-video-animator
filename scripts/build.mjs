@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Runs the mechanical half of the pipeline once edits.yaml has been through the critic:
-// validate → render overlays → compose → check → report.
+// Renders edits.yaml into the finished video:
+// validate → render overlays → compose (with captions) → GIF previews → report.
 //
 // Usage: node scripts/build.mjs out/<video>
 import path from 'node:path';
@@ -8,8 +8,8 @@ import fs from 'node:fs';
 import { validateDir, printIssues } from './validate.mjs';
 import { renderOverlays } from './render-overlays.mjs';
 import { compose } from './compose.mjs';
-import { check } from './check.mjs';
 import { writeReport } from './report.mjs';
+import { makePreviews } from './previews.mjs';
 import { isMain } from '../lib/cli.js';
 
 export async function build(outDir, { log = console.log } = {}) {
@@ -24,12 +24,10 @@ export async function build(outDir, { log = console.log } = {}) {
   await renderOverlays(outDir, { log });
   log('compose');
   await compose(outDir, { log });
-  log('check');
-  const result = await check(outDir, { log });
-  for (const i of result.issues) log(`  ✗ ${i.id} [${i.rule}] ${i.message}`);
+  log('previews');
+  await makePreviews(outDir, { log });
   log('report');
   writeReport(outDir, { log });
-  return result;
 }
 
 if (isMain(import.meta.url)) {

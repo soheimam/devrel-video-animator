@@ -7,15 +7,16 @@
 // Usage: node scripts/compose.mjs out/<video>
 import fs from 'node:fs';
 import path from 'node:path';
-import { readJson, readYaml } from '../lib/files.js';
-import { normalizeEdl, overlayCues, zoomCues, sortedCuts } from '../lib/edl.js';
+import { readJson, readYaml, writeJson } from '../lib/files.js';
+import { normalizeEdl, overlayCues, zoomCues, sortedCuts, captionsBurned } from '../lib/edl.js';
+import { captionCues, toSRT, toVTT, toASS } from '../lib/captions.js';
 import { designSpace } from '../lib/design.js';
 import { loadRules } from '../lib/rules.js';
 import { zoomExpressions } from '../lib/zoom.js';
 import { FFMPEG, run } from '../lib/ffmpeg.js';
 import { isMain } from '../lib/cli.js';
 
-export function buildCommand({ source, edl, rules, outDir, output }) {
+export function buildCommand({ source, edl, rules, outDir, output, captionsFile }) {
   const { width: W, height: H, fps } = source;
   const design = designSpace(W, H);
   const inputs = ['-i', source.path];
@@ -41,15 +42,19 @@ export function buildCommand({ source, edl, rules, outDir, output }) {
 
   const cuts = sortedCuts(edl.cuts);
   const audio = [];
+  // Captions are timed to the edited video, so they are drawn after the cuts.
+  const burn = captionsFile ? `ass=filename='${captionsFile.replace(/'/g, "\\'")}',` : '';
   if (cuts.length) {
-    const drop = cuts.map((c) => `between(t,${c.start.toFixed(4)},${c.end.toFixed(4)})`).join('+');
-    graph.push(`[${last}]select='not(${drop})',setpts=N/(${fps}*TB),format=yuv420p[vout]`);
+    // Half-open [start, end): between() includes both ends and drops one extra frame per
+    // cut, which makes the audio drift behind the picture.
+    const drop = cuts.map((c) => `gte(t,${c.start.toFixed(4)})*lt(t,${c.end.toFixed(4)})`).join('+');
+    graph.push(`[${last}]select='not(${drop})',setpts=N/(${fps}*TB),${burn}format=yuv420p[vout]`);
     if (source.hasAudio) {
       graph.push(`[0:a]aselect='not(${drop})',asetpts=N/SR/TB[aout]`);
       audio.push('-map', '[aout]', '-c:a', 'aac', '-b:a', '192k');
     }
   } else {
-    graph.push(`[${last}]format=yuv420p[vout]`);
+    graph.push(`[${last}]${burn}format=yuv420p[vout]`);
     if (source.hasAudio) audio.push('-map', '0:a', '-c:a', 'copy');
   }
 
@@ -65,16 +70,48 @@ export function buildCommand({ source, edl, rules, outDir, output }) {
   ];
 }
 
+// Writes captions.srt / .vtt (sidecars) and captions.ass (for burning in), timed to the
+// edited video. Returns what was produced (also saved as captions.json).
+export function writeCaptions(outDir, { source, edl, rules }) {
+  const transcript = readJson(path.join(outDir, 'transcript.json'), { segments: [] });
+  const burn = captionsBurned(edl, rules);
+  const info = { burned: false, count: 0, files: [] };
+  const cues = captionCues(transcript, edl.cuts, rules.captions);
+  info.count = cues.length;
+  if (cues.length) {
+    fs.writeFileSync(path.join(outDir, 'captions.srt'), toSRT(cues));
+    fs.writeFileSync(path.join(outDir, 'captions.vtt'), toVTT(cues));
+    info.files.push('captions.srt', 'captions.vtt');
+    if (burn) {
+      fs.writeFileSync(path.join(outDir, 'captions.ass'), toASS(cues, { width: source.width, height: source.height, rules, avoid: edl.captions.avoid }));
+      info.burned = true;
+    }
+  }
+  info.cues = cues.map(({ start, end, text }) => ({ start, end, text }));
+  writeJson(path.join(outDir, 'captions.json'), info);
+  return info;
+}
+
 export async function compose(outDir, { log = console.log } = {}) {
   const source = readJson(path.join(outDir, 'source.json'));
   const edl = normalizeEdl(readYaml(path.join(outDir, 'edits.yaml')));
+  const rules = loadRules();
   const output = path.join(outDir, 'edited.mp4');
+  const captions = writeCaptions(outDir, { source, edl, rules });
+  if (captions.files.length) log(`  captions: ${captions.count} (${captions.burned ? 'burned in, ' : ''}${captions.files.join(', ')})`);
+  // "No changes" hands back the original, bit for bit, not a re-encode.
+  if (!edl.cues.length && !edl.cuts.length && !captions.burned) {
+    fs.copyFileSync(source.path, output);
+    log(`  no edits: copied the source to ${output}`);
+    return output;
+  }
   for (const cue of overlayCues(edl)) {
     if (!fs.existsSync(path.join(outDir, 'overlays', `${cue.id}.mov`))) {
       throw new Error(`Missing overlay for ${cue.id}. Run render-overlays first.`);
     }
   }
-  await run(FFMPEG, buildCommand({ source, edl, rules: loadRules(), outDir, output }));
+  const captionsFile = captions.burned ? path.resolve(outDir, 'captions.ass') : undefined;
+  await run(FFMPEG, buildCommand({ source, edl, rules, outDir, output, captionsFile }));
   log(`  wrote ${output}`);
   return output;
 }

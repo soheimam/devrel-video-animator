@@ -17,14 +17,13 @@ git push
 
 Then open Claude Code in this repo and say:
 
-> Edit videos/my-talk.mp4
+> Animate videos/my-talk.mp4
 
-The edited video and its report appear in `out/my-talk/` (`edited.mp4`, `report.md`). Review both before publishing. You can reply with notes like "drop cue-3" or "restore cut-1".
+You get a review PR with a GIF of every suggested animation and the edited video (`out/my-talk/edited.mp4`). Reply with picks like "keep cue-1, drop cue-3" and the final video is re-rendered. If your recorder exports captions, upload the `.srt` next to the MP4 and say so; otherwise transcription uses `OPENAI_API_KEY`.
 
 ## Before you upload
 
 - **Format:** MP4, recorded at the resolution you'll publish (1080p is ideal). Landscape and vertical both work.
 - **Name the file after the topic:** `edge-caching-intro.mp4`, not `Screen Recording 2026-09-30.mp4`. The name becomes the output folder name.
 - **Size limits:** GitHub accepts files up to **25 MB** through the browser and **100 MB** through `git push`. For longer recordings, use [Git LFS](https://git-lfs.com) or share the file another way and put it in this folder locally.
-- **Product names:** add any new product names or technical terms to [`editorial/GLOSSARY.md`](../editorial/GLOSSARY.md) first, so the transcript and on-screen text spell them correctly.
 - **Nothing confidential:** anything committed here is visible to everyone with access to the repo, including API keys, customer data or internal dashboards on screen.

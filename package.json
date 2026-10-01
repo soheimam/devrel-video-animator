@@ -10,10 +10,9 @@
     "validate": "node scripts/validate.mjs",
     "render": "node scripts/render-overlays.mjs",
     "compose": "node scripts/compose.mjs",
-    "check": "node scripts/check.mjs",
     "report": "node scripts/report.mjs",
-    "build": "node scripts/build.mjs",
-    "metrics": "node scripts/metrics.mjs"
+    "previews": "node scripts/previews.mjs",
+    "build": "node scripts/build.mjs"
   },
   "repository": {
     "type": "git",
@@ -25,7 +24,9 @@
   },
   "homepage": "https://github.com/soheimam/devrel-video-animator#readme",
   "dependencies": {
-    "@huggingface/transformers": "^4.3.0",
+    "@ai-sdk/deepgram": "^3.1.24",
+    "@ai-sdk/openai": "^4.0.83",
+    "ai": "^7.0.126",
     "animejs": "^4.5.0",
     "playwright": "1.56.1",
     "yaml": "^2.9.1"
@@ -33,6 +34,6 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   }
 }
