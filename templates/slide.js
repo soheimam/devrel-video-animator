@@ -5,6 +5,7 @@
 // params: {
 //   title,
 //   columns: [{ heading, pill?, lines?: [string | { mono: string }], note?, at? }],
+//   summary?: "SIGN → WAIT → INCLUDE"   // the bracketed takeaway line under the columns (reference 3)
 // }
 // Columns appear in order (on their `at` word if given). No anchor: it is the whole frame.
 import { el, appear, pop, equalize, STEP } from './motion.js';
@@ -42,16 +43,22 @@ export function build(ctx) {
     return col;
   });
   slide.append(cols);
+  const summary = params.summary ? el('div', 'slide-summary', `[ ${params.summary} ]`) : null;
+  if (summary) slide.append(summary);
   root.append(slide);
   equalize(slide.querySelectorAll('.card'), { width: false });
 
   // The field fades up, the header drops in, columns follow one by one and their pills pop.
   appear(tl, slide, 0, { y: 0, scale: 1, duration: 350, ease: 'outQuad' });
   appear(tl, head, 120, { y: -40, scale: 1, duration: 650, ease: 'outExpo' });
+  let last = 0;
   params.columns.slice(0, 3).forEach((c, i) => {
     const t = at(c.at, 600 + i * STEP);
     appear(tl, built[i], t, { y: 28, scale: 0.97 });
     const pill = built[i].querySelector('.pill');
     if (pill) pop(tl, pill, t + 250);
+    last = Math.max(last, t);
   });
+  // The takeaway lands once every column has: the last thing to read.
+  if (summary) appear(tl, summary, last + 700, { y: 16, scale: 1 });
 }

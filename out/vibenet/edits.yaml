@@ -1,4 +1,4 @@
-# Vibenet walkthrough, eval round 1: storyboard re-timed to the real narration.
+# Vibenet walkthrough, eval round 4: re-run against editorial/STYLE.md and MOTION.md.
 # Source-video time; design px (1662x1080 = source px × 1.5). Webcam bubble: {1062,722,600,358}.
 # `at` is the word's time; the renderer leads every cue and reveal by 0.25s (lib/rules.js).
 # Word times come from a segment-level transcript spread evenly (±1s); see transcript.json note.
@@ -49,19 +49,25 @@ cues:
     rationale: "The definition, quoted from the narration, at the moment it is given."
 
   - id: beat-3
-    at: 00:31.8                      # "go live here first… weeks before Sepolia or Mainnet"
+    at: 00:31.8                      # "go live here first… weeks before they even reach Sepolia or Mainnet"
     duration: 8s
-    template: flow-diagram
+    template: slide
     params:
-      title: "New hard fork features go live"
-      nodes:
-        - "Vibenet"
-        - { label: "Sepolia", at: 00:36.8 }
-        - { label: "Mainnet", at: 00:37.5 }
-    anchor: { x: 560, y: 56 }
+      title: "Hard fork features go live"
+      columns:
+        - heading: "Vibenet"
+          pill: "FIRST"
+          lines: ["Weeks ahead"]
+        - heading: "Sepolia"
+          lines: ["Testnet, next"]
+          at: 00:36.8
+        - heading: "Mainnet"
+          lines: ["Last"]
+          at: 00:37.5
+      summary: "VIBENET → SEPOLIA → MAINNET"
     gap: said-not-shown
     objective: 1
-    rationale: "She describes the order in words over a static page. Nodes appear on 'Sepolia' and 'Mainnet'. Over the browser chrome, where nothing is lost."
+    rationale: "She describes the order in words over a static page. STYLE.md: an idea that needs a diagram gets a slide, in the style of reference 1 (three numbered steps, one pill, a takeaway line). Columns land on 'Sepolia' and 'Mainnet'; the takeaway lands last. Replaces the round-3 flow overlay that sat against the browser chrome."
 
   - id: beat-4
     at: 00:40.1                      # "200 millisecond blocks… running on Vibenet today, while Sepolia is planned for later in October"
@@ -148,16 +154,16 @@ cues:
       columns:
         - heading: "Sign & send"
           pill: "Tx + conditions"
-          lines: ["Sent to Base now"]
         - heading: "Sequencer checks"
           lines: ["Included while conditions hold"]
           at: 02:14.4
         - heading: "Otherwise"
           pill: "EXPIRES"
           at: 02:16.6
+      summary: "SIGN → CHECK → INCLUDE"
     gap: said-not-shown
     objective: 3
-    rationale: "Validity transactions are named but never explained; the page explains them in one sentence. A full-frame slide in the Base style fills the pause (STYLE.md: use a slide when the idea needs a diagram). Wording from the page: description, 'Block Bounds & Expiry', 'No Keeper Required'. Ends with the pause, so nothing hangs."
+    rationale: "Validity transactions are named but never explained; the page explains them in one sentence. A full-frame slide in the Base style fills the pause (STYLE.md: use a slide when the idea needs a diagram), with the bracketed takeaway from reference 3. Wording from the page: description, 'Block Bounds & Expiry', 'No Keeper Required'. Ends with the pause, so nothing hangs."
 
   - id: beat-12
     at: 02:21.6                      # "tell us in our Base Discord…"
@@ -186,6 +192,10 @@ cues:
     rationale: "Her closing line, as the sign-off card."
 
 rejected:
+  - id: beat-3-overlay
+    kind: cue
+    summary: "Vibenet → Sepolia → Mainnet as a flow overlay over the browser chrome (rounds 2–3)"
+    rule: "Superseded by the beat-3 slide: STYLE.md prefers a slide when the idea needs a diagram, and the overlay was cramped against the top edge."
   - id: cut-pauses
     kind: cut
     summary: "Round 1 cuts at 0:47.9–0:50.0 and 1:15.4–1:18.7, taken from gaps in the transcript"

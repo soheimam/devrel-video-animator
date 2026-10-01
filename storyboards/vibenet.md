@@ -1,6 +1,6 @@
 # Storyboard: Vibenet walkthrough (`videos/vibetnet.mp4`)
 
-The plan of record for this video. Round 3 (PR #17): twelve beats and two cuts, timed to the transcript, in the Base style. Rendered edit: `out/vibenet/`.
+The plan of record for this video. Round 4 (PR #17): twelve beats and two cuts, timed to the transcript, re-run against `editorial/STYLE.md` and `editorial/MOTION.md`. Rendered edit: `out/vibenet/`.
 
 ## The video
 
@@ -14,14 +14,14 @@ The static 70 seconds needs the most help. The Validity page gets the most valua
 |---|---|---|---|---|
 | 1 | 0:04–0:09 | "Base hard forks change how the chain works… how early can you test" | Card: **Base hard forks** / "What changes for your app, and how early you can test" | The video's framing, as she states it |
 | 2 | 0:26–0:31 | "Vibenet is Base's experimental preview network" | Card: **Vibenet** / "Base's experimental preview network" | The definition, at the moment it's given |
-| 3 | 0:31–0:39 | "go live here first… weeks before they reach Sepolia or Mainnet" | Flow, over the browser chrome: **Vibenet → Sepolia → Mainnet**, nodes on the words | The order she describes, never drawn |
+| 3 | 0:31–0:39 | "go live here first… weeks before they reach Sepolia or Mainnet" | Full-frame **slide**: 01 Vibenet FIRST · 02 Sepolia · 03 Mainnet, columns on the words, takeaway `[ VIBENET → SEPOLIA → MAINNET ]` | The order she describes, never drawn; a slide in the style of reference 1 instead of a flow cramped against the browser chrome |
 | 4 | 0:40–0:48 | "200 ms blocks already running on Vibenet today, while Sepolia is planned for later in October" | Comparison: **Vibenet** 200 ms blocks: live today · **Sepolia** 200 ms blocks: later in October | Her example is a contrast |
 | 5 | 0:55–1:04 | "point it at Vibenet and run your normal flows" | Step-list **Point your app at Vibenet**: Chain ID · RPC · Faucet | The values you need, 14 px on the page |
 | 6 | 1:06–1:14 | "look for timing assumptions, RPC responses, gaps or even events" | Step-list **Look for**, one line per item | A spoken checklist over a static screen |
 | 7 | 1:45–1:49 | "learn about EIP-8130… click on Accounts" | Callout **EIP-8130 · Accounts** on the Accounts card | Ties the EIP to the card she points at |
 | 8 | 1:53–1:56 | "if you are working with B20" | Card: **B20** / "Base's enshrined, ERC-20-compatible token standard" | Named, never defined aloud |
 | 9 | 2:00–2:02 | "deploy test tokens for B20 directly on Vibenet" | Outline on **Create Token** | The button for what she says you can do |
-| 11 | 2:12–2:19 | "going live on Cobalt", then the pause | Full-frame **slide**: 01 Sign & send · 02 Sequencer checks · 03 Otherwise: EXPIRES | Validity transactions named, not explained; the slide fills the pause |
+| 11 | 2:12–2:19 | "going live on Cobalt", then the pause | Full-frame **slide**: 01 Sign & send · 02 Sequencer checks · 03 Otherwise: EXPIRES, takeaway `[ SIGN → CHECK → INCLUDE ]` | Validity transactions named, not explained; the slide fills the pause |
 | 12 | 2:21–2:29 | "tell us in our Base Discord: your transaction hash, what you expected, the exact error" | Step-list **Hit something? Base Discord**, lines on the words | The feedback channel and checklist, spoken once |
 | 13 | 2:30–2:35 | "test early, tell us what breaks, be ready for day one" | Card: **Test early. Tell us what breaks.** / "Be ready for day one" | Sign-off |
 

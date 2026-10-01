@@ -47,7 +47,7 @@ A neutral grotesque sans for text (a Base brand typeface can replace it in `temp
 ## Two kinds of visual
 
 1. **Overlays** sit on the recording: callouts, term cards, step-lists, highlights, zooms. Small, near the thing they describe, out of the caption zone and off the webcam.
-2. **Slides** replace the recording for a few seconds: a blue header band with the title and the `■ base` wordmark, then up to three numbered columns, each a short heading and a card. Use a slide when the idea needs a diagram the page doesn't have (a flow, a timeline, a before/after). This is what the references show.
+2. **Slides** replace the recording for a few seconds: a blue header band with the title and the `■ base` wordmark, then up to three numbered columns, each a short heading and a card, and optionally the bracketed takeaway line from reference 3 (`[ SIGN → WAIT → INCLUDE ]`) as the last thing to land. Use a slide when the idea needs a diagram the page doesn't have (a flow, a timeline, a before/after). This is what the references show.
 
 ## Motion
 

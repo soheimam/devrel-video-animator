@@ -67,7 +67,7 @@ Templates and their params:
 | `step-list` | `title?`, `steps: [text \| {text, at}]` | optional `anchor`; default top-right |
 | `flow-diagram` | `title?`, `nodes: [label \| {label, at}]`, `direction?`, `trace?` | optional `anchor`; default top-right |
 | `comparison` | `left {title, items[]}`, `right {title, items[], at?}` | optional `anchor`; default top-left |
-| `slide` | `title`, `columns: [{ heading, pill?, lines?: [text \| {mono}], note?, at? }]` (up to 3) | full frame; replaces the recording while it's up |
+| `slide` | `title`, `columns: [{ heading, pill?, lines?: [text \| {mono}], note?, at? }]` (up to 3), `summary?` (the bracketed takeaway, e.g. `SIGN → WAIT → INCLUDE`) | full frame; replaces the recording while it's up |
 
 ## 3. Render and show
 
