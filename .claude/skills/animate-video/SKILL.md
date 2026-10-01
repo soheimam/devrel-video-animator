@@ -48,7 +48,7 @@ Rules of thumb:
 - **Wording comes from the screen or the narration.** Never invent a fact or a number; quote what's there. A number that is on screen but never spoken needs `source: screen` on the cue (the validator otherwise checks numbers against the transcript).
 - **Keep clear of** the webcam bubble, the bottom 15% (captions), and whatever is being discussed. Pick anchors and panel positions from the grid frames.
 - **Don't stack zooms** on footage the recorder already zoomed (look for sudden scale changes between frames).
-- **Cuts** remove only silence and mistakes, never content. Keep ~0.4s either side of a cut so the pacing breathes. Put boundaries in silence.
+- **Cuts** remove only silence and mistakes, never content. **A gap in the transcript is not a pause**: transcribers drop whole sentences. Before proposing a cut, measure it (`ffmpeg -ss <start> -t <len> -i <video> -af volumedetect -f null -`); speech sits around −15 to −25 dB, silence below −32. The validator refuses cuts that contain sound. Keep ~0.4s either side of a cut so the pacing breathes.
 - **Captions** are on by default; set `captions: { avoid: { x, y, w, h } }` to keep them clear of a webcam in the bottom corner.
 
 Put ideas you considered and left out under `rejected:` with the reason, so the reviewer sees your thinking. Add a one-line `rationale` to every suggestion, and say in it when timing or wording is a guess.

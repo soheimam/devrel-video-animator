@@ -1,6 +1,6 @@
 # Storyboard: Vibenet walkthrough (`videos/vibetnet.mp4`)
 
-The plan of record for this video. Round 1 (PR #17): thirteen beats and four cuts, timed to the transcript. Rendered edit: `out/vibenet/`.
+The plan of record for this video. Round 3 (PR #17): twelve beats and two cuts, timed to the transcript, in the Base style. Rendered edit: `out/vibenet/`.
 
 ## The video
 
@@ -8,7 +8,7 @@ The plan of record for this video. Round 1 (PR #17): thirteen beats and four cut
 
 The static 70 seconds needs the most help. The Validity page gets the most valuable animation.
 
-## Beats (round 1: timed to the narration)
+## Beats (timed to the narration; the renderer leads each by 0.25s)
 
 | # | Time | She says | Animation | Why |
 |---|---|---|---|---|
@@ -21,8 +21,7 @@ The static 70 seconds needs the most help. The Validity page gets the most valua
 | 7 | 1:45–1:49 | "learn about EIP-8130… click on Accounts" | Callout **EIP-8130 · Accounts** on the Accounts card | Ties the EIP to the card she points at |
 | 8 | 1:53–1:56 | "if you are working with B20" | Card: **B20** / "Base's enshrined, ERC-20-compatible token standard" | Named, never defined aloud |
 | 9 | 2:00–2:02 | "deploy test tokens for B20 directly on Vibenet" | Outline on **Create Token** | The button for what she says you can do |
-| 10 | 2:11–2:13 | "going live on Cobalt" | Outline on "Coming soon in **Base Cobalt**" | 12 px text, said at that moment |
-| 11 | 2:13–2:19 | (pause) | Vertical flow: **Sign tx + conditions → Sequencer checks them → Included only while valid** | Validity transactions named, not explained |
+| 11 | 2:12–2:19 | "going live on Cobalt", then the pause | Full-frame **slide**: 01 Sign & send · 02 Sequencer checks · 03 Otherwise: EXPIRES | Validity transactions named, not explained; the slide fills the pause |
 | 12 | 2:21–2:29 | "tell us in our Base Discord: your transaction hash, what you expected, the exact error" | Step-list **Hit something? Base Discord**, lines on the words | The feedback channel and checklist, spoken once |
 | 13 | 2:30–2:35 | "test early, tell us what breaks, be ready for day one" | Card: **Test early. Tell us what breaks.** / "Be ready for day one" | Sign-off |
 
@@ -33,11 +32,9 @@ Captions are burned in throughout, kept clear of the webcam.
 | | Range | What goes |
 |---|---|---|
 | cut-1 | 0:00–0:00.6 | Silent lead-in |
-| cut-2 | 0:47.8–0:50.0 | 3.3s pause after "later in October", kept to ~1s |
-| cut-3 | 1:15.4–1:18.7 | 4.3s thinking pause mid-sentence ("how does it… work") |
-| cut-4 | 2:35.8–end | Reaching to stop the recorder |
+| cut-2 | 2:35.8–end | Reaching to stop the recorder |
 
-The 2:12–2:19 pause is kept: beat 11 plays there.
+Round 1 also cut 0:47.9–0:50.0 and 1:15.4–1:18.7 as "pauses". Both were speech the transcript had dropped (the second was "testing on Vibenet is really easy with AI, you just need to add the skills"). Reverted; the validator now measures audio inside every cut. The 2:12–2:19 pause is kept: the Validity slide fills it.
 
 ## Known limits of round 1
 

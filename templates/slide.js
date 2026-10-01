@@ -7,7 +7,7 @@
 //   columns: [{ heading, pill?, lines?: [string | { mono: string }], note?, at? }],
 // }
 // Columns appear in order (on their `at` word if given). No anchor: it is the whole frame.
-import { el, appear, STEP } from './motion.js';
+import { el, appear, pop, STEP } from './motion.js';
 
 export function build(ctx) {
   const { root, params, tl, at } = ctx;
@@ -44,10 +44,13 @@ export function build(ctx) {
   slide.append(cols);
   root.append(slide);
 
-  // The field and header come in together; columns follow one by one.
-  appear(tl, slide, 0, { y: 0, duration: 350 });
-  appear(tl, head, 100, { y: 0 });
+  // The field fades up, the header drops in, columns follow one by one and their pills pop.
+  appear(tl, slide, 0, { y: 0, scale: 1, duration: 350, ease: 'outQuad' });
+  appear(tl, head, 120, { y: -40, scale: 1, duration: 650, ease: 'outExpo' });
   params.columns.slice(0, 3).forEach((c, i) => {
-    appear(tl, built[i], at(c.at, 500 + i * STEP), { y: 18 });
+    const t = at(c.at, 600 + i * STEP);
+    appear(tl, built[i], t, { y: 28, scale: 0.97 });
+    const pill = built[i].querySelector('.pill');
+    if (pill) pop(tl, pill, t + 250);
   });
 }

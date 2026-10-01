@@ -1,9 +1,12 @@
-// Shared motion vocabulary. Restraint is the point: short entrances, one easing family,
-// no bounce, no loops. Motion should mean something (appearing = new, direction = flow).
-export const ENTER = 450;
+// Shared motion vocabulary (editorial/STYLE.md). Entrances decelerate hard with a touch of
+// overshoot, so elements arrive with weight instead of fading in flat. No elastic bounce,
+// no loops. Motion should mean something (appearing = new, direction = flow).
+export const ENTER = 550;
 export const EXIT = 300;
 export const STEP = 900;
-export const EASE = 'outCubic';
+export const EASE = 'outQuint';          // fast start, long settle
+export const EASE_SETTLE = 'outBack(1.2)'; // slight overshoot for cards and nodes
+export const EASE_DRAW = 'inOutQuart';   // arrows and leaders
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -24,11 +27,21 @@ export function hidden(...nodes) {
   for (const n of nodes) n.style.opacity = 0;
 }
 
-export function appear(tl, target, at, { y = 14, duration = ENTER } = {}) {
+// Entrance: rises and scales up slightly while fading in, settling with a little overshoot.
+export function appear(tl, target, at, { y = 24, scale = 0.96, duration = ENTER, ease = EASE_SETTLE } = {}) {
   hidden(target);
-  const params = { opacity: [0, 1], duration, ease: EASE };
-  if (y && !(target instanceof SVGElement)) params.translateY = [y, 0];
+  const params = { opacity: { to: [0, 1], duration: Math.min(duration, 350), ease: 'outQuad' }, duration, ease };
+  if (!(target instanceof SVGElement)) {
+    if (y) params.translateY = [y, 0];
+    if (scale && scale !== 1) params.scale = [scale, 1];
+  }
   tl.add(target, params, at);
+}
+
+// A pill or chip popping into place.
+export function pop(tl, target, at, duration = 500) {
+  hidden(target);
+  tl.add(target, { opacity: { to: [0, 1], duration: 200 }, scale: [0.8, 1], duration, ease: 'outBack(1.5)' }, at);
 }
 
 export function fadeIn(tl, target, at, duration = ENTER) {
@@ -41,7 +54,7 @@ export function draw(tl, path, at, duration = 600) {
   const len = path.getTotalLength();
   path.style.strokeDasharray = `${len}`;
   path.style.strokeDashoffset = `${len}`;
-  tl.add(path, { strokeDashoffset: [len, 0], duration, ease: 'inOutQuad' }, at);
+  tl.add(path, { strokeDashoffset: [len, 0], duration, ease: EASE_DRAW }, at);
 }
 
 export const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), Math.max(lo, hi));

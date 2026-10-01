@@ -1,7 +1,7 @@
 // term-definition: keeps a new term and a short gloss on screen while the viewer needs it.
 // The term is a blue pill, the gloss plain text below (editorial/STYLE.md).
 // params: { term, gloss }   cue.anchor (optional): top-left of the card.
-import { el, appear, place, corner } from './motion.js';
+import { el, appear, pop, place, corner } from './motion.js';
 
 export function build(ctx) {
   const { root, params, anchor, tl } = ctx;
@@ -16,7 +16,7 @@ export function build(ctx) {
   if (anchor) place(panel, anchor, ctx);
   else corner(panel, ctx, 'bottom-left');
 
-  appear(tl, panel, 0, { y: 0 });
-  appear(tl, term, 150);
-  appear(tl, gloss, 450);
+  appear(tl, panel, 0);
+  pop(tl, term, 200);
+  appear(tl, gloss, 420, { y: 14, scale: 1 });
 }

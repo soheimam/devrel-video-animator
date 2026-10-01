@@ -6,19 +6,32 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { readJson, readYaml, writeJson } from '../lib/files.js';
-import { validateEdl } from '../lib/edl.js';
+import { validateEdl, normalizeEdl } from '../lib/edl.js';
+import { loudness } from '../lib/ffmpeg.js';
 import { loadRules } from '../lib/rules.js';
 import { fullText } from '../lib/transcript.js';
 import { isMain } from '../lib/cli.js';
 
-export function validateDir(outDir) {
+// Transcript gaps are not pauses: transcribers drop sentences. Every cut is measured.
+export async function checkCutsAudio(source, rawEdl, rules) {
+  const errors = [];
+  for (const cut of normalizeEdl(rawEdl).cuts) {
+    if (Number.isNaN(cut.start) || Number.isNaN(cut.end) || cut.end <= cut.start) continue;
+    const { mean, max } = await loudness(source.path, cut.start, cut.end);
+    if (Number.isFinite(mean) && mean > rules.cuts.max_mean_db) {
+      errors.push({ id: cut.id, rule: 'audio', message: `Cut contains sound (mean ${mean.toFixed(1)} dB, peak ${max.toFixed(1)} dB; silence is below ${rules.cuts.max_mean_db} dB). A gap in the transcript is not a pause; listen, or keep the footage.` });
+    }
+  }
+  return errors;
+}
+
+export async function validateDir(outDir) {
   const source = readJson(path.join(outDir, 'source.json'));
   const transcript = readJson(path.join(outDir, 'transcript.json'), { segments: [] });
-  const result = validateEdl(readYaml(path.join(outDir, 'edits.yaml')), {
-    rules: loadRules(),
-    video: source,
-    transcriptText: fullText(transcript),
-  });
+  const raw = readYaml(path.join(outDir, 'edits.yaml'));
+  const rules = loadRules();
+  const result = validateEdl(raw, { rules, video: source, transcriptText: fullText(transcript) });
+  if (fs.existsSync(source.path)) result.errors.push(...(await checkCutsAudio(source, raw, rules)));
   writeJson(path.join(outDir, 'validation.json'), result);
   return result;
 }
@@ -35,7 +48,7 @@ if (isMain(import.meta.url)) {
     console.error('Usage: node scripts/validate.mjs out/<video>   (needs out/<video>/edits.yaml)');
     process.exit(2);
   }
-  const result = validateDir(outDir);
+  const result = await validateDir(outDir);
   printIssues(result);
   process.exit(result.errors.length ? 1 : 0);
 }

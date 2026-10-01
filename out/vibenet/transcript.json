@@ -977,6 +977,88 @@
       ]
     },
     {
+      "start": 75.2,
+      "end": 78.9,
+      "text": "testing on Vibenet is really easy with AI you just need to add the skills",
+      "words": [
+        {
+          "word": "testing",
+          "start": 75.2,
+          "end": 75.447
+        },
+        {
+          "word": "on",
+          "start": 75.447,
+          "end": 75.693
+        },
+        {
+          "word": "Vibenet",
+          "start": 75.693,
+          "end": 75.94
+        },
+        {
+          "word": "is",
+          "start": 75.94,
+          "end": 76.187
+        },
+        {
+          "word": "really",
+          "start": 76.187,
+          "end": 76.433
+        },
+        {
+          "word": "easy",
+          "start": 76.433,
+          "end": 76.68
+        },
+        {
+          "word": "with",
+          "start": 76.68,
+          "end": 76.927
+        },
+        {
+          "word": "AI",
+          "start": 76.927,
+          "end": 77.173
+        },
+        {
+          "word": "you",
+          "start": 77.173,
+          "end": 77.42
+        },
+        {
+          "word": "just",
+          "start": 77.42,
+          "end": 77.667
+        },
+        {
+          "word": "need",
+          "start": 77.667,
+          "end": 77.913
+        },
+        {
+          "word": "to",
+          "start": 77.913,
+          "end": 78.16
+        },
+        {
+          "word": "add",
+          "start": 78.16,
+          "end": 78.407
+        },
+        {
+          "word": "the",
+          "start": 78.407,
+          "end": 78.653
+        },
+        {
+          "word": "skills",
+          "start": 78.653,
+          "end": 78.9
+        }
+      ]
+    },
+    {
       "start": 79.2,
       "end": 97.9,
       "text": "work So I'm going to put that link in the comments below And that's already live and you can get started So your agents will have everything you need to test anything on Vibenet Another thing is going to chain.base.org We actually have all the demos here for",
@@ -1945,5 +2027,5 @@
       ]
     }
   ],
-  "note": "Built from segment-level transcript; word times are spread evenly within each segment (±1s). Replace with transcript.json from ingest for exact timing."
+  "note": "Built from segment-level transcript; word times are spread evenly within each segment (\u00b11s). Replace with transcript.json from ingest for exact timing. The sentence at 1:15\u20131:19 was missing from the pasted transcript and was added by hand from the reviewer's note."
 }

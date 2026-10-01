@@ -14,7 +14,7 @@ import { isMain } from '../lib/cli.js';
 
 export async function render(outDir, { log = console.log } = {}) {
   log('validate');
-  const validation = validateDir(outDir);
+  const validation = await validateDir(outDir);
   printIssues(validation, log);
   if (validation.errors.length) {
     writeReport(outDir, { log });

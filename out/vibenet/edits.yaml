@@ -20,16 +20,6 @@ cuts:
     kind: dead-air
     reason: "Silent lead-in; first word at 0.9."
   - id: cut-2
-    from: 00:47.9
-    to: 00:50.0
-    kind: dead-air
-    reason: "3.3s pause after 'later in October' on a static screen, kept to ~1.1s."
-  - id: cut-3
-    from: 01:15.4
-    to: 01:18.7
-    kind: dead-air
-    reason: "4.3s thinking pause mid-sentence ('how does it … work'), kept to ~1s so the sentence joins."
-  - id: cut-4
     from: 02:35.8
     to: 02:37.46
     kind: dead-air
@@ -196,6 +186,10 @@ cues:
     rationale: "Her closing line, as the sign-off card."
 
 rejected:
+  - id: cut-pauses
+    kind: cut
+    summary: "Round 1 cuts at 0:47.9–0:50.0 and 1:15.4–1:18.7, taken from gaps in the transcript"
+    rule: "WRONG, reverted: both windows contain speech (−24 and −17 dB mean). The transcript had dropped the sentence 'testing on Vibenet is really easy with AI, you just need to add the skills'. The validator now measures audio inside every cut and refuses sound."
   - id: beat-10
     kind: cue
     summary: "Outline on 'Coming soon in Base Cobalt' at 2:11.4 (round 1)"

@@ -31,9 +31,9 @@ export function build(ctx) {
   if (anchor) place(panel, anchor, ctx);
   else corner(panel, ctx, 'top-left');
 
-  appear(tl, panel, 0, { y: 0 });
-  left.items.forEach((li, i) => appear(tl, li, 150 + i * 150));
-  const tr = at(params.right.at, 900);
-  appear(tl, right.col, tr);
-  right.items.forEach((li, i) => appear(tl, li, tr + 150 + i * 150));
+  appear(tl, panel, 0);
+  left.items.forEach((li, i) => appear(tl, li, 200 + i * 180, { y: 12, scale: 1 }));
+  const tr = at(params.right.at, 1000);
+  appear(tl, right.col, tr, { y: 0, scale: 0.97 });
+  right.items.forEach((li, i) => appear(tl, li, tr + 200 + i * 180, { y: 12, scale: 1 }));
 }

@@ -42,7 +42,7 @@ export function build(ctx) {
   if (anchor) place(panel, anchor, ctx);
   else corner(panel, ctx, 'top-right');
 
-  appear(tl, panel, 0, { y: 0 });
+  appear(tl, panel, 0);
   let last = 0;
   params.nodes.forEach((n, i) => {
     const t = Math.max(at(typeof n === 'string' ? undefined : n.at, 300 + i * HOP), i ? last + 500 : 0);
@@ -50,7 +50,7 @@ export function build(ctx) {
       draw(tl, arrows[i - 1].line, t - 450, 400);
       fadeIn(tl, arrows[i - 1].head, t - 80, 160);
     }
-    appear(tl, nodes[i], t, { y: 0 });
+    appear(tl, nodes[i], t, { y: 10, scale: 0.9 });
     last = t;
   });
 

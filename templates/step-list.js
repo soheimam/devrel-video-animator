@@ -1,7 +1,7 @@
 // step-list: a sequence that builds as the presenter walks through it, and stays up while
 // the steps are done. The current step is emphasised; earlier ones recede.
 // params: { title?, steps: [ "text" | { text, at? } ] }   cue.anchor (optional).
-import { el, appear, place, corner, STEP, ENTER } from './motion.js';
+import { el, appear, place, corner, STEP, ENTER, EASE } from './motion.js';
 
 export function build(ctx) {
   const { root, params, anchor, tl, at } = ctx;
@@ -21,11 +21,12 @@ export function build(ctx) {
   if (anchor) place(panel, anchor, ctx);
   else corner(panel, ctx, 'top-right');
 
-  appear(tl, panel, 0, { y: 0 });
+  appear(tl, panel, 0);
   let prev = null;
   params.steps.forEach((s, i) => {
     const t = at(typeof s === 'string' ? undefined : s.at, 300 + i * STEP);
-    appear(tl, rows[i], t);
+    appear(tl, rows[i], t, { y: 0, scale: 1 });
+    tl.add(rows[i], { translateX: [-18, 0], duration: ENTER, ease: EASE }, t);
     if (prev) tl.add(prev, { opacity: [1, 0.5], duration: ENTER }, t);
     prev = rows[i];
   });
