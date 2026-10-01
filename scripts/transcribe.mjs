@@ -5,9 +5,9 @@
 // an OpenAI verbose_json file).
 //
 // Configure in .env (see .env.example):
-//   TRANSCRIBE_PROVIDER  openai (default) | deepgram | gateway (Vercel AI Gateway, one key for everything)
-//   TRANSCRIBE_MODEL     default whisper-1 (openai), nova-3 (deepgram), openai/whisper-1 (gateway)
-//   OPENAI_API_KEY / DEEPGRAM_API_KEY / AI_GATEWAY_API_KEY
+//   AI_GATEWAY_API_KEY | OPENAI_API_KEY | DEEPGRAM_API_KEY   set one; the provider follows the key
+//   TRANSCRIBE_PROVIDER  gateway | openai | deepgram          only needed if more than one key is set
+//   TRANSCRIBE_MODEL     default openai/whisper-1 (gateway), whisper-1 (openai), nova-3 (deepgram)
 //
 // Usage: node scripts/transcribe.mjs <video> out/<video> [--from captions.srt] [--language en]
 import fs from 'node:fs';
@@ -70,13 +70,28 @@ async function extractAudio(video) {
   return out;
 }
 
-export async function transcribeWithAiSdk(video, { language, transcribeFn } = {}) {
-  const name = process.env.TRANSCRIBE_PROVIDER || 'openai';
-  const provider = PROVIDERS[name];
-  if (!provider) throw new Error(`Unknown TRANSCRIBE_PROVIDER "${name}". Use one of: ${Object.keys(PROVIDERS).join(', ')}.`);
-  if (!process.env[provider.key]) {
-    throw new Error(`Set ${provider.key} in .env to transcribe (see .env.example), or import captions with --from file.srt`);
+// The provider follows whichever key is set; TRANSCRIBE_PROVIDER only decides between several.
+export function pickProvider(env = process.env) {
+  const keys = Object.keys(PROVIDERS);
+  if (env.TRANSCRIBE_PROVIDER) {
+    const name = env.TRANSCRIBE_PROVIDER;
+    if (!PROVIDERS[name]) throw new Error(`Unknown TRANSCRIBE_PROVIDER "${name}". Use one of: ${keys.join(', ')}.`);
+    if (!env[PROVIDERS[name].key]) throw new Error(`TRANSCRIBE_PROVIDER=${name} but ${PROVIDERS[name].key} is not set in .env.`);
+    return name;
   }
+  const withKey = keys.filter((k) => env[PROVIDERS[k].key]);
+  if (withKey.length === 0) {
+    throw new Error(`No transcription key found. Set one of ${keys.map((k) => PROVIDERS[k].key).join(', ')} in .env (see .env.example), or import captions with --from file.srt`);
+  }
+  if (withKey.length > 1) {
+    throw new Error(`Several transcription keys are set (${withKey.map((k) => PROVIDERS[k].key).join(', ')}). Set TRANSCRIBE_PROVIDER=${withKey[0]} (or another) to choose.`);
+  }
+  return withKey[0];
+}
+
+export async function transcribeWithAiSdk(video, { language, transcribeFn } = {}) {
+  const name = pickProvider();
+  const provider = PROVIDERS[name];
   const modelId = process.env.TRANSCRIBE_MODEL || provider.model;
   const transcribe = transcribeFn || (await import('ai')).transcribe;
   const sdk = await provider.load();

@@ -18,7 +18,7 @@ Requirements: Node 22+, ffmpeg, and a transcription key in `.env` (copy `.env.ex
 
 ```bash
 npm install
-cp .env.example .env   # add one provider key
+cp .env.example .env   # set one key; AI_GATEWAY_API_KEY is the simplest
 npm run doctor         # checks Node, ffmpeg, Chromium and the key
 npm run demo        # synthetic recording, end to end → out/demo/edited.mp4, report.md, preview/*.gif
 npm test

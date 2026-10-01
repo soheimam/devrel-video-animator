@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fromOpenAI, fromAiSdk, fromSubtitles, groupWords, toMarkdown, fullText } from '../lib/transcript.js';
-import { importTranscript, transcribeWithAiSdk, PROVIDERS } from '../scripts/transcribe.mjs';
+import { importTranscript, transcribeWithAiSdk, PROVIDERS, pickProvider } from '../scripts/transcribe.mjs';
 import { makeDemoVideo } from '../scripts/demo.mjs';
 import { hasFfmpeg } from './helpers.mjs';
 import { ROOT } from '../lib/paths.js';
@@ -83,13 +83,12 @@ test('transcription asks the provider for word timestamps and needs a key', { sk
   const video = await makeDemoVideo(path.join(tmpDir('dva-sdk-'), 'demo.mp4'));
   const saved = { ...process.env };
   try {
-    delete process.env.OPENAI_API_KEY;
-    process.env.TRANSCRIBE_PROVIDER = 'openai';
-    await assert.rejects(transcribeWithAiSdk(video, {}), /OPENAI_API_KEY/);
+    for (const k of ['OPENAI_API_KEY', 'DEEPGRAM_API_KEY', 'AI_GATEWAY_API_KEY', 'TRANSCRIBE_PROVIDER']) delete process.env[k];
+    await assert.rejects(transcribeWithAiSdk(video, {}), /No transcription key found/);
     process.env.TRANSCRIBE_PROVIDER = 'nope';
     await assert.rejects(transcribeWithAiSdk(video, {}), /Unknown TRANSCRIBE_PROVIDER/);
+    delete process.env.TRANSCRIBE_PROVIDER;
 
-    process.env.TRANSCRIBE_PROVIDER = 'openai';
     process.env.OPENAI_API_KEY = 'test';
     let call;
     const t = await transcribeWithAiSdk(video, {
@@ -105,10 +104,15 @@ test('transcription asks the provider for word timestamps and needs a key', { sk
     assert.ok(call.audio.length > 1000, 'audio was extracted and passed as bytes');
     assert.equal(t.segments[0].text, 'Hello there');
 
-    process.env.TRANSCRIBE_PROVIDER = 'gateway';
+    // The provider follows the key: a gateway key alone selects the gateway, no TRANSCRIBE_PROVIDER needed.
     delete process.env.OPENAI_API_KEY;
-    await assert.rejects(transcribeWithAiSdk(video, {}), /AI_GATEWAY_API_KEY/);
     process.env.AI_GATEWAY_API_KEY = 'test';
+    assert.equal(pickProvider(), 'gateway');
+    process.env.OPENAI_API_KEY = 'also';
+    assert.throws(() => pickProvider(), /Several transcription keys/);
+    process.env.TRANSCRIBE_PROVIDER = 'gateway';
+    assert.equal(pickProvider(), 'gateway');
+    delete process.env.OPENAI_API_KEY;
     await transcribeWithAiSdk(video, { transcribeFn: async (args) => ((call = args), { text: '', segments: [], warnings: [] }) });
     assert.equal(call.model, 'openai/whisper-1', 'gateway models are plain strings');
   } finally {

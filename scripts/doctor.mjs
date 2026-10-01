@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { run } from '../lib/ffmpeg.js';
 import { ROOT } from '../lib/paths.js';
-import { PROVIDERS, loadEnv } from './transcribe.mjs';
+import { PROVIDERS, loadEnv, pickProvider } from './transcribe.mjs';
 
 const checks = [];
 const ok = (name, detail) => checks.push({ ok: true, name, detail });
@@ -43,12 +43,13 @@ try {
 
 // Transcription key
 loadEnv();
-const providerName = process.env.TRANSCRIBE_PROVIDER || 'openai';
-const provider = PROVIDERS[providerName];
-if (!provider) bad('transcription', `TRANSCRIBE_PROVIDER=${providerName} is not one of ${Object.keys(PROVIDERS).join(', ')}`, 'Fix TRANSCRIBE_PROVIDER in .env.');
-else if (process.env[provider.key]) ok('transcription', `${providerName}, ${provider.key} is set`);
-else if (!fs.existsSync(path.join(ROOT, '.env'))) bad('transcription', 'no .env file', 'Run `cp .env.example .env` and add one key. Or skip transcription with `--from captions.srt`.');
-else bad('transcription', `${provider.key} is empty in .env`, `Add ${provider.key} to .env (or change TRANSCRIBE_PROVIDER). Or import captions with --from.`);
+try {
+  const name = pickProvider();
+  ok('transcription', `${name} (${PROVIDERS[name].key} is set, model ${process.env.TRANSCRIBE_MODEL || PROVIDERS[name].model})`);
+} catch (e) {
+  const noEnv = !fs.existsSync(path.join(ROOT, '.env'));
+  bad('transcription', noEnv ? 'no .env file' : e.message.split('\n')[0], noEnv ? 'Run `cp .env.example .env` and set one key (AI_GATEWAY_API_KEY is the simplest). Or skip transcription with `--from captions.srt`.' : 'Fix .env as described, or import captions with --from.');
+}
 
 // Videos
 const videos = fs.existsSync(path.join(ROOT, 'videos')) ? fs.readdirSync(path.join(ROOT, 'videos')).filter((f) => /\.(mp4|mov|m4v)$/i.test(f)) : [];
