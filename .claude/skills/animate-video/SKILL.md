@@ -77,7 +77,9 @@ npm run render -- out/<name>
 
 Validates `edits.yaml` (overlaps, cue over a cut, caption zone, reading time, numbers that aren't in the narration), renders the overlays, composes `edited.mp4` with captions burned in, writes `captions.srt`/`.vtt`, a GIF of every cue in `preview/`, and `report.md`. Fix any validation errors it prints.
 
-**Look at every GIF yourself** before handing over. A label covering the code it describes only shows up visually.
+**Look at every cue yourself** before handing over, in time, not just in place. `preview/<id>.strip.jpg` shows the three moments that go wrong: the cue just landed, its last reveal landed, and one second before it exits. If the last frame still has something arriving, the cue is too short. The GIF shows the motion; a label covering the code it describes only shows up there. `report.md` opens with the pacing line (edits per minute, share of time with something on screen, longest empty stretch): on a static-page video, a long empty stretch is where the next suggestion goes.
+
+Leave about a second between one overlay leaving and the next arriving (the validator warns below that). Back-to-back overlays read as a slideshow.
 
 Then open a review PR (`git add -f out/<name>`; `out/` is ignored) containing `edited.mp4`, `report.md`, `edits.yaml`, `captions.*` and `preview/`. In the description: a direct link to the video (`https://github.com/<owner>/<repo>/raw/<branch>/out/<name>/edited.mp4`) and **every GIF embedded** (`![cue-1](https://github.com/<owner>/<repo>/blob/<branch>/out/<name>/preview/cue-1.gif?raw=true)`) with one line each on what it shows and why. Also send the video and the GIFs in chat.
 

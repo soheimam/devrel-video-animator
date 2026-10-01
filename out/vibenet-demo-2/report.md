@@ -2,6 +2,8 @@
 
 **02:57.4 → 02:56.3** (1.1s removed) · 12 visual edit(s) · 2 cut(s) · 4 candidate(s) rejected
 
+**Pacing:** 4.1 visual edits per minute · something on screen 57% of the time · longest stretch with nothing: 20s (00:30.3–00:50.6, edited time)
+
 ## Learning objectives
 
 What the agents understood this video to teach. Every edit serves one of these.
@@ -33,49 +35,97 @@ What the agents understood this video to teach. Every edit serves one of these.
 
 ![beat-1](preview/beat-1.gif)
 
+Landed · last reveal · one second before exit:
+
+![beat-1 moments](preview/beat-1.strip.jpg)
+
 **beat-2** · step-list · 00:23.8
 
 ![beat-2](preview/beat-2.gif)
+
+Landed · last reveal · one second before exit:
+
+![beat-2 moments](preview/beat-2.strip.jpg)
 
 **beat-3** · term-definition · 00:50.6
 
 ![beat-3](preview/beat-3.gif)
 
+Landed · last reveal · one second before exit:
+
+![beat-3 moments](preview/beat-3.strip.jpg)
+
 **beat-4** · slide · 00:56.0
 
 ![beat-4](preview/beat-4.gif)
+
+Landed · last reveal · one second before exit:
+
+![beat-4 moments](preview/beat-4.strip.jpg)
 
 **beat-5** · comparison · 01:10.9
 
 ![beat-5](preview/beat-5.gif)
 
+Landed · last reveal · one second before exit:
+
+![beat-5 moments](preview/beat-5.strip.jpg)
+
 **beat-6** · step-list · 01:24.1
 
 ![beat-6](preview/beat-6.gif)
+
+Landed · last reveal · one second before exit:
+
+![beat-6 moments](preview/beat-6.strip.jpg)
 
 **beat-7** · callout · 01:38.8
 
 ![beat-7](preview/beat-7.gif)
 
+Landed · last reveal · one second before exit:
+
+![beat-7 moments](preview/beat-7.strip.jpg)
+
 **beat-8** · step-list · 01:45.9
 
 ![beat-8](preview/beat-8.gif)
+
+Landed · last reveal · one second before exit:
+
+![beat-8 moments](preview/beat-8.strip.jpg)
 
 **beat-9** · term-definition · 02:04.0
 
 ![beat-9](preview/beat-9.gif)
 
+Landed · last reveal · one second before exit:
+
+![beat-9 moments](preview/beat-9.strip.jpg)
+
 **beat-10** · term-definition · 02:12.6
 
 ![beat-10](preview/beat-10.gif)
+
+Landed · last reveal · one second before exit:
+
+![beat-10 moments](preview/beat-10.strip.jpg)
 
 **beat-11** · step-list · 02:29.5
 
 ![beat-11](preview/beat-11.gif)
 
+Landed · last reveal · one second before exit:
+
+![beat-11 moments](preview/beat-11.strip.jpg)
+
 **beat-12** · term-definition · 02:42.8
 
 ![beat-12](preview/beat-12.gif)
+
+Landed · last reveal · one second before exit:
+
+![beat-12 moments](preview/beat-12.strip.jpg)
 
 ## Cuts
 
