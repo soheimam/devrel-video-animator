@@ -13,8 +13,8 @@ You suggest, the human decides. Be generous with suggestions and honest about do
 
 ```bash
 npm install            # anime.js, Playwright (headless Chromium), yaml, Vercel AI SDK
-ffmpeg -version        # required
 cp .env.example .env   # then add one key: OPENAI_API_KEY, DEEPGRAM_API_KEY or AI_GATEWAY_API_KEY
+npm run doctor         # checks Node, ffmpeg, Chromium and the key; says exactly what's missing
 ```
 
 ## 1. Ingest
@@ -69,7 +69,7 @@ Templates and their params:
 ## 3. Render and show
 
 ```bash
-npm run build -- out/<name>
+npm run render -- out/<name>
 ```
 
 Validates `edits.yaml` (overlaps, cue over a cut, caption zone, reading time, numbers that aren't in the narration), renders the overlays, composes `edited.mp4` with captions burned in, writes `captions.srt`/`.vtt`, a GIF of every cue in `preview/`, and `report.md`. Fix any validation errors it prints.
@@ -80,4 +80,4 @@ Then open a review PR (`git add -f out/<name>`; `out/` is ignored) containing `e
 
 ## 4. Apply the picks
 
-The reviewer answers with picks: `keep cue-1`, `drop cue-3`, `cue-2 at 1:10`, `cue-4 should say "…"`, `restore cut-2`. Apply them to `edits.yaml` (dropped items move to `rejected:` with `rule: "reviewer"`), run `npm run build` again, and update the PR. Repeat until they're happy. Humans publish.
+The reviewer answers with picks: `keep cue-1`, `drop cue-3`, `cue-2 at 1:10`, `cue-4 should say "…"`, `restore cut-2`. Apply them to `edits.yaml` (dropped items move to `rejected:` with `rule: "reviewer"`), run `npm run render` again, and update the PR. Repeat until they're happy. Humans publish.

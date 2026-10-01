@@ -8,11 +8,12 @@
     "ingest": "node scripts/ingest.mjs",
     "frames": "node scripts/frames.mjs",
     "validate": "node scripts/validate.mjs",
-    "render": "node scripts/render-overlays.mjs",
+    "render": "node scripts/build.mjs",
     "compose": "node scripts/compose.mjs",
     "report": "node scripts/report.mjs",
     "previews": "node scripts/previews.mjs",
-    "build": "node scripts/build.mjs"
+    "doctor": "node scripts/doctor.mjs",
+    "site": "node scripts/site.mjs"
   },
   "repository": {
     "type": "git",

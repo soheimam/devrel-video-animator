@@ -5,14 +5,25 @@
 //        [--language en] [--every 10]
 import fs from 'node:fs';
 import path from 'node:path';
-import { probe } from '../lib/ffmpeg.js';
+import { probe, hasCommand, FFMPEG, FFPROBE } from '../lib/ffmpeg.js';
 import { writeJson } from '../lib/files.js';
 import { ROOT, slugFor } from '../lib/paths.js';
 import { transcribe } from './transcribe.mjs';
 import { captureFrames } from './frames.mjs';
 import { isMain, parseArgs } from '../lib/cli.js';
 
+export async function preflight(video) {
+  const problems = [];
+  const [major] = process.versions.node.split('.').map(Number);
+  if (major < 20) problems.push(`Node ${process.version} is too old; install Node 22 or newer.`);
+  if (!fs.existsSync(path.join(ROOT, 'node_modules', 'yaml'))) problems.push('Dependencies are not installed; run `npm install` in the repo folder.');
+  if (!fs.existsSync(video)) problems.push(`Video not found: ${video} (paths are relative to where you run the command; try videos/<file>.mp4 from the repo root).`);
+  for (const tool of [FFMPEG, FFPROBE]) if (!(await hasCommand(tool))) problems.push(`${tool} is not installed or not on PATH (brew install ffmpeg / apt install ffmpeg).`);
+  if (problems.length) throw new Error(`Can't start:\n  - ${problems.join('\n  - ')}\nRun \`npm run doctor\` for a full check.`);
+}
+
 export async function ingest(video, { out, from, language, every, log = console.log } = {}) {
+  await preflight(video);
   const outDir = out || path.join(ROOT, 'out', slugFor(video));
   fs.mkdirSync(outDir, { recursive: true });
   log(`ingest → ${outDir}`);

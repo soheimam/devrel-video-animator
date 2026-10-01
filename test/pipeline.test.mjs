@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { prepareDemo, DEMO_DURATION } from '../scripts/demo.mjs';
-import { build } from '../scripts/build.mjs';
+import { render } from '../scripts/render.mjs';
 import { probe } from '../lib/ffmpeg.js';
 import { hasBrowser, hasFfmpeg, tmpDir, grayFrame, meanDiff } from './helpers.mjs';
 
@@ -12,7 +12,7 @@ const skip = !hasBrowser || !hasFfmpeg ? 'needs Playwright Chromium and ffmpeg' 
 
 test('the demo builds into a correct edited video', { skip, timeout: 300000 }, async () => {
   const dir = await prepareDemo(tmpDir('dva-demo-'));
-  await build(dir, { log: () => {} });
+  await render(dir, { log: () => {} });
 
   const source = await probe(path.join(dir, 'demo.mp4'));
   const edited = await probe(path.join(dir, 'edited.mp4'));
@@ -56,7 +56,7 @@ test('build refuses to render an edit list with errors', { skip }, async () => {
   const dir = await prepareDemo(tmpDir('dva-bad-'));
   const edits = path.join(dir, 'edits.yaml');
   fs.writeFileSync(edits, fs.readFileSync(edits, 'utf8').replace('gap: said-not-shown', 'gap: looks-cool'));
-  await assert.rejects(build(dir, { log: () => {} }), /edits\.yaml has errors/);
+  await assert.rejects(render(dir, { log: () => {} }), /edits\.yaml has errors/);
   assert.ok(!fs.existsSync(path.join(dir, 'edited.mp4')));
   assert.match(fs.readFileSync(path.join(dir, 'report.md'), 'utf8'), /✗ cue-2 \[gap-test\]/);
 });
@@ -64,6 +64,6 @@ test('build refuses to render an edit list with errors', { skip }, async () => {
 test('an edit list with no edits hands back the original file untouched', { skip, timeout: 120000 }, async () => {
   const dir = await prepareDemo(tmpDir('dva-none-'));
   fs.writeFileSync(path.join(dir, 'edits.yaml'), 'video: demo.mp4\nobjectives:\n  - Find the TTL\ncuts: []\ncues: []\ncaptions:\n  burn: false\n');
-  await build(dir, { log: () => {} });
+  await render(dir, { log: () => {} });
   assert.ok(fs.readFileSync(path.join(dir, 'edited.mp4')).equals(fs.readFileSync(path.join(dir, 'demo.mp4'))));
 });

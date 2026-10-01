@@ -19,6 +19,7 @@ Requirements: Node 22+, ffmpeg, and a transcription key in `.env` (copy `.env.ex
 ```bash
 npm install
 cp .env.example .env   # add one provider key
+npm run doctor         # checks Node, ffmpeg, Chromium and the key
 npm run demo        # synthetic recording, end to end → out/demo/edited.mp4, report.md, preview/*.gif
 npm test
 ```
@@ -34,7 +35,7 @@ Then open Claude Code in this repo and say:
 | `.claude/skills/animate-video/SKILL.md` | The whole flow, and how to suggest well |
 | `editorial/STANDARD.md` | One page on what makes an animation worth adding |
 | `templates/` | anime.js templates, the theme, and the stage they render on |
-| `scripts/` | `ingest` (transcribe + frames), `validate`, `build` (render, compose, captions, previews, report), `demo` |
+| `scripts/` | `doctor`, `ingest` (transcribe + frames), `validate`, `render` (overlays, compose, captions, previews, report), `site` (static review page for Vercel), `demo` |
 | `lib/` | timeline maths, validation, captions, ffmpeg helpers |
 | `examples/demo/edits.yaml` | Reference edit list |
 | `videos/` | Upload recordings here |

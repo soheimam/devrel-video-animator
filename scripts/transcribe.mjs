@@ -19,11 +19,17 @@ import { fromAiSdk, fromOpenAI, fromSubtitles, toMarkdown } from '../lib/transcr
 import { ROOT } from '../lib/paths.js';
 import { isMain, parseArgs } from '../lib/cli.js';
 
-try {
-  process.loadEnvFile(path.join(ROOT, '.env'));
-} catch {
-  // no .env: rely on the environment
+// Reads .env from the repo root into process.env (values already set win). Safe to call twice.
+export function loadEnv() {
+  const file = path.join(ROOT, '.env');
+  if (!fs.existsSync(file)) return;
+  if (typeof process.loadEnvFile === 'function') return process.loadEnvFile(file);
+  for (const line of fs.readFileSync(file, 'utf8').split('\n')) {
+    const m = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/.exec(line);
+    if (m && !line.trim().startsWith('#') && process.env[m[1]] === undefined) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
+  }
 }
+loadEnv();
 
 export const PROVIDERS = {
   openai: {

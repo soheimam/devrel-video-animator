@@ -16,7 +16,7 @@ A DevRel engineer records a video. The AI transcribes it and **suggests where an
 ## What exists
 
 - **Templates** (anime.js): callout, term-definition, step-list, flow-diagram, comparison, highlight-region, code-focus; zoom is done in ffmpeg. Rendered deterministically in headless Chromium, composited by ffmpeg.
-- **Scripts:** `ingest`, `frames`, `validate`, `build` (render → compose → captions → GIF previews → report), `demo`.
+- **Scripts:** `doctor`, `ingest`, `frames`, `validate`, `render` (overlays → compose → captions → GIF previews → report), `site`, `demo`.
 - **Captions:** word-timed from the transcript, following the cuts, burned in plus SRT/VTT.
 - **Validation:** only what prevents broken renders: schema, overlapping cues, a cue across a cut, text in the caption zone, reading time, numbers that aren't in the narration.
 - **One skill** (`.claude/skills/animate-video/SKILL.md`) and one page of taste (`editorial/STANDARD.md`).
