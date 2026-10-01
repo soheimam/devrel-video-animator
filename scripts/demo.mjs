@@ -9,7 +9,7 @@ import path from 'node:path';
 import { FFMPEG, run, probe } from '../lib/ffmpeg.js';
 import { writeJson } from '../lib/files.js';
 import { ROOT } from '../lib/paths.js';
-import { build } from './build.mjs';
+import { render } from './render.mjs';
 import { isMain } from '../lib/cli.js';
 
 const W = 1280;
@@ -55,7 +55,7 @@ export async function prepareDemo(outDir) {
 if (isMain(import.meta.url)) {
   const outDir = process.argv[2] || path.join(ROOT, 'out', 'demo');
   prepareDemo(outDir)
-    .then(() => build(outDir))
+    .then(() => render(outDir))
     .then(() => console.log(`\nDone. Watch ${path.join(outDir, 'edited.mp4')} and read ${path.join(outDir, 'report.md')}`))
     .catch((e) => {
       console.error(e.message);

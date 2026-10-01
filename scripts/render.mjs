@@ -2,7 +2,7 @@
 // Renders edits.yaml into the finished video:
 // validate → render overlays → compose (with captions) → GIF previews → report.
 //
-// Usage: node scripts/build.mjs out/<video>
+// Usage: node scripts/render.mjs out/<video>
 import path from 'node:path';
 import fs from 'node:fs';
 import { validateDir, printIssues } from './validate.mjs';
@@ -12,7 +12,7 @@ import { writeReport } from './report.mjs';
 import { makePreviews } from './previews.mjs';
 import { isMain } from '../lib/cli.js';
 
-export async function build(outDir, { log = console.log } = {}) {
+export async function render(outDir, { log = console.log } = {}) {
   log('validate');
   const validation = validateDir(outDir);
   printIssues(validation, log);
@@ -33,7 +33,7 @@ export async function build(outDir, { log = console.log } = {}) {
 if (isMain(import.meta.url)) {
   const outDir = process.argv[2];
   if (!outDir || !fs.existsSync(path.join(outDir, 'edits.yaml'))) {
-    console.error('Usage: node scripts/build.mjs out/<video>   (needs out/<video>/edits.yaml)');
+    console.error('Usage: node scripts/render.mjs out/<video>   (needs out/<video>/edits.yaml)');
     process.exit(2);
   }
   build(outDir).catch((e) => {
