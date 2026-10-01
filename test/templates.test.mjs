@@ -16,6 +16,11 @@ const SAMPLES = {
   'step-list': { params: { title: 'Deploy', steps: ['Build', { text: 'Upload', at: 11.2 }, 'Verify'] } },
   'flow-diagram': { params: { nodes: ['Client', { label: 'Edge', at: 10.9 }, 'Origin'], trace: true } },
   comparison: { params: { left: { title: 'Before', items: ['3 round trips'] }, right: { title: 'After', items: ['1 round trip'], at: 11.0 } } },
+  slide: { params: { title: 'Validity Transactions', columns: [
+    { heading: 'Sign & send', pill: 'Swap 1 ETH → USDC', lines: ['Signed with conditions', { mono: 'POOL PRICE ≥ 4,000' }] },
+    { heading: 'Wait', lines: ['Sequencer checks the conditions'], at: 11.2, note: 'No polling. No resending.' },
+    { heading: 'Included', pill: 'INCLUDED', lines: ['Only while valid'], at: 12.4 },
+  ] } },
 };
 
 const skip = !hasBrowser || !hasFfmpeg ? 'needs Playwright Chromium and ffmpeg' : false;
@@ -87,7 +92,7 @@ test('reveals follow their timecodes', { skip }, async () => {
     return Number(getComputedStyle(document.querySelectorAll('.step')[1]).opacity);
   }, ms);
   assert.equal(await opacityOfStep2(1900), 0, 'step 2 hidden before its word at 12.0s');
-  assert.equal(await opacityOfStep2(2400), 1, 'step 2 fully in 400ms after its word');
+  assert.equal(await opacityOfStep2(2600), 1, 'step 2 fully in 600ms after its word');
   await page.close();
 });
 

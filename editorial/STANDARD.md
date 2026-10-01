@@ -1,5 +1,7 @@
 # What makes an animation worth adding
 
+How it should *look* is in `STYLE.md`. This page is about *when*.
+
 The test for every suggestion: **would a viewer understand or find something they otherwise wouldn't?** If yes, suggest it. If it's only there to look lively, don't. The reviewer makes the final call, so when in doubt, suggest and say why you doubt.
 
 ## Where animations help

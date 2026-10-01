@@ -11,7 +11,7 @@ export function build(ctx) {
   const list = el('ol', 'steps');
   const rows = params.steps.map((s, i) => {
     const row = el('li', 'step');
-    row.append(el('span', 'badge', String(i + 1)), el('span', '', typeof s === 'string' ? s : s.text));
+    row.append(el('span', 'num', `${String(i + 1).padStart(2, '0')} /`), el('span', '', typeof s === 'string' ? s : s.text));
     list.append(row);
     return row;
   });
@@ -24,7 +24,7 @@ export function build(ctx) {
   appear(tl, panel, 0, { y: 0 });
   let prev = null;
   params.steps.forEach((s, i) => {
-    const t = at(typeof s === 'string' ? undefined : s.at, 200 + i * STEP);
+    const t = at(typeof s === 'string' ? undefined : s.at, 300 + i * STEP);
     appear(tl, rows[i], t);
     if (prev) tl.add(prev, { opacity: [1, 0.5], duration: ENTER }, t);
     prev = rows[i];

@@ -18,20 +18,21 @@ const contrast = (a, b) => {
   return (hi + 0.05) / (lo + 0.05);
 };
 
-test('text colours meet the contrast minimum on panels', () => {
-  const panel = token('panel-bg');
-  for (const name of ['text', 'text-muted', 'accent']) {
-    const ratio = contrast(token(name), panel);
-    assert.ok(ratio >= rules.theme.min_contrast, `--${name} is ${ratio.toFixed(2)}:1 on the panel`);
+test('text colours meet the contrast minimum on cards', () => {
+  const card = token('card');
+  for (const name of ['ink', 'ink-2', 'blue']) {
+    const ratio = contrast(token(name), card);
+    assert.ok(ratio >= rules.theme.min_contrast, `--${name} is ${ratio.toFixed(2)}:1 on the card`);
   }
 });
 
-test('the accent badge text is readable on the accent colour', () => {
-  assert.ok(contrast(token('panel-bg'), token('accent')) >= rules.theme.min_contrast);
+test('white text is readable on Base Blue (pills and the slide header)', () => {
+  assert.ok(contrast('#ffffff', token('blue')) >= rules.theme.min_contrast);
+  assert.equal(token('blue').toLowerCase(), '#0000ff', 'Base Blue is the accent');
 });
 
 test('type sizes are at or above the phone-readable minimum', () => {
-  for (const name of ['fs-title', 'fs-body', 'fs-label']) {
+  for (const name of ['fs-title', 'fs-body', 'fs-label', 'fs-mono']) {
     const px = Number(new RegExp(`--${name}:\\s*(\\d+)px`).exec(css)[1]);
     assert.ok(px >= rules.layout.min_font_px, `--${name} is ${px}px`);
   }

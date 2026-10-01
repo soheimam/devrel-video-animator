@@ -1,8 +1,8 @@
 // Shared motion vocabulary. Restraint is the point: short entrances, one easing family,
 // no bounce, no loops. Motion should mean something (appearing = new, direction = flow).
-export const ENTER = 300;
-export const EXIT = 250;
-export const STEP = 650;
+export const ENTER = 450;
+export const EXIT = 300;
+export const STEP = 900;
 export const EASE = 'outCubic';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -37,7 +37,7 @@ export function fadeIn(tl, target, at, duration = ENTER) {
 }
 
 // Draws an SVG stroke from its start, like a pen.
-export function draw(tl, path, at, duration = 450) {
+export function draw(tl, path, at, duration = 600) {
   const len = path.getTotalLength();
   path.style.strokeDasharray = `${len}`;
   path.style.strokeDashoffset = `${len}`;
