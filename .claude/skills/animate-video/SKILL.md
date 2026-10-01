@@ -43,7 +43,7 @@ Then go through the video and ask, every 20–30 seconds: **what would a viewer 
 Rules of thumb:
 - **Prefer visible overlays** (callout, term card, step-list, diagram) to crops. A zoom alone leaves the video looking unedited.
 - **Time to the word.** Start a cue 0.1–0.3s before the word it relates to (`transcript.json` has every word).
-- **Wording comes from the screen or the narration.** Never invent a fact or a number; quote what's there.
+- **Wording comes from the screen or the narration.** Never invent a fact or a number; quote what's there. A number that is on screen but never spoken needs `source: screen` on the cue (the validator otherwise checks numbers against the transcript).
 - **Keep clear of** the webcam bubble, the bottom 15% (captions), and whatever is being discussed. Pick anchors and panel positions from the grid frames.
 - **Don't stack zooms** on footage the recorder already zoomed (look for sudden scale changes between frames).
 - **Cuts** remove only silence and mistakes, never content. Keep ~0.4s either side of a cut so the pacing breathes. Put boundaries in silence.

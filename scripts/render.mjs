@@ -36,7 +36,7 @@ if (isMain(import.meta.url)) {
     console.error('Usage: node scripts/render.mjs out/<video>   (needs out/<video>/edits.yaml)');
     process.exit(2);
   }
-  build(outDir).catch((e) => {
+  render(outDir).catch((e) => {
     console.error(e.message);
     process.exit(1);
   });
