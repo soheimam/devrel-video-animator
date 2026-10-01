@@ -65,7 +65,7 @@ cues:
 
   - id: beat-4
     at: 00:56.9                      # "hard fork features go live on VibeNet… weeks prior to Sepolia or Mainnet"
-    duration: 9.4s
+    duration: 12.5s
     template: slide
     params:
       title: "Hard fork features go live"
@@ -82,7 +82,7 @@ cues:
       summary: "VIBENET → SEPOLIA → MAINNET"
     gap: said-not-shown
     objective: 1
-    rationale: "The order she describes, never drawn. Slide in the style of reference 1; columns land on 'Sepolia' and 'Mainnet', the takeaway last. Ends as she finishes 'months prior'."
+    rationale: "The order she describes, never drawn. Slide in the style of reference 1; columns land on 'Sepolia' and 'Mainnet', the takeaway last. Stays through 'months prior' and the start of the Denim example, so the takeaway has time to be read (reviewer: it left too quickly)."
 
   - id: beat-5
     at: 01:11.8                      # "Denim… 200 millisecond blocks… test 200 millisecond blocks today… on VibeNet"

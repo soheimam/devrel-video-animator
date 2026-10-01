@@ -2,7 +2,7 @@
 // overshoot, so elements arrive with weight instead of fading in flat. No elastic bounce,
 // no loops. Motion should mean something (appearing = new, direction = flow).
 export const ENTER = 550;
-export const EXIT = 300;
+export const EXIT = 340;
 export const STEP = 900;
 export const EASE = 'outQuint';          // fast start, long settle
 export const EASE_SETTLE = 'outBack(1.2)'; // slight overshoot for cards and nodes

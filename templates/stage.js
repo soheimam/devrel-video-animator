@@ -30,7 +30,18 @@ window.stage = {
 
     const ctx = { root, params, anchor, tl, design, layout, durationMs, at };
     mod.build(ctx);
-    tl.add(root, { opacity: [1, 0], duration: EXIT, ease: 'inQuad' }, durationMs - EXIT);
+    // The exit (editorial/MOTION.md): everything eases out together, with a small drift so it
+    // leaves rather than switches off. Overlays settle down and away; a slide's content lifts.
+    const exitAt = durationMs - EXIT;
+    tl.add(root, { opacity: [1, 0], duration: EXIT, ease: 'inQuad' }, exitAt);
+    for (const child of root.children) {
+      if (child.classList.contains('slide')) {
+        const parts = child.querySelectorAll('.slide-cols, .slide-summary');
+        if (parts.length) tl.add(parts, { translateY: [0, -12], duration: EXIT, ease: 'inQuad' }, exitAt);
+      } else if (!(child instanceof SVGElement)) {
+        tl.add(child, { translateY: [0, 10], scale: [1, 0.985], duration: EXIT, ease: 'inQuad' }, exitAt);
+      }
+    }
     tl.seek(0);
     this.tl = tl;
     this.ctx = ctx;

@@ -13,7 +13,7 @@ The plan of record for this video. Round 1 (PR #18): twelve beats and two cuts, 
 | 1 | 0:14–0:21 | "what is a hard fork… changes how the chain works or introduces brand new features" | Card: **Hard fork** / "Changes how the chain works, or adds new features" | Question asked, answered in her words |
 | 2 | 0:24–0:30 | "upgraded to Cobalt… B20 tokens and also validity transactions" | Step-list **Cobalt brought**: B20 tokens · Validity transactions, lines on the words | Two features named once; fills the pause, cut-1 closes it |
 | 3 | 0:51–0:56 | "Vibenet is experimental preview network" | Card: **Vibenet** / "Base's experimental preview network" | The definition at the moment it is given |
-| 4 | 0:57–1:06 | "features go live on Vibenet… weeks prior to Sepolia or Mainnet" | **Slide**: 01 Vibenet FIRST · 02 Sepolia · 03 Mainnet, takeaway `[ VIBENET → SEPOLIA → MAINNET ]` | The order she describes, never drawn |
+| 4 | 0:57–1:09 | "features go live on Vibenet… weeks prior to Sepolia or Mainnet" | **Slide**: 01 Vibenet FIRST · 02 Sepolia · 03 Mainnet, takeaway `[ VIBENET → SEPOLIA → MAINNET ]` | The order she describes, never drawn |
 | 5 | 1:12–1:23 | "Denim… 200 millisecond blocks… test 200 millisecond blocks today on Vibenet" | Comparison: **Denim (next hard fork)** 200 ms blocks · **Vibenet** 200 ms blocks: test today | Her example is a contrast |
 | 6 | 1:25–1:38 | "point it at the Vibenet RPC… deploy… check your indexes… user flows" | Step-list **Test your own app**, four lines on the words | A checklist spoken quickly over a static page |
 | 7 | 1:40–1:44 | "how 8130 can improve your user experience" | Callout **EIP-8130 · Accounts** on the page's "New! EIP-8130" banner | Ties the number to the 13 px banner that names it |

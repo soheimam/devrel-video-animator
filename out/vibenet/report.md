@@ -17,7 +17,7 @@ What the agents understood this video to teach. Every edit serves one of these.
 | beat-1 | 00:03.2 | 00:03.8 | term-definition | **Base hard forks**: What changes for your app, and how early you can test | said-once-then-gone | 1 | The framing of the whole video, in her own words (0:10–0:18), shown as she names the topic. |
 | beat-2 | 00:26.0 | 00:26.6 | term-definition | **Vibenet**: Base's experimental preview network | said-once-then-gone | 1 | The definition, quoted from the narration, at the moment it is given. |
 | beat-3 | 00:31.0 | 00:31.6 | slide |  | said-not-shown | 1 | She describes the order in words over a static page. STYLE.md: an idea that needs a diagram gets a slide, in the style of reference 1 (three numbered steps, one pill, a takeaway line). Columns land on 'Sepolia' and 'Mainnet'; the takeaway lands last. Replaces the round-3 flow overlay that sat against the browser chrome. |
-| beat-4 | 00:39.3 | 00:39.9 | comparison | Vibenet vs Sepolia | relationship-not-visible | 1 | Her concrete example is a contrast between two networks; the right column appears when she gets to Sepolia. Ends exactly at cut-2. |
+| beat-4 | 00:42.2 | 00:42.8 | comparison | Vibenet vs Sepolia | relationship-not-visible | 1 | Her concrete example is a contrast between two networks; the right column appears when she gets to Sepolia. Starts after the slide, which now stays long enough for its takeaway to be read. |
 | beat-5 | 00:54.8 | 00:55.4 | step-list | Chain ID 84538453 → RPC rpc.vibes.base.org → Test funds: Faucet (sidebar) | said-not-shown | 2 | She says to point your app at Vibenet; the values you need are 14 px text in the Connect panel. Quoted from the screen. |
 | beat-6 | 01:05.5 | 01:06.1 | step-list | Timing assumptions → RPC responses → Gaps or missing events | said-once-then-gone | 2 | A checklist spoken quickly over a static page; the list builds on each item and stays up while she finishes the thought. |
 | beat-7 | 01:45.3 | 01:45.9 | callout | “EIP-8130 · Accounts” | shown-not-findable | 3 | She says the EIP number and tells viewers to click Accounts; the callout ties the two together on the card she is pointing at. |
@@ -41,7 +41,7 @@ What the agents understood this video to teach. Every edit serves one of these.
 
 ![beat-3](preview/beat-3.gif)
 
-**beat-4** · comparison · 00:39.3
+**beat-4** · comparison · 00:42.2
 
 ![beat-4](preview/beat-4.gif)
 
