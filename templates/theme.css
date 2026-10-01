@@ -1,97 +1,131 @@
-/* Brand theme. Every overlay reads its colours, type and spacing from here, so a
-   rebrand is a one-file change. Sizes are design pixels (short side = 1080). */
+/* Base theme (editorial/STYLE.md). Light, flat, one accent. Sizes are design pixels
+   (short side = 1080). Swap --font-sans for the brand typeface when available. */
 :root {
-  --font-sans: "Inter", "Segoe UI", "Helvetica Neue", "Liberation Sans", "DejaVu Sans", Arial, sans-serif;
-  --font-mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  --font-sans: "Inter", "Helvetica Neue", "Liberation Sans", "DejaVu Sans", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", "DejaVu Sans Mono", monospace;
 
-  --panel-bg: #0f1117;          /* text sits on solid panels: contrast never depends on the video */
-  --panel-bg-alpha: 0.94;
-  --panel-border: #2a2f3a;
-  --text: #f5f7fa;
-  --text-muted: #b8c0cc;
-  --accent: #8ab4ff;            /* the one colour that means "look here" */
-  --accent-soft: #1e2a44;
-  --dim: #000000;
-  --dim-opacity: 0.62;
+  --blue: #0000ff;              /* Base Blue: the one accent */
+  --ink: #0a0b0d;               /* Gray 100 */
+  --ink-2: #5b616e;             /* Gray 60 */
+  --rule: #dee1e7;              /* Gray 15 */
+  --card: #ffffff;
+  --field: #ffffff;
+  --dim: #0a0b0d;
+  --dim-opacity: 0.55;
 
   --fs-title: 52px;
-  --fs-body: 40px;
-  --fs-label: 36px;
-  --radius: 16px;
+  --fs-body: 38px;
+  --fs-label: 34px;
+  --fs-mono: 32px;
+  --radius: 12px;
   --pad: 28px;
-  --stroke: 5px;
+  --stroke: 4px;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  overflow: hidden;
-}
+html, body { margin: 0; padding: 0; background: transparent; overflow: hidden; }
 
 #root {
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   font-family: var(--font-sans);
-  color: var(--text);
+  color: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
 
 .layer { position: absolute; left: 0; top: 0; overflow: visible; }
 
+/* The card: white, thin blue border. */
 .panel {
   position: absolute;
   box-sizing: border-box;
   padding: var(--pad) calc(var(--pad) * 1.2);
-  background: rgb(15 17 23 / var(--panel-bg-alpha));
-  border: 2px solid var(--panel-border);
+  background: var(--card);
+  border: 2px solid var(--blue);
   border-radius: var(--radius);
-  box-shadow: 0 12px 40px rgb(0 0 0 / 0.35);
+  box-shadow: 0 8px 28px rgb(10 11 13 / 0.12);
   font-size: var(--fs-body);
-  line-height: 1.25;
+  line-height: 1.3;
   max-width: 760px;
 }
 
 .label { font-size: var(--fs-label); font-weight: 600; }
-.title { font-size: var(--fs-title); font-weight: 700; line-height: 1.1; }
-.muted { color: var(--text-muted); }
-.mono { font-family: var(--font-mono); }
+.title { font-size: var(--fs-title); font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; }
+.muted { color: var(--ink-2); }
+.mono { font-family: var(--font-mono); font-size: var(--fs-mono); letter-spacing: 0.04em; }
+.kicker { font-family: var(--font-mono); font-size: var(--fs-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); }
+
+/* Blue pill: the headline of a card. */
+.pill {
+  display: inline-block;
+  padding: 10px 26px;
+  border-radius: 999px;
+  background: var(--blue);
+  color: #fff;
+  font-weight: 600;
+  font-size: var(--fs-label);
+  line-height: 1.2;
+}
+.chip {
+  display: inline-block;
+  padding: 4px 18px;
+  border: 2px solid var(--blue);
+  border-radius: 999px;
+  color: var(--blue);
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: 0.06em;
+}
 
 /* callout */
-.leader { stroke: var(--accent); stroke-width: var(--stroke); fill: none; stroke-linecap: round; }
-.dot { fill: var(--accent); }
-.ring { fill: none; stroke: var(--accent); stroke-width: 4px; }
+.leader { stroke: var(--blue); stroke-width: var(--stroke); fill: none; stroke-linecap: round; }
+.dot { fill: var(--blue); }
+.ring { fill: none; stroke: var(--blue); stroke-width: 3px; }
 
 /* highlight-region / code-focus */
-.outline { fill: none; stroke: var(--accent); stroke-width: var(--stroke); }
-.outline-thin { fill: none; stroke: var(--accent); stroke-width: 3px; }
+.outline { fill: none; stroke: var(--blue); stroke-width: var(--stroke); }
+.outline-thin { fill: none; stroke: var(--blue); stroke-width: 3px; }
 .dim { fill: var(--dim); fill-opacity: var(--dim-opacity); fill-rule: evenodd; }
 
-/* term-definition */
-.term-panel { padding-left: calc(var(--pad) * 1.6); }
-.term-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: var(--accent);
-  border-radius: var(--radius) 0 0 var(--radius); transform-origin: top; }
-.term { font-size: var(--fs-title); font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+/* term-definition: pill headline, gloss below */
+.term-panel { padding-top: calc(var(--pad) * 0.8); }
+.term { margin-bottom: 14px; }
+.gloss { color: var(--ink); }
 
-/* step-list */
-.steps { list-style: none; margin: 16px 0 0; padding: 0; }
-.step { display: flex; align-items: baseline; gap: 18px; margin-top: 14px; }
-.badge { flex: none; width: 52px; height: 52px; border-radius: 50%; background: var(--accent);
-  color: var(--panel-bg); font-weight: 800; font-size: var(--fs-label); display: flex;
-  align-items: center; justify-content: center; transform: translateY(6px); }
+/* step-list: "01 /" numbering */
+.steps { list-style: none; margin: 14px 0 0; padding: 0; }
+.step { display: flex; align-items: baseline; gap: 18px; margin-top: 16px; }
+.num { flex: none; font-family: var(--font-mono); font-size: var(--fs-mono); color: var(--blue); letter-spacing: 0.06em; }
 
-/* flow-diagram */
-.flow { display: flex; align-items: center; gap: 0; margin-top: 12px; }
+/* flow-diagram: outlined nodes, blue arrows */
+.flow { display: flex; align-items: center; gap: 0; margin-top: 14px; }
 .flow.down { flex-direction: column; }
-.node { padding: 18px 26px; border: 3px solid var(--accent); border-radius: 12px;
-  background: var(--accent-soft); font-weight: 700; font-size: var(--fs-label); white-space: nowrap; }
+.node { padding: 16px 26px; border: 2px solid var(--blue); border-radius: 10px; background: var(--card);
+  color: var(--ink); font-weight: 600; font-size: var(--fs-label); white-space: nowrap; }
 .arrow { flex: none; overflow: visible; }
-.arrow path { stroke: var(--text-muted); stroke-width: 4px; fill: none; stroke-linecap: round; }
-.arrow .head { fill: var(--text-muted); stroke: none; }
+.arrow path { stroke: var(--blue); stroke-width: 3px; fill: none; stroke-linecap: round; }
+.arrow .head { fill: none; stroke: var(--blue); stroke-width: 3px; stroke-linejoin: round; }
 
 /* comparison */
 .compare { display: flex; gap: 40px; }
 .column { min-width: 300px; }
 .column ul { margin: 12px 0 0; padding-left: 1.1em; }
 .column li { margin-top: 10px; }
-.divider { width: 3px; background: var(--panel-border); align-self: stretch; }
+.divider { width: 2px; background: var(--rule); align-self: stretch; }
+
+/* slide: full-frame explainer */
+.slide { position: absolute; inset: 0; background: var(--field); box-sizing: border-box;
+  display: flex; flex-direction: column; justify-content: center; padding: 150px 0 160px; }  /* content centred between header and caption band */
+.slide-head { position: absolute; left: 0; right: 0; top: 0; height: 150px; background: var(--blue); color: #fff;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 72px; box-sizing: border-box; }
+.slide-title { font-size: 64px; font-weight: 700; letter-spacing: -0.01em; }
+.wordmark { display: flex; align-items: center; gap: 12px; font-size: 44px; font-weight: 600; letter-spacing: -0.02em; }
+.wordmark .sq { width: 26px; height: 26px; background: #fff; border-radius: 3px; display: inline-block; }
+.slide-cols { position: relative; margin: 0 72px; display: grid; gap: 56px; }
+.slide-col .kicker { color: var(--ink); font-family: var(--font-sans); text-transform: none; letter-spacing: -0.01em; font-size: 44px; font-weight: 600; margin-bottom: 28px; }
+.slide-col .kicker b { color: var(--ink); font-weight: 600; }
+.slide-col .card { border: 2px solid var(--blue); border-radius: var(--radius); padding: 40px 40px; background: var(--card); }
+.slide-col .card .pill { margin-bottom: 22px; font-size: 38px; }
+.slide-col .line { font-size: 44px; line-height: 1.3; margin-top: 10px; }
+.slide-col .line.mono { color: var(--blue); }
+.slide-note { font-size: var(--fs-body); color: var(--ink); margin-top: 28px; }
+.slide-summary { position: relative; margin: 72px 72px 0; text-align: center;   /* under the cards, clear of the caption band */
+  font-family: var(--font-mono); font-size: 40px; letter-spacing: 0.08em; color: var(--blue); }

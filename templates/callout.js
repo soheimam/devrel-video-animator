@@ -42,6 +42,6 @@ export function build(ctx) {
   // One ring pulse to pull the eye to the point. Once, never looping.
   hidden(ring);
   tl.add(ring, { r: [12, 46], opacity: [0.9, 0], duration: 700, ease: 'outQuad' }, 0);
-  draw(tl, leader, 120, 300);
-  appear(tl, label, 320);
+  draw(tl, leader, 120, 380);
+  appear(tl, label, 380, { y: 12 });
 }

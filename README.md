@@ -33,7 +33,7 @@ Then open Claude Code in this repo and say:
 | Path | What it is |
 |---|---|
 | `.claude/skills/animate-video/SKILL.md` | The whole flow, and how to suggest well |
-| `editorial/STANDARD.md` | One page on what makes an animation worth adding |
+| `editorial/` | `STANDARD.md` (when a visual helps), `STYLE.md` (the Base look, with references), `MOTION.md` (the animation principles) |
 | `templates/` | anime.js templates, the theme, and the stage they render on |
 | `scripts/` | `doctor`, `ingest` (transcribe + frames), `validate`, `render` (overlays, compose, captions, previews, report), `site` (static review page for Vercel), `demo` |
 | `lib/` | timeline maths, validation, captions, ffmpeg helpers |

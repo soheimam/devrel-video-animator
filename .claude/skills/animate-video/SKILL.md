@@ -41,12 +41,14 @@ Then go through the video and ask, every 20–30 seconds: **what would a viewer 
 | Dead air, a false start, a long wait, the tail after the sign-off | a cut |
 
 Rules of thumb:
-- **Prefer visible overlays** (callout, term card, step-list, diagram) to crops. A zoom alone leaves the video looking unedited.
-- **Time to the word.** Start a cue 0.1–0.3s before the word it relates to (`transcript.json` has every word).
-- **Wording comes from the screen or the narration.** Never invent a fact or a number; quote what's there.
+- **Follow `editorial/STYLE.md`** (Base look: white cards, one blue, mono labels, `01 /` numbering, equal boxes) `editorial/MOTION.md` (how things move) and `editorial/STANDARD.md` (when a visual helps). Before designing a slide, a flow or a comparison, **open the three reference images in `editorial/references/`** and match them: same density, same shapes, same restraint.
+- **Prefer visible overlays** (callout, term card, step-list, diagram) to crops. A zoom alone leaves the video looking unedited. When the idea needs a real diagram (a flow, a timeline, a before/after), use a `slide`: a full-frame explainer that replaces the recording for a few seconds.
+- **Write the word's time, not an earlier one.** `at` and every reveal `at` are the exact time of the word they belong to (`transcript.json`). The renderer starts each element 0.25s earlier so it has landed when the word is said. Same lead everywhere, by construction.
+- **An animation that fills a pause owns the pause.** If a cue plays during dead air, add a cut from about 0.4s after the cue ends to the next word, so the pause ends with the animation instead of hanging. If the pause is shorter than the cue, there's nothing to cut.
+- **Wording comes from the screen or the narration.** Never invent a fact or a number; quote what's there. A number that is on screen but never spoken needs `source: screen` on the cue (the validator otherwise checks numbers against the transcript).
 - **Keep clear of** the webcam bubble, the bottom 15% (captions), and whatever is being discussed. Pick anchors and panel positions from the grid frames.
 - **Don't stack zooms** on footage the recorder already zoomed (look for sudden scale changes between frames).
-- **Cuts** remove only silence and mistakes, never content. Keep ~0.4s either side of a cut so the pacing breathes. Put boundaries in silence.
+- **Cuts** remove only silence and mistakes, never content. **A gap in the transcript is not a pause**: transcribers drop whole sentences. Before proposing a cut, measure it (`ffmpeg -ss <start> -t <len> -i <video> -af volumedetect -f null -`); speech sits around −15 to −25 dB, silence below −32. The validator refuses cuts that contain sound. Keep ~0.4s either side of a cut so the pacing breathes.
 - **Captions** are on by default; set `captions: { avoid: { x, y, w, h } }` to keep them clear of a webcam in the bottom corner.
 
 Put ideas you considered and left out under `rejected:` with the reason, so the reviewer sees your thinking. Add a one-line `rationale` to every suggestion, and say in it when timing or wording is a guess.
@@ -65,6 +67,7 @@ Templates and their params:
 | `step-list` | `title?`, `steps: [text \| {text, at}]` | optional `anchor`; default top-right |
 | `flow-diagram` | `title?`, `nodes: [label \| {label, at}]`, `direction?`, `trace?` | optional `anchor`; default top-right |
 | `comparison` | `left {title, items[]}`, `right {title, items[], at?}` | optional `anchor`; default top-left |
+| `slide` | `title`, `columns: [{ heading, pill?, lines?: [text \| {mono}], note?, at? }]` (up to 3), `summary?` (the bracketed takeaway, e.g. `SIGN → WAIT → INCLUDE`) | full frame; replaces the recording while it's up |
 
 ## 3. Render and show
 

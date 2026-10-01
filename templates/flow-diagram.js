@@ -2,9 +2,9 @@
 // Arrows draw in the direction of flow; nodes appear as they are mentioned.
 // params: { title?, nodes: [ "label" | { label, at? } ], direction?: "right" | "down", trace? }
 // cue.anchor (optional): top-left of the panel.
-import { el, svgEl, appear, draw, fadeIn, place, corner, ENTER } from './motion.js';
+import { el, svgEl, appear, draw, fadeIn, place, corner, equalize, ENTER } from './motion.js';
 
-const HOP = 700;
+const HOP = 900;
 
 export function build(ctx) {
   const { root, params, anchor, tl, at } = ctx;
@@ -27,7 +27,7 @@ export function build(ctx) {
       });
       const head = svgEl('path', {
         class: 'head',
-        d: down ? `M10 ${h - 18} L20 ${h - 4} L30 ${h - 18}Z` : `M${w - 20} 10 L${w - 4} 20 L${w - 20} 30Z`,
+        d: down ? `M11 ${h - 15} L20 ${h - 5} L29 ${h - 15}` : `M${w - 18} 11 L${w - 7} 20 L${w - 18} 29`,
       });
       svg.append(line, head);
       flow.append(svg);
@@ -38,19 +38,21 @@ export function build(ctx) {
     nodes.push(node);
   });
   root.append(panel);
+  equalize(nodes);
+  for (const n of nodes) n.style.textAlign = 'center';
 
   if (anchor) place(panel, anchor, ctx);
   else corner(panel, ctx, 'top-right');
 
-  appear(tl, panel, 0, { y: 0 });
+  appear(tl, panel, 0);
   let last = 0;
   params.nodes.forEach((n, i) => {
-    const t = Math.max(at(typeof n === 'string' ? undefined : n.at, 200 + i * HOP), i ? last + 350 : 0);
+    const t = Math.max(at(typeof n === 'string' ? undefined : n.at, 300 + i * HOP), i ? last + 500 : 0);
     if (i > 0) {
-      draw(tl, arrows[i - 1].line, t - 300, 300);
-      fadeIn(tl, arrows[i - 1].head, t - 60, 120);
+      draw(tl, arrows[i - 1].line, t - 450, 400);
+      fadeIn(tl, arrows[i - 1].head, t - 80, 160);
     }
-    appear(tl, nodes[i], t, { y: 0 });
+    appear(tl, nodes[i], t, { y: 10, scale: 0.9 });
     last = t;
   });
 
@@ -58,11 +60,11 @@ export function build(ctx) {
   // a request takes.
   if (params.trace) {
     const base = getComputedStyle(nodes[0]).backgroundColor;
-    const lit = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+    const lit = getComputedStyle(document.documentElement).getPropertyValue('--blue').trim();
     let t = last + ENTER + 200;
     for (const node of nodes) {
-      tl.add(node, { backgroundColor: [base, lit], color: ['#f5f7fa', '#0f1117'], duration: 220 }, t);
-      tl.add(node, { backgroundColor: [lit, base], color: ['#0f1117', '#f5f7fa'], duration: 320 }, t + 260);
+      tl.add(node, { backgroundColor: [base, lit], color: ['#0a0b0d', '#ffffff'], duration: 260 }, t);
+      tl.add(node, { backgroundColor: [lit, base], color: ['#ffffff', '#0a0b0d'], duration: 360 }, t + 300);
       t += 380;
     }
   }

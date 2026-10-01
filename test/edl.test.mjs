@@ -91,6 +91,21 @@ describe('validation: the gap test and explanations', () => {
   });
 });
 
+describe('timing lead', () => {
+  test('cues start a lead before the word they are written for', () => {
+    const [cue] = normalizeEdl({ cues: [{ id: 'c', at: '00:10.0', duration: '4s' }] }, 0.25).cues;
+    assert.equal(cue.at_seconds, 10);
+    assert.ok(Math.abs(cue.start - 9.75) < 1e-9);
+    assert.ok(Math.abs(cue.end - 13.75) < 1e-9);
+    assert.equal(normalizeEdl({ cues: [{ id: 'c', at: 0.1, duration: 2 }] }, 0.25).cues[0].start, 0, 'never before the video starts');
+  });
+
+  test('a reveal on the first word of the cue is still inside it', () => {
+    const cue = flow({ at: '00:10.0', params: { nodes: ['Client', { label: 'Edge', at: '00:10.0' }] } });
+    assert.ok(!rulesHit(validateEdl(baseEdl({ cues: [cue] }), ctx()), 'timing'));
+  });
+});
+
 describe('validation: timing', () => {
   test('text stays up long enough to read', () => {
     const cue = flow({ duration: '1.6s', params: { nodes: ['Client', 'Edge', 'Origin', 'Database', 'Queue'] } });

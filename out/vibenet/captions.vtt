@@ -1,0 +1,117 @@
+WEBVTT
+
+00:00:00.300 --> 00:00:06.283
+Hey builders So today I'm going to talk
+to you about Base hard forks So Base
+
+00:00:06.283 --> 00:00:08.900
+hard forks change how the chain works
+
+00:00:10.000 --> 00:00:14.307
+So what I'm going to go through today is
+how can you know what changes impact your
+
+00:00:14.307 --> 00:00:17.600
+app and how early can you find
+out how early can you test
+
+00:00:18.700 --> 00:00:24.280
+So I want to introduce you guys to Vibenet
+You've probably heard us talk about
+
+00:00:24.280 --> 00:00:29.116
+Vibenet tweet about Vibenet but what is
+Vibenet So Vibenet is Base's experimental
+
+00:00:29.116 --> 00:00:34.324
+preview network That means that new hard
+fork features go live here first often
+
+00:00:34.324 --> 00:00:39.160
+weeks before they even reach Sepolia or
+Mainnet For example we're getting ready
+
+00:00:39.160 --> 00:00:43.624
+for 200 millisecond blocks that are
+already running on Vibenet today while
+
+00:00:43.624 --> 00:00:46.600
+Sepolia is actually planned
+for later in October
+
+00:00:49.900 --> 00:00:55.750
+So what should you test Well you can
+start with your own app and point it
+
+00:00:55.750 --> 00:01:00.138
+at Vibenet and run your normal flows
+deploy your contracts any transactions
+
+00:01:00.138 --> 00:01:01.600
+check indexers frontends etc
+
+00:01:02.800 --> 00:01:07.729
+Look for anything that behaves differently
+look for timing assumptions RPC responses
+
+00:01:07.729 --> 00:01:13.479
+gaps or even events Then try the new
+features themselves and ask yourself how
+
+00:01:13.479 --> 00:01:18.300
+does it testing on Vibenet is really easy
+with AI you just need to add the skills
+
+00:01:18.600 --> 00:01:24.444
+work So I'm going to put that link in
+the comments below And that's already
+
+00:01:24.444 --> 00:01:30.288
+live and you can get started So your
+agents will have everything you need to
+
+00:01:30.288 --> 00:01:35.352
+test anything on Vibenet Another thing is
+going to chain.base.org We actually have
+
+00:01:35.352 --> 00:01:37.300
+all the demos here for
+
+00:01:38.400 --> 00:01:44.029
+everything that will be going to Vibenet
+or new features So for example if you're
+
+00:01:44.029 --> 00:01:49.283
+wanting to learn about EIP-8130 how that's
+going to affect user experiences how you
+
+00:01:49.283 --> 00:01:54.912
+can implement feel free to click on
+accounts If you are working with B20 and
+
+00:01:54.912 --> 00:02:00.542
+you want to know what is the next
+features for B20 you can always check
+
+00:02:00.542 --> 00:02:06.171
+out the demos here You can even deploy
+test tokens for B20 directly on Vibenet
+
+00:02:06.171 --> 00:02:11.800
+And we also have a validity transactions
+as well which is going live on Cobalt
+
+00:02:18.500 --> 00:02:22.940
+And if you hit something unexpected you
+can tell us in our Base Discord Include
+
+00:02:22.940 --> 00:02:25.900
+your transaction hash what you
+expected and the exact error
+
+00:02:26.900 --> 00:02:32.131
+Vibenet is our ground zero for what's next
+on Base So test early tell us what breaks
+
+00:02:32.131 --> 00:02:34.900
+and be ready for day one Thanks guys Bye

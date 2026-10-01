@@ -16,6 +16,11 @@ const SAMPLES = {
   'step-list': { params: { title: 'Deploy', steps: ['Build', { text: 'Upload', at: 11.2 }, 'Verify'] } },
   'flow-diagram': { params: { nodes: ['Client', { label: 'Edge', at: 10.9 }, 'Origin'], trace: true } },
   comparison: { params: { left: { title: 'Before', items: ['3 round trips'] }, right: { title: 'After', items: ['1 round trip'], at: 11.0 } } },
+  slide: { params: { title: 'Validity Transactions', columns: [
+    { heading: 'Sign & send', pill: 'Swap 1 ETH → USDC', lines: ['Signed with conditions', { mono: 'POOL PRICE ≥ 4,000' }] },
+    { heading: 'Wait', lines: ['Sequencer checks the conditions'], at: 11.2, note: 'No polling. No resending.' },
+    { heading: 'Included', pill: 'INCLUDED', lines: ['Only while valid'], at: 12.4 },
+  ] } },
 };
 
 const skip = !hasBrowser || !hasFfmpeg ? 'needs Playwright Chromium and ffmpeg' : false;
@@ -87,7 +92,7 @@ test('reveals follow their timecodes', { skip }, async () => {
     return Number(getComputedStyle(document.querySelectorAll('.step')[1]).opacity);
   }, ms);
   assert.equal(await opacityOfStep2(1900), 0, 'step 2 hidden before its word at 12.0s');
-  assert.equal(await opacityOfStep2(2400), 1, 'step 2 fully in 400ms after its word');
+  assert.equal(await opacityOfStep2(2600), 1, 'step 2 fully in 600ms after its word');
   await page.close();
 });
 
@@ -119,5 +124,25 @@ test('labels never cover the thing they describe', { skip }, async () => {
       assert.ok(!overlaps, `${template} label overlaps its region ${JSON.stringify(region)}`);
     }
   }
+  await page.close();
+});
+
+test('boxes in one diagram are the same size', { skip }, async () => {
+  const design = designSpace(1920, 1080);
+  const { page } = await openStage(browser, `http://127.0.0.1:${server.address().port}`, design, 1);
+  const sizes = (sel) => page.evaluate((q) => [...document.querySelectorAll(q)].map((n) => { const r = n.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; }), sel);
+  const load = (template, params) => page.evaluate((spec) => window.stage.load(spec), { template, params, duration: 5, cueStart: 0, design, layout: rules.layout });
+
+  await load('flow-diagram', { nodes: ['Go', 'A much longer node label', 'Mid'] });
+  let s = await sizes('.node');
+  assert.ok(s.every(([w, h]) => w === s[0][0] && h === s[0][1]), `flow nodes differ: ${JSON.stringify(s)}`);
+
+  await load('slide', { title: 'T', columns: [{ heading: 'A', pill: 'P', lines: ['one', 'two', 'three lines here'] }, { heading: 'B', lines: ['x'] }, { heading: 'C', pill: 'Q' }] });
+  s = await sizes('.slide-col .card');
+  assert.ok(s.every(([, h]) => h === s[0][1]), `slide cards differ in height: ${JSON.stringify(s)}`);
+
+  await load('comparison', { left: { title: 'Short', items: ['a'] }, right: { title: 'A considerably longer title', items: ['b', 'c'] } });
+  s = await sizes('.compare .column');
+  assert.ok(s.every(([w, h]) => w === s[0][0] && h === s[0][1]), `comparison columns differ: ${JSON.stringify(s)}`);
   await page.close();
 });

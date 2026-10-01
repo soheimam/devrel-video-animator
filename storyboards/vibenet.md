@@ -1,6 +1,6 @@
 # Storyboard: Vibenet walkthrough (`videos/vibetnet.mp4`)
 
-The plan of record for this video. Nine visual beats, four cuts. Beats marked **ESTIMATE** are timed by guess (no transcript yet); the rest are locked to screen events. Rendered edit: `out/vibenet/` (PR #13).
+The plan of record for this video. Round 4 (PR #17): twelve beats and two cuts, timed to the transcript, re-run against `editorial/STYLE.md` and `editorial/MOTION.md`. Rendered edit: `out/vibenet/`.
 
 ## The video
 
@@ -8,37 +8,38 @@ The plan of record for this video. Nine visual beats, four cuts. Beats marked **
 
 The static 70 seconds needs the most help. The Validity page gets the most valuable animation.
 
-## Beats
+## Beats (timed to the narration; the renderer leads each by 0.25s)
 
-| # | Time | On screen | Animation | Why |
+| # | Time | She says | Animation | Why |
 |---|---|---|---|---|
-| 1 | 0:01–0:05 | Overview, nothing yet | Lower-third title: **Vibenet**, "An ephemeral Base developer network for testing in-flight features" | Orients the viewer before the talking starts |
-| 2 | 0:35–0:44 **ESTIMATE** | Static overview | Step-list over the Connect panel: Chain ID `84538453` · RPC `rpc.vibes.base.org` · Test funds: Faucet | The one thing a developer will copy, and it's 14 px text |
-| 3 | 1:00–1:08 **ESTIMATE** | Static overview | Flow diagram, over the browser chrome: **In-flight feature → Test on Vibenet → Ships on Base** | The mental model the page is about; never drawn. *Confirm the story against the narration* |
-| 4 | 1:46.5–1:50 | Cursor on the Accounts card | Callout anchored to the bullet: **200 ms blocks** | The most striking fact on the page, in 14 px grey |
-| 5 | 1:52.8–1:56.2 | Cursor on the Tokens card | Term card: **B20**, "Base's enshrined, ERC-20-compatible token standard" | The term the next page is built on; ends before the recorder's zoom |
-| 6 | 2:00.2–2:01.8 | Tokens page, scrolled to "Create your first token" | Outline on the **Create Token** button | The action viewers are invited to take |
-| 8 | 2:11.5–2:13.5 | Validity page, just unzoomed | Outline on "Coming soon in **Base Cobalt**" | 12 px text, said at that moment |
-| 7 | 2:13.5–2:21.5 | Validity page, quiet stretch | Vertical flow diagram between the description and the grid: **Sign tx + conditions → Sequencer checks them → Included only while valid** | The hardest concept in the video, explained on the page in one sentence. Fills the silence with a picture |
-| 9 | 2:24–2:32 **ESTIMATE** | Static Validity page, the ask | Card: **Try it, tell us what breaks** / "Open Demo → run it → report what you hit" | The CTA is spoken but never shown. *Add the feedback channel once confirmed* |
+| 1 | 0:04–0:09 | "Base hard forks change how the chain works… how early can you test" | Card: **Base hard forks** / "What changes for your app, and how early you can test" | The video's framing, as she states it |
+| 2 | 0:26–0:31 | "Vibenet is Base's experimental preview network" | Card: **Vibenet** / "Base's experimental preview network" | The definition, at the moment it's given |
+| 3 | 0:31–0:39 | "go live here first… weeks before they reach Sepolia or Mainnet" | Full-frame **slide**: 01 Vibenet FIRST · 02 Sepolia · 03 Mainnet, columns on the words, takeaway `[ VIBENET → SEPOLIA → MAINNET ]` | The order she describes, never drawn; a slide in the style of reference 1 instead of a flow cramped against the browser chrome |
+| 4 | 0:40–0:48 | "200 ms blocks already running on Vibenet today, while Sepolia is planned for later in October" | Comparison: **Vibenet** 200 ms blocks: live today · **Sepolia** 200 ms blocks: later in October | Her example is a contrast |
+| 5 | 0:55–1:04 | "point it at Vibenet and run your normal flows" | Step-list **Point your app at Vibenet**: Chain ID · RPC · Faucet | The values you need, 14 px on the page |
+| 6 | 1:06–1:14 | "look for timing assumptions, RPC responses, gaps or even events" | Step-list **Look for**, one line per item | A spoken checklist over a static screen |
+| 7 | 1:45–1:49 | "learn about EIP-8130… click on Accounts" | Callout **EIP-8130 · Accounts** on the Accounts card | Ties the EIP to the card she points at |
+| 8 | 1:53–1:56 | "if you are working with B20" | Card: **B20** / "Base's enshrined, ERC-20-compatible token standard" | Named, never defined aloud |
+| 9 | 2:00–2:02 | "deploy test tokens for B20 directly on Vibenet" | Outline on **Create Token** | The button for what she says you can do |
+| 11 | 2:12–2:19 | "going live on Cobalt", then the pause | Full-frame **slide**: 01 Sign & send · 02 Sequencer checks · 03 Otherwise: EXPIRES, takeaway `[ SIGN → CHECK → INCLUDE ]` | Validity transactions named, not explained; the slide fills the pause |
+| 12 | 2:21–2:29 | "tell us in our Base Discord: your transaction hash, what you expected, the exact error" | Step-list **Hit something? Base Discord**, lines on the words | The feedback channel and checklist, spoken once |
+| 13 | 2:30–2:35 | "test early, tell us what breaks, be ready for day one" | Card: **Test early. Tell us what breaks.** / "Be ready for day one" | Sign-off |
 
-Order of 7 and 8 is deliberate: the Cobalt outline first, then the diagram.
+Captions are burned in throughout, kept clear of the webcam.
 
 ## Cuts
 
 | | Range | What goes |
 |---|---|---|
-| cut-1 | 0:00–0:01.0 | Silent lead-in |
-| cut-2 | 0:18.5–0:19.2 | Pause on a static screen |
-| cut-3 | 0:49.45–0:50.15 | Pause on a static screen |
-| cut-4 | 2:35.8–end | Reaching to stop the recorder |
+| cut-1 | 0:00–0:00.6 | Silent lead-in |
+| cut-2 | 2:35.8–end | Reaching to stop the recorder |
 
-The 2:13–2:19 silence is kept: beat 7 plays there.
+Round 1 also cut 0:47.9–0:50.0 and 1:15.4–1:18.7 as "pauses". Both were speech the transcript had dropped (the second was "testing on Vibenet is really easy with AI, you just need to add the skills"). Reverted; the validator now measures audio inside every cut. The 2:12–2:19 pause is kept: the Validity slide fills it.
 
-## Not done (yet)
+## Known limits of round 1
 
-- **Captions**: need a transcript. `captions.avoid` is already set for the webcam.
-- **Timings for beats 2, 3, 9**: lock to the words once we have a transcript, or from the presenter's memory of what's said when.
+- Word times are spread evenly inside each transcript segment (±1s). The word-level `transcript.json` from ingest will tighten them.
+- Captions have no punctuation for the same reason.
 
 ## Considered and left out
 

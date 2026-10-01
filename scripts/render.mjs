@@ -14,7 +14,7 @@ import { isMain } from '../lib/cli.js';
 
 export async function render(outDir, { log = console.log } = {}) {
   log('validate');
-  const validation = validateDir(outDir);
+  const validation = await validateDir(outDir);
   printIssues(validation, log);
   if (validation.errors.length) {
     writeReport(outDir, { log });
@@ -36,7 +36,7 @@ if (isMain(import.meta.url)) {
     console.error('Usage: node scripts/render.mjs out/<video>   (needs out/<video>/edits.yaml)');
     process.exit(2);
   }
-  build(outDir).catch((e) => {
+  render(outDir).catch((e) => {
     console.error(e.message);
     process.exit(1);
   });
