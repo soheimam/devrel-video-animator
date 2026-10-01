@@ -7,7 +7,7 @@
 //   columns: [{ heading, pill?, lines?: [string | { mono: string }], note?, at? }],
 // }
 // Columns appear in order (on their `at` word if given). No anchor: it is the whole frame.
-import { el, appear, pop, STEP } from './motion.js';
+import { el, appear, pop, equalize, STEP } from './motion.js';
 
 export function build(ctx) {
   const { root, params, tl, at } = ctx;
@@ -43,6 +43,7 @@ export function build(ctx) {
   });
   slide.append(cols);
   root.append(slide);
+  equalize(slide.querySelectorAll('.card'), { width: false });
 
   // The field fades up, the header drops in, columns follow one by one and their pills pop.
   appear(tl, slide, 0, { y: 0, scale: 1, duration: 350, ease: 'outQuad' });

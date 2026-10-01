@@ -1,6 +1,20 @@
 # Base style for animations
 
-Every overlay and slide follows this, so videos from different people look like they came from one team. Source: the Base brand guide v1.0 (`base/brand-kit`) and the three reference explainers in `references/`.
+Every overlay and slide follows this, so videos from different people look like they came from one team. Source: the Base brand guide v1.0 (`base/brand-kit`) and the three reference explainers below. **Look at the references before designing any slide or diagram.** They are the target.
+
+## References
+
+![Schedule Multiplier Updates](references/base-explainer-1-schedule.jpg)
+
+*Three numbered steps, equal cards, one blue. Mono uppercase labels for data (`NEW MULTIPLIER`, `GOES LIVE`), a blue pill as the card's headline, a single blue connector between steps, a one-line takeaway under the first card.*
+
+![Composite Policies](references/base-explainer-2-policies.jpg)
+
+*Two inputs merging into one: stacked cards on the left, curved blue connectors into the middle card, outcomes as outlined chips (`Listed`, `YES`, `Not yet`). Note how little text each card carries.*
+
+![Validity Transactions](references/base-explainer-3-validity.jpg)
+
+*A timeline across the three steps, values in blue mono (`4,000 USDC`, `1,156,990`), status as a filled pill (`INCLUDED`), and a bracketed summary line at the end (`[ SIGN → WAIT → INCLUDE ]`). The hardest concept on the page, made scannable.*
 
 ## Look
 
@@ -26,6 +40,7 @@ A neutral grotesque sans for text (a Base brand typeface can replace it in `temp
 - Cards: white, 2 px blue border, 12 px radius, generous padding.
 - Headline inside a card: a blue pill with white text.
 - Step numbering: `01 / Schedule`, `02 / Go live`, `03 / Holder view`. Always two digits, slash, short name.
+- **Boxes in one diagram are the same size.** Flow nodes share a width and height, slide cards share a height, comparison columns share a width; the templates enforce it. A smaller box only when it is explicitly needed (a connector, a status chip), and say so in the rationale.
 - Arrows: thin blue lines with a small open head, drawn in the direction of flow.
 - Status chips: outlined pill, mono text (`SCHEDULED`, `YES`, `Not yet`).
 

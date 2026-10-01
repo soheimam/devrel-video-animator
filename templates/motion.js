@@ -79,3 +79,17 @@ export function corner(node, ctx, where = 'top-right') {
   const y = where.startsWith('top') ? m : design.h * (1 - layout.caption_zone) - layout.margin - r.height;
   return place(node, { x, y }, ctx);
 }
+
+// Boxes in one diagram are the same size (editorial/STYLE.md): measure after layout, then
+// give every box the largest width and/or height found.
+export function equalize(nodes, { width = true, height = true } = {}) {
+  const list = [...nodes];
+  if (!list.length) return;
+  const w = Math.max(...list.map((n) => n.getBoundingClientRect().width));
+  const h = Math.max(...list.map((n) => n.getBoundingClientRect().height));
+  for (const n of list) {
+    n.style.boxSizing = 'border-box';
+    if (width) n.style.minWidth = `${Math.ceil(w)}px`;
+    if (height) n.style.minHeight = `${Math.ceil(h)}px`;
+  }
+}

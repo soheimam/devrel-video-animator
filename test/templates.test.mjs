@@ -126,3 +126,23 @@ test('labels never cover the thing they describe', { skip }, async () => {
   }
   await page.close();
 });
+
+test('boxes in one diagram are the same size', { skip }, async () => {
+  const design = designSpace(1920, 1080);
+  const { page } = await openStage(browser, `http://127.0.0.1:${server.address().port}`, design, 1);
+  const sizes = (sel) => page.evaluate((q) => [...document.querySelectorAll(q)].map((n) => { const r = n.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; }), sel);
+  const load = (template, params) => page.evaluate((spec) => window.stage.load(spec), { template, params, duration: 5, cueStart: 0, design, layout: rules.layout });
+
+  await load('flow-diagram', { nodes: ['Go', 'A much longer node label', 'Mid'] });
+  let s = await sizes('.node');
+  assert.ok(s.every(([w, h]) => w === s[0][0] && h === s[0][1]), `flow nodes differ: ${JSON.stringify(s)}`);
+
+  await load('slide', { title: 'T', columns: [{ heading: 'A', pill: 'P', lines: ['one', 'two', 'three lines here'] }, { heading: 'B', lines: ['x'] }, { heading: 'C', pill: 'Q' }] });
+  s = await sizes('.slide-col .card');
+  assert.ok(s.every(([, h]) => h === s[0][1]), `slide cards differ in height: ${JSON.stringify(s)}`);
+
+  await load('comparison', { left: { title: 'Short', items: ['a'] }, right: { title: 'A considerably longer title', items: ['b', 'c'] } });
+  s = await sizes('.compare .column');
+  assert.ok(s.every(([w, h]) => w === s[0][0] && h === s[0][1]), `comparison columns differ: ${JSON.stringify(s)}`);
+  await page.close();
+});

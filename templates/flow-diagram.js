@@ -2,7 +2,7 @@
 // Arrows draw in the direction of flow; nodes appear as they are mentioned.
 // params: { title?, nodes: [ "label" | { label, at? } ], direction?: "right" | "down", trace? }
 // cue.anchor (optional): top-left of the panel.
-import { el, svgEl, appear, draw, fadeIn, place, corner, ENTER } from './motion.js';
+import { el, svgEl, appear, draw, fadeIn, place, corner, equalize, ENTER } from './motion.js';
 
 const HOP = 900;
 
@@ -38,6 +38,8 @@ export function build(ctx) {
     nodes.push(node);
   });
   root.append(panel);
+  equalize(nodes);
+  for (const n of nodes) n.style.textAlign = 'center';
 
   if (anchor) place(panel, anchor, ctx);
   else corner(panel, ctx, 'top-right');

@@ -1,7 +1,7 @@
 // comparison: puts two states side by side so the difference is visible
 // (before/after, A vs B). Replaces "animated counter" stats, which are decoration.
 // params: { left: { title, items[] }, right: { title, items[], at? } }   cue.anchor (optional).
-import { el, appear, place, corner } from './motion.js';
+import { el, appear, place, corner, equalize } from './motion.js';
 
 function column(side) {
   const col = el('div', 'column');
@@ -27,6 +27,7 @@ export function build(ctx) {
   wrap.append(left.col, el('div', 'divider'), right.col);
   panel.append(wrap);
   root.append(panel);
+  equalize([left.col, right.col]);
 
   if (anchor) place(panel, anchor, ctx);
   else corner(panel, ctx, 'top-left');
