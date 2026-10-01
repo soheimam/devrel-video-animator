@@ -39,78 +39,78 @@ already running on Vibenet today while
 Sepolia is actually planned
 for later in October
 
-00:00:47.700 --> 00:00:53.550
+00:00:47.800 --> 00:00:53.650
 So what should you test Well you can
 start with your own app and point it
 
-00:00:53.550 --> 00:00:57.938
+00:00:53.650 --> 00:00:58.038
 at Vibenet and run your normal flows
 deploy your contracts any transactions
 
-00:00:57.938 --> 00:00:59.400
+00:00:58.038 --> 00:00:59.500
 check indexers frontends etc
 
-00:01:00.600 --> 00:01:05.529
+00:01:00.700 --> 00:01:05.629
 Look for anything that behaves differently
 look for timing assumptions RPC responses
 
-00:01:05.529 --> 00:01:11.279
+00:01:05.629 --> 00:01:11.379
 gaps or even events Then try the new
 features themselves and ask yourself how
 
-00:01:11.279 --> 00:01:12.279
+00:01:11.379 --> 00:01:12.379
 does it
 
-00:01:13.100 --> 00:01:18.944
+00:01:13.200 --> 00:01:19.044
 work So I'm going to put that link in
 the comments below And that's already
 
-00:01:18.944 --> 00:01:24.788
+00:01:19.044 --> 00:01:24.888
 live and you can get started So your
 agents will have everything you need to
 
-00:01:24.788 --> 00:01:29.852
+00:01:24.888 --> 00:01:29.952
 test anything on Vibenet Another thing is
 going to chain.base.org We actually have
 
-00:01:29.852 --> 00:01:31.800
+00:01:29.952 --> 00:01:31.900
 all the demos here for
 
-00:01:32.900 --> 00:01:38.529
+00:01:33.000 --> 00:01:38.629
 everything that will be going to Vibenet
 or new features So for example if you're
 
-00:01:38.529 --> 00:01:43.783
+00:01:38.629 --> 00:01:43.883
 wanting to learn about EIP-8130 how that's
 going to affect user experiences how you
 
-00:01:43.783 --> 00:01:49.412
+00:01:43.883 --> 00:01:49.512
 can implement feel free to click on
 accounts If you are working with B20 and
 
-00:01:49.412 --> 00:01:55.042
+00:01:49.512 --> 00:01:55.142
 you want to know what is the next
 features for B20 you can always check
 
-00:01:55.042 --> 00:02:00.671
+00:01:55.142 --> 00:02:00.771
 out the demos here You can even deploy
 test tokens for B20 directly on Vibenet
 
-00:02:00.671 --> 00:02:06.300
+00:02:00.771 --> 00:02:06.400
 And we also have a validity transactions
 as well which is going live on Cobalt
 
-00:02:13.000 --> 00:02:17.440
+00:02:13.100 --> 00:02:17.540
 And if you hit something unexpected you
 can tell us in our Base Discord Include
 
-00:02:17.440 --> 00:02:20.400
+00:02:17.540 --> 00:02:20.500
 your transaction hash what you
 expected and the exact error
 
-00:02:21.400 --> 00:02:26.631
+00:02:21.500 --> 00:02:26.731
 Vibenet is our ground zero for what's next
 on Base So test early tell us what breaks
 
-00:02:26.631 --> 00:02:29.400
+00:02:26.731 --> 00:02:29.500
 and be ready for day one Thanks guys Bye

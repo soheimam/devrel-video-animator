@@ -1,5 +1,6 @@
 # Vibenet walkthrough, eval round 1: storyboard re-timed to the real narration.
 # Source-video time; design px (1662x1080 = source px × 1.5). Webcam bubble: {1062,722,600,358}.
+# `at` is the word's time; the renderer leads every cue and reveal by 0.25s (lib/rules.js).
 # Word times come from a segment-level transcript spread evenly (±1s); see transcript.json note.
 video: vibetnet.mp4
 
@@ -19,7 +20,7 @@ cuts:
     kind: dead-air
     reason: "Silent lead-in; first word at 0.9."
   - id: cut-2
-    from: 00:47.8
+    from: 00:47.9
     to: 00:50.0
     kind: dead-air
     reason: "3.3s pause after 'later in October' on a static screen, kept to ~1.1s."
@@ -36,7 +37,7 @@ cuts:
 
 cues:
   - id: beat-1
-    at: 00:03.8                      # "Base hard forks" ~0:04
+    at: 00:04.0                      # "Base hard forks"
     duration: 5.6s
     template: term-definition
     params:
@@ -47,7 +48,7 @@ cues:
     rationale: "The framing of the whole video, in her own words (0:10–0:18), shown as she names the topic."
 
   - id: beat-2
-    at: 00:26.5                      # "Vibenet is Base's experimental preview network" ~0:27–0:29
+    at: 00:26.8                      # "Vibenet is Base's experimental preview network"
     duration: 5s
     template: term-definition
     params:
@@ -58,34 +59,34 @@ cues:
     rationale: "The definition, quoted from the narration, at the moment it is given."
 
   - id: beat-3
-    at: 00:31.5                      # "go live here first… weeks before Sepolia or Mainnet" (Sepolia 0:36.8, Mainnet 0:37.5)
+    at: 00:31.8                      # "go live here first… weeks before Sepolia or Mainnet"
     duration: 8s
     template: flow-diagram
     params:
       title: "New hard fork features go live"
       nodes:
         - "Vibenet"
-        - { label: "Sepolia", at: 00:36.6 }
-        - { label: "Mainnet", at: 00:37.3 }
+        - { label: "Sepolia", at: 00:36.8 }
+        - { label: "Mainnet", at: 00:37.5 }
     anchor: { x: 560, y: 56 }
     gap: said-not-shown
     objective: 1
     rationale: "She describes the order in words over a static page. Nodes appear on 'Sepolia' and 'Mainnet'. Over the browser chrome, where nothing is lost."
 
   - id: beat-4
-    at: 00:39.8                      # "200 millisecond blocks… running on Vibenet today, while Sepolia is planned for later in October"
+    at: 00:40.1                      # "200 millisecond blocks… running on Vibenet today, while Sepolia is planned for later in October"
     duration: 8s
     template: comparison
     params:
       left: { title: "Vibenet", items: ["200 ms blocks: live today"] }
-      right: { title: "Sepolia", items: ["200 ms blocks: later in October"], at: 00:44.0 }
+      right: { title: "Sepolia", items: ["200 ms blocks: later in October"], at: 00:44.3 }
     anchor: { x: 620, y: 50 }
     gap: relationship-not-visible
     objective: 1
     rationale: "Her concrete example is a contrast between two networks; the right column appears when she gets to Sepolia. Ends exactly at cut-2."
 
   - id: beat-5
-    at: 00:55.0                      # "point it at Vibenet" 0:55.6
+    at: 00:55.6                      # "point it at Vibenet"
     duration: 9s
     template: step-list
     params:
@@ -101,22 +102,22 @@ cues:
     rationale: "She says to point your app at Vibenet; the values you need are 14 px text in the Connect panel. Quoted from the screen."
 
   - id: beat-6
-    at: 01:06.0                      # "timing assumptions" 1:06.7, "RPC responses" ~1:08, "gaps or even events" ~1:09.5
+    at: 01:06.3                      # "look for timing assumptions…"
     duration: 8.5s
     template: step-list
     params:
       title: "Look for"
       steps:
-        - { text: "Timing assumptions", at: 01:06.5 }
-        - { text: "RPC responses", at: 01:07.9 }
-        - { text: "Gaps or missing events", at: 01:09.4 }
+        - { text: "Timing assumptions", at: 01:06.7 }
+        - { text: "RPC responses", at: 01:08.1 }
+        - { text: "Gaps or missing events", at: 01:09.6 }
     anchor: { x: 1050, y: 440 }
     gap: said-once-then-gone
     objective: 2
     rationale: "A checklist spoken quickly over a static page; the list builds on each item and stays up while she finishes the thought."
 
   - id: beat-7
-    at: 01:45.5                      # "EIP-8130… click on Accounts" 1:46–1:50; cursor on the Accounts card
+    at: 01:46.1                      # "EIP-8130"; cursor is on the Accounts card
     duration: 4s
     template: callout
     params:
@@ -127,7 +128,7 @@ cues:
     rationale: "She says the EIP number and tells viewers to click Accounts; the callout ties the two together on the card she is pointing at."
 
   - id: beat-8
-    at: 01:52.8                      # "If you are working with B20" ~1:54; must end before the recorder's zoom at 1:56.3
+    at: 01:53.0                      # "If you are working with B20"; must end before the recorder's zoom at 1:56.3
     duration: 3.4s
     template: term-definition
     params:
@@ -139,7 +140,7 @@ cues:
     rationale: "B20 is named but never defined aloud; the gloss is the Tokens card's own wording."
 
   - id: beat-9
-    at: 02:00.2                      # Create Token button visible 2:00–2:02; "deploy test tokens for B20" ~2:03
+    at: 02:00.4                      # Create Token button visible 2:00–2:02; "deploy test tokens for B20" ~2:03
     duration: 1.6s
     template: highlight-region
     params:
@@ -148,48 +149,43 @@ cues:
     objective: 3
     rationale: "The button for the thing she says you can do. Short, because the page scrolls back up at 2:02 (a second before she says it)."
 
-  - id: beat-10
-    at: 02:11.0                      # "going live on Cobalt" ends 2:12.4
-    duration: 2s
-    template: highlight-region
-    params:
-      region: { x: 428, y: 462, w: 194, h: 28 }
-    gap: shown-not-findable
-    objective: 3
-    rationale: "'Coming soon in Base Cobalt' is 12 px text; outlined as she says Cobalt."
-
   - id: beat-11
-    at: 02:13.5                      # the 6.8s pause after 'Cobalt'
-    duration: 6s
-    template: flow-diagram
+    at: 02:12.0                      # "Cobalt", then the 6.7s pause (2:12.4–2:19.1)
+    duration: 7.2s
+    template: slide
     params:
-      direction: down
-      nodes:
-        - "Sign tx + conditions"
-        - { label: "Sequencer checks them", at: 02:15.1 }
-        - { label: "Included only while valid", at: 02:16.7 }
-    anchor: { x: 990, y: 300 }
+      title: "Validity Transactions"
+      columns:
+        - heading: "Sign & send"
+          pill: "Tx + conditions"
+          lines: ["Sent to Base now"]
+        - heading: "Sequencer checks"
+          lines: ["Included while conditions hold"]
+          at: 02:14.4
+        - heading: "Otherwise"
+          pill: "EXPIRES"
+          at: 02:16.6
     gap: said-not-shown
     objective: 3
-    rationale: "Validity transactions are named but not explained; the page explains them in one sentence. Drawn in the pause, between the description and the grid."
+    rationale: "Validity transactions are named but never explained; the page explains them in one sentence. A full-frame slide in the Base style fills the pause (STYLE.md: use a slide when the idea needs a diagram). Wording from the page: description, 'Block Bounds & Expiry', 'No Keeper Required'. Ends with the pause, so nothing hangs."
 
   - id: beat-12
-    at: 02:21.3                      # "tell us in our Base Discord. Include your transaction hash (2:24), what you expected (2:25), and the exact error (2:26)"
+    at: 02:21.6                      # "tell us in our Base Discord…"
     duration: 8s
     template: step-list
     params:
       title: "Hit something? Base Discord"
       steps:
-        - { text: "Your transaction hash", at: 02:23.9 }
-        - { text: "What you expected", at: 02:25.0 }
-        - { text: "The exact error", at: 02:26.2 }
+        - { text: "Your transaction hash", at: 02:24.1 }
+        - { text: "What you expected", at: 02:25.2 }
+        - { text: "The exact error", at: 02:26.4 }
     anchor: { x: 430, y: 500 }
     gap: said-once-then-gone
     objective: 3
     rationale: "The feedback channel and the three things to include are spoken once and never shown. Each line lands on its word."
 
   - id: beat-13
-    at: 02:30.3                      # "test early, tell us what breaks, and be ready for day one" 2:31–2:34
+    at: 02:30.6                      # "test early, tell us what breaks, and be ready for day one"
     duration: 5s
     template: term-definition
     params:
@@ -200,6 +196,10 @@ cues:
     rationale: "Her closing line, as the sign-off card."
 
 rejected:
+  - id: beat-10
+    kind: cue
+    summary: "Outline on 'Coming soon in Base Cobalt' at 2:11.4 (round 1)"
+    rule: "Superseded: the Validity slide now starts on 'Cobalt' and fills the pause; two things at once would split attention."
   - id: cand-tagline-zoom
     kind: cue
     summary: "Zoom on the tagline at 0:22"
@@ -219,4 +219,4 @@ rejected:
   - id: cand-validity-silence-cut
     kind: cut
     summary: "Cut the 6.8s pause at 2:12–2:19"
-    rule: "beat-11 plays there; it becomes reading time."
+    rule: "beat-11 (a slide) fills it almost exactly: 5.6s in a 6.7s pause, 0.25s lead. What is left is under the 0.3s minimum cut."
