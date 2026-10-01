@@ -5,9 +5,9 @@
 // an OpenAI verbose_json file).
 //
 // Configure in .env (see .env.example):
-//   TRANSCRIBE_PROVIDER  openai (default) | deepgram
-//   TRANSCRIBE_MODEL     default whisper-1 for openai, nova-3 for deepgram
-//   OPENAI_API_KEY / DEEPGRAM_API_KEY
+//   TRANSCRIBE_PROVIDER  openai (default) | deepgram | gateway (Vercel AI Gateway, one key for everything)
+//   TRANSCRIBE_MODEL     default whisper-1 (openai), nova-3 (deepgram), openai/whisper-1 (gateway)
+//   OPENAI_API_KEY / DEEPGRAM_API_KEY / AI_GATEWAY_API_KEY
 //
 // Usage: node scripts/transcribe.mjs <video> out/<video> [--from captions.srt] [--language en]
 import fs from 'node:fs';
@@ -39,6 +39,13 @@ export const PROVIDERS = {
     load: () => import('@ai-sdk/deepgram').then((m) => m.deepgram),
     options: (language) => ({ deepgram: { smartFormat: true, punctuate: true, ...(language ? { language } : {}) } }),
   },
+  // A string model id resolves through the AI Gateway: 'provider/model'.
+  gateway: {
+    key: 'AI_GATEWAY_API_KEY',
+    model: 'openai/whisper-1',
+    load: () => ({ transcription: (id) => id }),
+    options: (language) => ({ openai: { timestampGranularities: ['word'], ...(language ? { language } : {}) } }),
+  },
 };
 
 export function importTranscript(file) {
@@ -65,7 +72,7 @@ export async function transcribeWithAiSdk(video, { language, transcribeFn } = {}
     throw new Error(`Set ${provider.key} in .env to transcribe (see .env.example), or import captions with --from file.srt`);
   }
   const modelId = process.env.TRANSCRIBE_MODEL || provider.model;
-  const transcribe = transcribeFn || (await import('ai')).experimental_transcribe;
+  const transcribe = transcribeFn || (await import('ai')).transcribe;
   const sdk = await provider.load();
   const result = await transcribe({
     model: sdk.transcription(modelId),

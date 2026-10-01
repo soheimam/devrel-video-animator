@@ -14,7 +14,7 @@ No app, no server. A Claude Code skill, a dozen scripts, and seven anime.js temp
 
 ## Quick start
 
-Requirements: Node 22+, ffmpeg, and a transcription key in `.env` (copy `.env.example`; OpenAI or Deepgram, through the [Vercel AI SDK](https://ai-sdk.dev/docs/ai-sdk-core/transcription)). Or skip the key and import captions exported from your recorder (`--from file.srt`).
+Requirements: Node 22+, ffmpeg, and a transcription key in `.env` (copy `.env.example`; OpenAI, Deepgram or the AI Gateway, through the [Vercel AI SDK](https://ai-sdk.dev/docs/ai-sdk-core/transcription)). Or skip the key and import captions exported from your recorder (`--from file.srt`).
 
 ```bash
 npm install

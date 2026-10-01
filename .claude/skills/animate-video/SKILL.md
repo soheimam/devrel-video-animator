@@ -14,7 +14,7 @@ You suggest, the human decides. Be generous with suggestions and honest about do
 ```bash
 npm install            # anime.js, Playwright (headless Chromium), yaml, Vercel AI SDK
 ffmpeg -version        # required
-cp .env.example .env   # then add OPENAI_API_KEY (or DEEPGRAM_API_KEY with TRANSCRIBE_PROVIDER=deepgram)
+cp .env.example .env   # then add one key: OPENAI_API_KEY, DEEPGRAM_API_KEY or AI_GATEWAY_API_KEY
 ```
 
 ## 1. Ingest

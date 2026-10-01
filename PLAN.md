@@ -33,5 +33,5 @@ The first version let agents edit autonomously, with an analyst, an editor, an a
 
 ## Open
 
-- Which provider key the team uses: OpenAI or Deepgram (both wired; `.env.example`).
+- Which key the team uses: OpenAI, Deepgram or the AI Gateway (all wired; `.env.example`).
 - Brand colours and fonts for `templates/theme.css`.

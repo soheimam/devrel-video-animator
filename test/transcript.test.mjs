@@ -104,6 +104,13 @@ test('transcription asks the provider for word timestamps and needs a key', { sk
     assert.equal(call.providerOptions.openai.language, 'en');
     assert.ok(call.audio.length > 1000, 'audio was extracted and passed as bytes');
     assert.equal(t.segments[0].text, 'Hello there');
+
+    process.env.TRANSCRIBE_PROVIDER = 'gateway';
+    delete process.env.OPENAI_API_KEY;
+    await assert.rejects(transcribeWithAiSdk(video, {}), /AI_GATEWAY_API_KEY/);
+    process.env.AI_GATEWAY_API_KEY = 'test';
+    await transcribeWithAiSdk(video, { transcribeFn: async (args) => ((call = args), { text: '', segments: [], warnings: [] }) });
+    assert.equal(call.model, 'openai/whisper-1', 'gateway models are plain strings');
   } finally {
     process.env = saved;
   }
