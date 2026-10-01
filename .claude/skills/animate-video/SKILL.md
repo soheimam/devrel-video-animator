@@ -13,7 +13,7 @@ You suggest, the human decides. Be generous with suggestions and honest about do
 
 ```bash
 npm install            # anime.js, Playwright (headless Chromium), yaml, Vercel AI SDK
-cp .env.example .env   # then add one key: OPENAI_API_KEY, DEEPGRAM_API_KEY or AI_GATEWAY_API_KEY
+cp .env.example .env   # set one key (AI_GATEWAY_API_KEY, OPENAI_API_KEY or DEEPGRAM_API_KEY); the provider follows the key
 npm run doctor         # checks Node, ffmpeg, Chromium and the key; says exactly what's missing
 ```
 
