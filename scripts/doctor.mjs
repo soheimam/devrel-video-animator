@@ -47,8 +47,10 @@ try {
   const name = pickProvider();
   ok('transcription', `${name} (${PROVIDERS[name].key} is set, model ${process.env.TRANSCRIBE_MODEL || PROVIDERS[name].model})`);
 } catch (e) {
+  const anyKey = Object.values(PROVIDERS).some((p) => process.env[p.key]);
   const noEnv = !fs.existsSync(path.join(ROOT, '.env'));
-  bad('transcription', noEnv ? 'no .env file' : e.message.split('\n')[0], noEnv ? 'Run `cp .env.example .env` and set one key (AI_GATEWAY_API_KEY is the simplest). Or skip transcription with `--from captions.srt`.' : 'Fix .env as described, or import captions with --from.');
+  if (!anyKey && noEnv) bad('transcription', 'no .env file', 'Run `cp .env.example .env` and set one key (AI_GATEWAY_API_KEY is the simplest). Or skip transcription with `--from captions.srt`.');
+  else bad('transcription', e.message.split('\n')[0], 'Fix .env as described, or import captions with --from.');
 }
 
 // Videos
@@ -61,5 +63,5 @@ for (const c of checks) {
   if (!c.ok) console.log(`    → ${c.fix}`);
 }
 const failed = checks.filter((c) => !c.ok);
-console.log(failed.length ? `\n${failed.length} thing(s) to fix.` : '\nAll good. Try: npm run ingest -- videos/<file>.mp4');
+console.log(failed.length ? `\n${failed.length} thing(s) to fix.` : '\nAll good. Try: node scripts/ingest.mjs');
 process.exit(failed.length ? 1 : 0);

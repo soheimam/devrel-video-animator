@@ -113,6 +113,9 @@ test('transcription asks the provider for word timestamps and needs a key', { sk
     process.env.TRANSCRIBE_PROVIDER = 'gateway';
     assert.equal(pickProvider(), 'gateway');
     delete process.env.OPENAI_API_KEY;
+    process.env.TRANSCRIBE_PROVIDER = 'openai';
+    assert.throws(() => pickProvider(), /Remove the TRANSCRIBE_PROVIDER line/);
+    delete process.env.TRANSCRIBE_PROVIDER;
     await transcribeWithAiSdk(video, { transcribeFn: async (args) => ((call = args), { text: '', segments: [], warnings: [] }) });
     assert.equal(call.model, 'openai/whisper-1', 'gateway models are plain strings');
   } finally {
