@@ -1,0 +1,160 @@
+# Vibenet walkthrough: the storyboard (storyboards/vibenet.md) as an edit list.
+# Source-video time; design px (1662x1080, = source px × 1.5). Webcam bubble: {1062,722,600,358}.
+# Beats 2, 3 and 9 are timed by estimate (no transcript yet); everything else is locked to screen events.
+video: vibetnet.mp4
+
+objectives:
+  - "Know what Vibenet is and how to connect to it"
+  - "Know the demos: Accounts, Tokens (B20), Validity Transactions"
+  - "Understand how a Validity Transaction works, and try it"
+
+captions:
+  burn: false            # no transcript yet; turn on once we have one
+  avoid: { x: 1062, y: 722, w: 600, h: 358 }
+
+cuts:
+  - id: cut-1
+    from: 00:00.0
+    to: 00:01.0
+    kind: dead-air
+    reason: "Silent lead-in before the first word."
+  - id: cut-2
+    from: 00:18.5
+    to: 00:19.2
+    kind: dead-air
+    reason: "Mid-explanation pause on a static screen, tightened to ~0.6s."
+  - id: cut-3
+    from: 00:49.45
+    to: 00:50.15
+    kind: dead-air
+    reason: "Pause on a static screen, tightened."
+  - id: cut-4
+    from: 02:35.8
+    to: 02:37.46
+    kind: dead-air
+    reason: "After the wave: reaching to stop the recorder."
+
+cues:
+  - id: beat-1
+    at: 00:01.0
+    duration: 4.5s
+    template: term-definition
+    params:
+      term: "Vibenet"
+      gloss: "An ephemeral Base developer network for testing in-flight features"
+    gap: said-once-then-gone
+    objective: 1
+    rationale: "Title lower-third. Orients the viewer before the talking starts; wording is the page's own tagline."
+
+  - id: beat-2
+    at: 00:35.0             # ESTIMATE: lock to when connecting / chain ID / RPC is mentioned
+    duration: 9s
+    template: step-list
+    params:
+      title: "Connect"
+      steps:
+        - "Chain ID 84538453"
+        - "RPC rpc.vibes.base.org"
+        - "Test funds: Faucet (sidebar)"
+    anchor: { x: 1050, y: 440 }
+    gap: said-once-then-gone
+    objective: 1
+    rationale: "The Connect panel is 14 px text nobody can read on a phone; this is the one thing a developer will want to copy. Placed over the panel it magnifies, clear of the webcam."
+
+  - id: beat-3
+    at: 01:00.0             # ESTIMATE: lock to the 'test upcoming features before they ship' moment
+    duration: 8s
+    template: flow-diagram
+    params:
+      nodes:
+        - "In-flight feature"
+        - { label: "Test on Vibenet", at: 01:02.0 }
+        - { label: "Ships on Base", at: 01:04.0 }
+    anchor: { x: 560, y: 56 }
+    gap: said-not-shown
+    objective: 1
+    rationale: "The mental model the page is about, drawn during the longest static stretch. Sits over the browser chrome (also hides internal tab names). CONFIRM the story against the narration; node labels are inferred from the page copy."
+
+  - id: beat-4
+    at: 01:46.5
+    duration: 3.5s
+    template: callout
+    params:
+      text: "200 ms blocks"
+    anchor: { x: 759, y: 657 }
+    gap: shown-not-findable
+    objective: 2
+    rationale: "Cursor is on the Accounts card; its most striking fact is a 14 px grey bullet. Anchored to the end of 'Transactions land in the next 200 ms block'."
+
+  - id: beat-5
+    at: 01:52.8
+    duration: 3.4s
+    template: term-definition
+    params:
+      term: "B20"
+      gloss: "Base's enshrined, ERC-20-compatible token standard"
+    anchor: { x: 420, y: 360 }
+    gap: said-once-then-gone
+    objective: 2
+    rationale: "Cursor rests on the Tokens card; B20 is the term the next page is built on. Wording quoted from the card. Ends before the recorder's own zoom at 1:56.3. Placed over the Accounts card, which is not being discussed."
+
+  - id: beat-6
+    at: 02:00.2
+    duration: 1.6s      # the page scrolls back up at 2:02
+    template: highlight-region
+    params:
+      region: { x: 900, y: 858, w: 135, h: 39 }
+    gap: shown-not-findable
+    objective: 2
+    rationale: "Tokens page, scrolled to 'Create your first token': outline the Create Token button, the action viewers are being invited to take."
+
+  - id: beat-8
+    at: 02:11.5             # 'Cobalt' at ~2:11.9
+    duration: 2s
+    template: highlight-region
+    params:
+      region: { x: 428, y: 462, w: 194, h: 28 }
+    gap: shown-not-findable
+    objective: 3
+    rationale: "'Coming soon in Base Cobalt' is 12 px text; outlined as it is said, right after the recorder's zoom ends."
+
+  - id: beat-7
+    at: 02:13.5
+    duration: 8s
+    template: flow-diagram
+    params:
+      direction: down
+      nodes:
+        - "Sign tx + conditions"
+        - { label: "Sequencer checks them", at: 02:15.3 }
+        - { label: "Included only while valid", at: 02:17.1 }
+    anchor: { x: 990, y: 300 }
+    gap: said-not-shown
+    objective: 3
+    rationale: "The hardest concept in the video, explained on the page in one long sentence. Drawn over the feature grid during the quiet stretch, so the viewer gets a picture instead of six cards of 11 px text. Wording from the page description."
+
+  - id: beat-9
+    at: 02:24.0             # ESTIMATE: lock to the 'tell us what breaks' sentence
+    duration: 8s
+    template: term-definition
+    params:
+      term: "Try it, tell us what breaks"
+      gloss: "Open Demo → run it → report what you hit"
+    anchor: { x: 72, y: 640 }
+    gap: said-once-then-gone
+    objective: 3
+    rationale: "The call to action is spoken but never shown. CONFIRM the feedback channel (Discord, GitHub, X) from the narration and add it to the second line."
+
+rejected:
+  - id: cand-tagline-zoom
+    kind: cue
+    summary: "Zoom on the tagline at 0:22"
+    rule: "It is the largest text on the page and the cursor already points at it."
+  - id: cand-tokens-grid-zoom
+    kind: cue
+    summary: "Zoom on the Tokens feature grid at 2:02"
+    rule: "The recorder already zooms there at 1:56–2:00; stacking zooms jars."
+  - id: cand-validity-silence-cut
+    kind: cut
+    summary: "Cut the near-silence at 2:13–2:19"
+    rule: "beat-7 plays there; the pause becomes the viewer's time to read the diagram."

@@ -10,6 +10,7 @@ export function build(ctx) {
   const { root, params, anchor, tl, at } = ctx;
   const down = params.direction === 'down';
   const panel = el('div', 'panel');
+  panel.style.maxWidth = 'none'; // a row of nodes is wider than a text panel
   panel.dataset.box = 'flow diagram';
   if (params.title) panel.append(el('div', 'title', params.title));
   const flow = el('div', down ? 'flow down' : 'flow');
