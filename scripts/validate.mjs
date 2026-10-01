@@ -8,21 +8,16 @@ import path from 'node:path';
 import { readJson, readYaml, writeJson } from '../lib/files.js';
 import { validateEdl } from '../lib/edl.js';
 import { loadRules } from '../lib/rules.js';
-import { loadGlossary } from '../lib/glossary.js';
 import { fullText } from '../lib/transcript.js';
 import { isMain } from '../lib/cli.js';
 
 export function validateDir(outDir) {
   const source = readJson(path.join(outDir, 'source.json'));
   const transcript = readJson(path.join(outDir, 'transcript.json'), { segments: [] });
-  const ocr = readJson(path.join(outDir, 'frames', 'ocr.json'), []);
   const result = validateEdl(readYaml(path.join(outDir, 'edits.yaml')), {
     rules: loadRules(),
     video: source,
     transcriptText: fullText(transcript),
-    transcriptNote: transcript.engine_note,
-    ocrText: ocr.map((o) => o.text).join(' '),
-    glossary: loadGlossary(),
   });
   writeJson(path.join(outDir, 'validation.json'), result);
   return result;

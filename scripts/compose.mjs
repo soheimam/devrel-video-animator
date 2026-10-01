@@ -71,15 +71,14 @@ export function buildCommand({ source, edl, rules, outDir, output, captionsFile 
 }
 
 // Writes captions.srt / .vtt (sidecars) and captions.ass (for burning in), timed to the
-// edited video. Sidecars are skipped for low-accuracy transcripts so wrong captions can't be
-// uploaded by mistake. Returns what was produced (also saved as captions.json).
+// edited video. Returns what was produced (also saved as captions.json).
 export function writeCaptions(outDir, { source, edl, rules }) {
   const transcript = readJson(path.join(outDir, 'transcript.json'), { segments: [] });
   const burn = captionsBurned(edl, rules);
-  const info = { burned: false, count: 0, files: [], low_accuracy: Boolean(transcript.engine_note) };
+  const info = { burned: false, count: 0, files: [] };
   const cues = captionCues(transcript, edl.cuts, rules.captions);
   info.count = cues.length;
-  if (cues.length && !info.low_accuracy) {
+  if (cues.length) {
     fs.writeFileSync(path.join(outDir, 'captions.srt'), toSRT(cues));
     fs.writeFileSync(path.join(outDir, 'captions.vtt'), toVTT(cues));
     info.files.push('captions.srt', 'captions.vtt');

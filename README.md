@@ -1,81 +1,49 @@
 # devrel-video-animator
 
-**Record a video, drop in the MP4, get back an edited MP4 and a report explaining every decision.**
-
-Claude Code agents do the editing: conservative cuts, zooms, and educational overlays animated with [anime.js](https://animejs.com). A human reviews the result before publishing. Every edit has to close a real gap in understanding, per the [editorial standard](editorial/STANDARD.md). Decoration doesn't make the cut, and "no changes needed" is a valid result.
-
-There is no app, server or database. It's a Claude Code skill, four subagents, and a handful of scripts. See [PLAN.md](PLAN.md) for the reasoning.
-
-## How it works
+Record a screen recording, upload the MP4, and get back suggestions for educational animations (anime.js), zooms, cuts and captions, each shown as a GIF. Pick the ones you want, and the final video is rendered with your picks.
 
 ```
-Human:   upload video.mp4 to videos/
-Agents:  1. Ingest      Whisper transcript (word timestamps), frames, OCR     npm run ingest
-         2. Understand  content map: objectives, terms, landmarks            analyst
-         3. Propose     cuts, zooms, overlays → edits.yaml                   editor
-         4. Critique    argue to remove each edit; failures → rejected       critic
-         5. Render      anime.js → transparent clips → one ffmpeg pass       npm run build
-         6. Check       inspect the rendered frames                          checker
-         7. Report      every edit kept and every candidate rejected         npm run report
-Human:   review edited.mp4 + report.md → publish, or send notes ("drop cue-3")
+you:     upload videos/my-talk.mp4
+agent:   transcribes, looks at the frames, writes out/my-talk/edits.yaml with suggestions,
+         renders a GIF of each, opens a review PR
+you:     "keep cue-1, drop cue-3, cue-2 a second later"
+agent:   re-renders → out/my-talk/edited.mp4 with captions burned in
 ```
+
+No app, no server. A Claude Code skill, a dozen scripts, and seven anime.js templates.
 
 ## Quick start
 
-Requirements: Node 20+ and ffmpeg. Whisper comes with `npm install` (it runs in Node via [Transformers.js](https://huggingface.co/docs/transformers.js)); the speech model downloads from Hugging Face on the first transcription and is cached in `.cache/models/`. Tesseract is optional; it enables OCR-based spelling and accuracy checks.
+Requirements: Node 20+, ffmpeg, and either `OPENAI_API_KEY` (transcription is one API call) or captions exported from your recorder (`--from file.srt`).
 
 ```bash
 npm install
-npm run demo        # builds a synthetic recording end to end → out/demo/edited.mp4 + report.md
+npm run demo        # synthetic recording, end to end → out/demo/edited.mp4, report.md, preview/*.gif
 npm test
 ```
 
-To edit a real recording, open Claude Code in this repo and say:
+Then open Claude Code in this repo and say:
 
-> Edit videos/my-talk.mp4
-
-The [`edit-video` skill](.claude/skills/edit-video/SKILL.md) runs the whole pipeline. To process new recordings automatically:
-
-```
-/loop 30m Run the edit-video skill on any MP4 in videos/ that has no out/<name>/report.md yet.
-```
+> Animate videos/my-talk.mp4
 
 ## What's where
 
 | Path | What it is |
 |---|---|
-| `videos/` | Upload recordings here to be edited (see `videos/README.md`) |
-| `.claude/skills/edit-video/SKILL.md` | The pipeline the orchestrating agent follows, including revising from review notes |
-| `.claude/agents/` | `analyst`, `editor`, `critic`, `checker`: separate agents so none grades its own work |
-| `editorial/STANDARD.md` | The editorial standard: the gap test, design rules, accuracy, cutting rules |
-| `editorial/rules.yaml` | Numeric thresholds, enforced by `npm run validate` |
-| `editorial/GLOSSARY.md` | Correct spellings of technical terms; fixes mis-hearings in transcripts and catches them on screen |
-| `editorial/LEARNINGS.md` | Patterns from human review, promoted into the standard over time |
-| `templates/` | anime.js overlay templates, the brand theme, and the stage used to render them |
-| `scripts/` | ingest, frames, validate, render-overlays, compose, check, report, build, metrics, demo |
-| `examples/demo/` | A reference `edits.yaml` and transcript |
+| `.claude/skills/animate-video/SKILL.md` | The whole flow, and how to suggest well |
+| `editorial/STANDARD.md` | One page on what makes an animation worth adding |
+| `templates/` | anime.js templates, the theme, and the stage they render on |
+| `scripts/` | `ingest` (transcribe + frames), `validate`, `build` (render, compose, captions, previews, report), `demo` |
+| `lib/` | timeline maths, validation, captions, ffmpeg helpers |
+| `examples/demo/edits.yaml` | Reference edit list |
+| `videos/` | Upload recordings here |
 
 ## Templates
 
-| Template | Closes the gap | What it does |
-|---|---|---|
-| `zoom` | shown, not findable | Punches into small text (ffmpeg, eased in and out) |
-| `code-focus` | shown, not findable | Dims everything except the lines being discussed |
-| `highlight-region` | shown, not findable | Outlines an area of the UI |
-| `callout` | shown, not findable / said, not shown | Short label anchored to an element |
-| `term-definition` | said once, then gone | A new term and a short gloss |
-| `step-list` | said once, then gone | Steps revealed on the words that name them |
-| `flow-diagram` | said, not shown | Nodes and arrows drawn in the direction of flow |
-| `comparison` | relationship not visible | Before/after, side by side |
+`callout` · `term-definition` · `step-list` · `flow-diagram` · `comparison` · `highlight-region` · `code-focus` · `zoom`
 
-The templates are laid out in design pixels (short side = 1080) and render at the source resolution, for landscape or vertical video. Brand colours and type live in `templates/theme.css`.
+Overlays are rendered deterministically: each cue's anime.js timeline is built paused and stepped frame by frame in headless Chromium, then composited by ffmpeg along with zooms, cuts and captions in one pass. Templates are laid out in design pixels (short side = 1080), so they work for any resolution and for vertical video. Brand colours and type live in `templates/theme.css`.
 
-## The edit decision list
+## The edit list
 
-Every decision for a video lives in `out/<video>/edits.yaml`, in source-video time. Cuts and cues are independent, so any single edit can be dropped or restored with a one-line change and a re-render. See [`examples/demo/edits.yaml`](examples/demo/edits.yaml).
-
-## Measuring quality
-
-Each human review is recorded in `out/<video>/review.yaml`. `npm run metrics` reports:
-- **precision:** the share of the agents' edits the reviewer kept
-- **restored cuts:** cuts the reviewer put back. This is the most serious miss, because it means useful content was removed.
+All decisions for a video live in `out/<video>/edits.yaml`, in source-video time: cuts, cues, captions placement, and the ideas considered but left out. Any single item can be dropped or restored and the video re-rendered.

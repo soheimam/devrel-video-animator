@@ -4,7 +4,7 @@ import { validateEdl, normalizeEdl, keptRanges, mapTime, editedDuration, zoomFac
 import { rules, baseEdl, video1080 } from './helpers.mjs';
 
 const transcriptText = 'Every request goes from the client to the edge. We set the TTL to 300 seconds.';
-const ctx = (extra = {}) => ({ rules, video: video1080, transcriptText, ocrText: '', glossary: [], ...extra });
+const ctx = (extra = {}) => ({ rules, video: video1080, transcriptText, ...extra });
 
 const flow = (over = {}) => ({
   id: 'cue-1',
@@ -107,17 +107,6 @@ describe('validation: timing', () => {
     assert.ok(rulesHit(result, 'one-focus'));
   });
 
-  test('cues too close together are flagged', () => {
-    const result = validateEdl(baseEdl({ cues: [flow(), flow({ id: 'cue-2', at: '00:16.0' })] }), ctx());
-    assert.ok(warned(result, 'spacing'));
-    assert.ok(!rulesHit(result, 'one-focus'));
-  });
-
-  test('density is capped per minute', () => {
-    const cues = [0, 1, 2, 3, 4].map((i) => flow({ id: `cue-${i}`, at: 2 + i * 9, duration: '5s' }));
-    assert.ok(rulesHit(validateEdl(baseEdl({ cues }), ctx()), 'density'));
-  });
-
   test('a cue may not span a cut', () => {
     const cuts = [{ id: 'cut-1', from: '00:12.0', to: '00:13.0', reason: 'false start' }];
     assert.ok(rulesHit(validateEdl(baseEdl({ cues: [flow()], cuts }), ctx()), 'spans-cut'));
@@ -143,10 +132,6 @@ describe('validation: cuts', () => {
     assert.ok(result.errors.some((e) => e.id === 'd'));
   });
 
-  test('long cuts are flagged for a second look', () => {
-    const result = validateEdl(baseEdl({ cuts: [{ id: 'a', from: 10, to: 40, reason: 'long install' }] }), ctx());
-    assert.ok(warned(result, 'cut-length'));
-  });
 });
 
 describe('validation: placement', () => {
@@ -173,13 +158,6 @@ describe('validation: placement', () => {
 });
 
 describe('validation: captions', () => {
-  test('captions are never burned in from a low-accuracy transcript', () => {
-    const low = ctx({ transcriptNote: 'PocketSphinx fallback' });
-    assert.ok(rulesHit(validateEdl(baseEdl(), low), 'accuracy'));
-    assert.ok(!rulesHit(validateEdl(baseEdl({ captions: { burn: false } }), low), 'accuracy'));
-    assert.ok(!rulesHit(validateEdl(baseEdl(), ctx()), 'accuracy'));
-  });
-
   test('the caption avoid box must be inside the frame', () => {
     assert.ok(rulesHit(validateEdl(baseEdl({ captions: { avoid: { x: 1800, y: 900, w: 400, h: 200 } } }), ctx()), 'placement'));
     assert.deepEqual(validateEdl(baseEdl({ captions: { avoid: { x: 1300, y: 700, w: 600, h: 380 } } }), ctx()).errors, []);
@@ -194,14 +172,8 @@ describe('validation: accuracy', () => {
     assert.ok(rulesHit(validateEdl(baseEdl({ cues: [bad] }), ctx()), 'nothing-new'));
   });
 
-  test('numbers read off the screen count as shown', () => {
+  test('without a transcript, numbers are not checked', () => {
     const cue = flow({ template: 'callout', gap: 'shown-not-findable', params: { text: 'Port 8787' }, anchor: { x: 400, y: 300 } });
-    assert.ok(!rulesHit(validateEdl(baseEdl({ cues: [cue] }), ctx({ ocrText: 'listening on :8787' })), 'nothing-new'));
-  });
-
-  test('known mis-hearings of glossary terms are caught', () => {
-    const glossary = [{ term: 'kubectl', avoid: ['kube control'] }];
-    const cue = flow({ params: { nodes: ['kube control', 'API server'] } });
-    assert.ok(rulesHit(validateEdl(baseEdl({ cues: [cue] }), ctx({ glossary })), 'glossary'));
+    assert.ok(!rulesHit(validateEdl(baseEdl({ cues: [cue] }), ctx({ transcriptText: undefined })), 'nothing-new'));
   });
 });

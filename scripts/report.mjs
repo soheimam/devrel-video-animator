@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Writes report.md: what the human reviews next to the edited video. Every edit kept,
-// every candidate rejected, and what the checks found.
+// Writes report.md: what the human reviews next to the edited video. Every suggestion,
+// with a GIF preview, and every idea that was considered and left out.
 //
 // Usage: node scripts/report.mjs out/<video>
 import fs from 'node:fs';
@@ -24,12 +24,11 @@ function describe(cue) {
   }
 }
 
-export function buildReport({ source, edl, validation, check, transcript, captions, previewExists = () => false }) {
+export function buildReport({ source, edl, validation, captions, previewExists = () => false }) {
   const kept = editedDuration(edl.cuts, source.duration);
   const removed = source.duration - kept;
   const L = [];
   L.push(`# Edit report: ${edl.video || path.basename(source.path)}`, '');
-  if (transcript?.engine_note) L.push(`> ⚠️ **Transcript quality:** ${transcript.engine_note}`, '');
   L.push(`**${formatTime(source.duration)} → ${formatTime(kept)}** (${removed.toFixed(1)}s removed) · ${edl.cues.length} visual edit(s) · ${edl.cuts.length} cut(s) · ${edl.rejected.length} candidate(s) rejected`, '');
 
   L.push('## Learning objectives', '', 'What the agents understood this video to teach. Every edit serves one of these.', '');
@@ -63,34 +62,34 @@ export function buildReport({ source, edl, validation, check, transcript, captio
 
   L.push('## Captions', '');
   if (captions?.burned) L.push(`✓ ${captions.count} captions burned into the video, timed to the edit. Sidecar files for YouTube and players: ${captions.files.map((f) => `\`${f}\``).join(', ')}.`, '');
-  else if (captions?.low_accuracy) L.push('✗ **Not added.** The transcript is low-accuracy, so captions would show wrong words. Re-transcribe with Whisper and rebuild to add them.', '');
   else if (captions?.files?.length) L.push(`Not burned in (\`captions.burn: false\`). Sidecar files: ${captions.files.map((f) => `\`${f}\``).join(', ')}.`, '');
   else if (captions) L.push('_No captions: the transcript has no words._', '');
   else L.push('_Not built yet._', '');
 
-  L.push('## Rejected candidates', '', 'Ideas the agents considered and dropped, and the rule that dropped them.', '');
-  if (!edl.rejected.length) L.push('_None recorded._', '');
+  L.push('## Considered and not suggested', '', 'Ideas that were looked at and left out, with the reason.', '');
+  if (!edl.rejected.length) L.push('_None._', '');
   else {
     L.push('| id | kind | idea | rejected by |', '|---|---|---|---|');
     for (const r of edl.rejected) L.push(`| ${r.id || ''} | ${r.kind || ''} | ${cell(r.summary)} | ${cell(r.rule)} |`);
     L.push('');
   }
 
-  const warnings = [
-    ...(validation?.warnings || []).map((w) => `${w.id} [${w.rule}] ${w.message}`),
-    ...(check?.issues || []).map((i) => `${i.id} [${i.rule}] ${i.message}`),
-    ...(check?.findings || []).map((f) => `${f.id} [checker] ${f.finding || f.message}`),
-  ];
-  L.push('## Checks', '');
-  if (!check) L.push('_The rendered video has not been checked yet._', '');
-  else if (!warnings.length) L.push('✓ Duration, resolution, audio and layout checks passed.', '');
-  warnings.forEach((w) => L.push(`- ${w}`));
-  if (warnings.length) L.push('');
+  const errors = (validation?.errors || []).map((e) => `✗ ${e.id} [${e.rule}] ${e.message}`);
+  if (errors.length) {
+    L.push('## Problems to fix before rendering', '');
+    errors.forEach((e) => L.push(`- ${e}`));
+    L.push('');
+  }
+  const warnings = (validation?.warnings || []).map((w) => `${w.id} [${w.rule}] ${w.message}`);
+  if (warnings.length) {
+    L.push('## Warnings', '');
+    warnings.forEach((w) => L.push(`- ${w}`));
+    L.push('');
+  }
 
   L.push('## Giving notes', '');
-  L.push('Reply with notes by id and the agents will revise and re-render, for example:', '');
+  L.push('Reply with notes by id, for example:', '');
   L.push('- `drop cue-3`: remove an edit', '- `restore cut-1`: put removed footage back', '- `cue-2 is too early`: adjust timing', '- `cue-4 should say "…"`: change the wording', '');
-  L.push('Decisions are logged in `review.yaml` and feed the quality metrics (`npm run metrics`).', '');
   return L.join('\n');
 }
 
@@ -99,8 +98,6 @@ export function writeReport(outDir, { log = console.log } = {}) {
     source: readJson(path.join(outDir, 'source.json')),
     edl: normalizeEdl(readYaml(path.join(outDir, 'edits.yaml'))),
     validation: readJson(path.join(outDir, 'validation.json'), null),
-    check: readJson(path.join(outDir, 'check.json'), null),
-    transcript: readJson(path.join(outDir, 'transcript.json'), null),
     captions: readJson(path.join(outDir, 'captions.json'), null),
     previewExists: (id) => fs.existsSync(path.join(outDir, 'preview', `${id}.gif`)),
   });

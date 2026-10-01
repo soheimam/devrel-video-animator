@@ -1,4 +1,4 @@
-// End to end on the synthetic demo: validate → render → compose → check → report.
+// End to end on the synthetic demo: validate → render → compose → previews → report.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -12,9 +12,8 @@ const skip = !hasBrowser || !hasFfmpeg ? 'needs Playwright Chromium and ffmpeg' 
 
 test('the demo builds into a correct edited video', { skip, timeout: 300000 }, async () => {
   const dir = await prepareDemo(tmpDir('dva-demo-'));
-  const result = await build(dir, { log: () => {} });
+  await build(dir, { log: () => {} });
 
-  assert.deepEqual(result.issues, [], 'automated checks pass');
   const source = await probe(path.join(dir, 'demo.mp4'));
   const edited = await probe(path.join(dir, 'edited.mp4'));
   assert.ok(Math.abs(edited.duration - (DEMO_DURATION - 2)) < 0.15, `2s cut removed (got ${edited.duration})`);
@@ -51,8 +50,6 @@ test('the demo builds into a correct edited video', { skip, timeout: 300000 }, a
   const report = fs.readFileSync(path.join(dir, 'report.md'), 'utf8');
   assert.match(report, /!\[cue-2\]\(preview\/cue-2\.gif\)/);
   assert.match(report, /✓ \d+ captions burned into the video/);
-  assert.match(report, /Duration, resolution, audio and layout checks passed/);
-  assert.ok(fs.existsSync(path.join(dir, 'check', 'cue-2.jpg')));
 });
 
 test('build refuses to render an edit list with errors', { skip }, async () => {
@@ -61,14 +58,12 @@ test('build refuses to render an edit list with errors', { skip }, async () => {
   fs.writeFileSync(edits, fs.readFileSync(edits, 'utf8').replace('gap: said-not-shown', 'gap: looks-cool'));
   await assert.rejects(build(dir, { log: () => {} }), /edits\.yaml has errors/);
   assert.ok(!fs.existsSync(path.join(dir, 'edited.mp4')));
-  assert.match(fs.readFileSync(path.join(dir, 'report.md'), 'utf8'), /has not been checked yet/);
+  assert.match(fs.readFileSync(path.join(dir, 'report.md'), 'utf8'), /✗ cue-2 \[gap-test\]/);
 });
 
 test('an edit list with no edits hands back the original file untouched', { skip, timeout: 120000 }, async () => {
   const dir = await prepareDemo(tmpDir('dva-none-'));
   fs.writeFileSync(path.join(dir, 'edits.yaml'), 'video: demo.mp4\nobjectives:\n  - Find the TTL\ncuts: []\ncues: []\ncaptions:\n  burn: false\n');
-  const result = await build(dir, { log: () => {} });
-  assert.deepEqual(result.issues, []);
+  await build(dir, { log: () => {} });
   assert.ok(fs.readFileSync(path.join(dir, 'edited.mp4')).equals(fs.readFileSync(path.join(dir, 'demo.mp4'))));
-  assert.ok(result.frames.some((f) => f.id === 'overview-middle'), 'the checker still gets frames to look at');
 });

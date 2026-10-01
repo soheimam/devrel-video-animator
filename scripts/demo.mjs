@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Builds a synthetic "screen recording" (a code editor made of coloured bars, with a tone
 // for narration) and runs the full build on examples/demo/edits.yaml. It exists to show
-// the pipeline end to end without a real recording or Whisper.
+// the pipeline end to end without a real recording or an API key.
 //
 // Usage: node scripts/demo.mjs [out/demo]
 import fs from 'node:fs';
