@@ -2,8 +2,10 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fromOpenAI, fromSubtitles, groupWords, toMarkdown, fullText } from '../lib/transcript.js';
-import { importTranscript } from '../scripts/transcribe.mjs';
+import { fromOpenAI, fromAiSdk, fromSubtitles, groupWords, toMarkdown, fullText } from '../lib/transcript.js';
+import { importTranscript, transcribeWithAiSdk, PROVIDERS } from '../scripts/transcribe.mjs';
+import { makeDemoVideo } from '../scripts/demo.mjs';
+import { hasFfmpeg } from './helpers.mjs';
 import { ROOT } from '../lib/paths.js';
 import { tmpDir } from './helpers.mjs';
 
@@ -20,6 +22,27 @@ test('OpenAI verbose_json: words are attached to their segments', () => {
   });
   assert.deepEqual(t.segments.map((s) => s.text), ['Set the TTL.', 'Then deploy.']);
   assert.deepEqual(t.segments[1].words.map((w) => w.word), ['Then', 'deploy']);
+});
+
+test('AI SDK result with word-level segments (OpenAI word granularity)', () => {
+  const t = fromAiSdk({
+    text: 'Set the TTL. Then deploy',
+    language: 'en',
+    segments: [
+      { text: 'Set', startSecond: 0, endSecond: 0.3 }, { text: 'the', startSecond: 0.3, endSecond: 0.5 },
+      { text: 'TTL.', startSecond: 0.5, endSecond: 1 }, { text: 'Then', startSecond: 2.5, endSecond: 2.8 },
+      { text: 'deploy', startSecond: 2.8, endSecond: 3.4 },
+    ],
+  });
+  assert.equal(t.language, 'en');
+  assert.deepEqual(t.segments.map((s) => s.text), ['Set the TTL.', 'Then deploy']);
+  assert.deepEqual(t.segments[0].words[2], { word: 'TTL.', start: 0.5, end: 1 });
+});
+
+test('AI SDK result with phrase segments spreads words across each phrase', () => {
+  const t = fromAiSdk({ text: 'Set the TTL.', segments: [{ text: ' Set the TTL. ', startSecond: 1, endSecond: 4 }] });
+  assert.deepEqual(t.segments[0].words.map((w) => [w.word, w.start]), [['Set', 1], ['the', 2], ['TTL.', 3]]);
+  assert.deepEqual(fromAiSdk({ text: '', segments: [] }).segments, []);
 });
 
 test('OpenAI output without segments is grouped by pause and punctuation', () => {
@@ -54,4 +77,34 @@ test('markdown transcript shows timestamps and long pauses', () => {
   assert.match(md, /\*\*\[00:07\.5 → 00:13\.5\]\*\* This line sets the TTL/);
   assert.match(md, /_\(pause 3\.0s\)_/);
   assert.match(fullText(demo()), /300 seconds/);
+});
+
+test('transcription asks the provider for word timestamps and needs a key', { skip: !hasFfmpeg && 'needs ffmpeg' }, async () => {
+  const video = await makeDemoVideo(path.join(tmpDir('dva-sdk-'), 'demo.mp4'));
+  const saved = { ...process.env };
+  try {
+    delete process.env.OPENAI_API_KEY;
+    process.env.TRANSCRIBE_PROVIDER = 'openai';
+    await assert.rejects(transcribeWithAiSdk(video, {}), /OPENAI_API_KEY/);
+    process.env.TRANSCRIBE_PROVIDER = 'nope';
+    await assert.rejects(transcribeWithAiSdk(video, {}), /Unknown TRANSCRIBE_PROVIDER/);
+
+    process.env.TRANSCRIBE_PROVIDER = 'openai';
+    process.env.OPENAI_API_KEY = 'test';
+    let call;
+    const t = await transcribeWithAiSdk(video, {
+      language: 'en',
+      transcribeFn: async (args) => {
+        call = args;
+        return { text: 'Hello there', language: 'en', segments: [{ text: 'Hello', startSecond: 0, endSecond: 0.4 }, { text: 'there', startSecond: 0.4, endSecond: 0.8 }], warnings: [] };
+      },
+    });
+    assert.equal(call.model.modelId, PROVIDERS.openai.model);
+    assert.deepEqual(call.providerOptions.openai.timestampGranularities, ['word']);
+    assert.equal(call.providerOptions.openai.language, 'en');
+    assert.ok(call.audio.length > 1000, 'audio was extracted and passed as bytes');
+    assert.equal(t.segments[0].text, 'Hello there');
+  } finally {
+    process.env = saved;
+  }
 });

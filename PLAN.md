@@ -7,7 +7,7 @@ A DevRel engineer records a video. The AI transcribes it and **suggests where an
 ## The flow
 
 ```
-1. Ingest     transcript with word timestamps (one API call, or the recorder's captions) + frames
+1. Ingest     transcript with word timestamps (AI SDK transcribe: OpenAI or Deepgram; or the recorder's captions) + frames
 2. Suggest    one agent writes edits.yaml: animations, zooms, cuts, captions placement, with a GIF of each
 3. Pick       the human keeps / drops / adjusts, in the PR or in chat
 4. Render     final MP4 with the picks, captions burned in
@@ -33,5 +33,5 @@ The first version let agents edit autonomously, with an analyst, an editor, an a
 
 ## Open
 
-- Transcript source on the team's machines: `OPENAI_API_KEY`, or captions from the recorder? (Both work; the API is the default.)
+- Which provider key the team uses: OpenAI or Deepgram (both wired; `.env.example`).
 - Brand colours and fonts for `templates/theme.css`.

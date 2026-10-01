@@ -12,9 +12,9 @@ You suggest, the human decides. Be generous with suggestions and honest about do
 ## Setup
 
 ```bash
-npm install            # anime.js, Playwright (headless Chromium), yaml
+npm install            # anime.js, Playwright (headless Chromium), yaml, Vercel AI SDK
 ffmpeg -version        # required
-export OPENAI_API_KEY  # for transcription; or import captions with --from file.srt
+cp .env.example .env   # then add OPENAI_API_KEY (or DEEPGRAM_API_KEY with TRANSCRIBE_PROVIDER=deepgram)
 ```
 
 ## 1. Ingest
@@ -24,7 +24,7 @@ npm run ingest -- videos/<file>.mp4            # → out/<name>/
 npm run ingest -- videos/<file>.mp4 --from videos/<file>.srt   # captions from the recorder instead
 ```
 
-Produces `source.json` (size, fps, duration), `transcript.json` + `transcript.md` (word timestamps), and `frames/` with a `.grid.jpg` copy of each frame. Grid lines are every 240 design px; coordinates in `edits.yaml` are design px (short side = 1080, origin top-left; a 1920×1080 or 1108×720 video is 1920×1080 or 1662×1080 in design px; `source.json` has the size, and `node -e "import('./lib/design.js').then(m=>console.log(m.designSpace(W,H)))"` the design frame).
+Transcription is one call through the AI SDK's `experimental_transcribe` (word timestamps; nothing to download). Produces `source.json` (size, fps, duration), `transcript.json` + `transcript.md`, and `frames/` with a `.grid.jpg` copy of each frame. Grid lines are every 240 design px; coordinates in `edits.yaml` are design px (short side = 1080, origin top-left; a 1920×1080 or 1108×720 video is 1920×1080 or 1662×1080 in design px; `source.json` has the size, and `node -e "import('./lib/design.js').then(m=>console.log(m.designSpace(W,H)))"` the design frame).
 
 ## 2. Suggest: write `out/<name>/edits.yaml`
 
