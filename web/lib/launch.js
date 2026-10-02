@@ -25,6 +25,15 @@ function launchLocal(id) {
 const REVISION = () => process.env.REPO_REVISION || process.env.VERCEL_GIT_COMMIT_SHA || 'main';
 const REPO = () => process.env.REPO_URL || 'https://github.com/soheimam/devrel-video-animator.git';
 const RESOURCES = () => ({ vcpus: Number(process.env.SANDBOX_VCPUS || 4) });
+const BRANCH = () => process.env.REPO_BRANCH || 'main';
+// Runs first in every machine: find the checkout (the SDK's clone location is not guaranteed),
+// clone it ourselves if it is missing, and move to the deployed commit. Logs what it found.
+const prelude = (revision) => [
+  'echo "cwd: $PWD"; ls -la | head -20',
+  'if [ ! -f scripts/sandbox-bootstrap.sh ]; then for d in */; do [ -f "$d/scripts/sandbox-bootstrap.sh" ] && cd "$d" && break; done; fi',
+  `if [ ! -f scripts/sandbox-bootstrap.sh ]; then echo "repo not here; cloning"; rm -rf repo; git clone --depth 1 --branch ${BRANCH()} ${REPO()} repo && cd repo; fi`,
+  `(git fetch --depth 1 origin ${revision} && git checkout -q FETCH_HEAD && echo "at commit $(git rev-parse --short HEAD)") || echo "could not move to ${revision}; staying on $(git rev-parse --short HEAD 2>/dev/null || echo unknown)"`,
+].join('\n');
 const SNAPSHOT_KEY = 'machine/snapshot.json';
 const PENDING_KEY = 'machine/pending.json';
 
@@ -38,7 +47,7 @@ async function launchSandbox(id, { store } = {}) {
     ? await Sandbox.create({ name, source: { type: 'snapshot', snapshotId: snapshot.snapshotId }, resources: RESOURCES(), timeout: Number(process.env.SANDBOX_TIMEOUT_MS || 45 * 60 * 1000) })
     : await Sandbox.create({
         name,
-        source: { type: 'git', url: REPO(), revision, depth: 1 },
+        source: { type: 'git', url: REPO(), revision: BRANCH(), depth: 1 },
         image: process.env.SANDBOX_IMAGE || 'vercel/sandbox/node:22',
         resources: RESOURCES(),
         timeout: Number(process.env.SANDBOX_TIMEOUT_MS || 45 * 60 * 1000),
@@ -53,15 +62,15 @@ async function launchSandbox(id, { store } = {}) {
   for (const k of ['OPENAI_API_KEY', 'DEEPGRAM_API_KEY', 'TRANSCRIBE_PROVIDER']) if (process.env[k]) env[k] = process.env[k];
   const script = snapshot
     ? [
-        // Prepared machine: bring the pipeline to the deployed commit, refresh deps only if needed.
-        'set -o pipefail',
-        `(git fetch --depth 1 origin ${revision} && git checkout -q FETCH_HEAD && npm ci --prefer-offline --no-audit --no-fund --loglevel=error) > bootstrap.log 2>&1 || echo "update failed, running with the snapshot's copy" >> bootstrap.log`,
+        // Prepared machine: move to the deployed commit, refresh deps only if the lockfile changed.
+        `{ ${prelude(revision)}; } > bootstrap.log 2>&1`,
+        '(npm ci --prefer-offline --no-audit --no-fund --loglevel=error >> bootstrap.log 2>&1) || echo "npm ci failed; using the snapshot\'s modules" >> bootstrap.log',
         'set -a; [ -f .sandbox-env ] && . ./.sandbox-env; set +a',
         'node scripts/job.mjs --id "$JOB_ID" > job.log 2>&1',
       ].join('\n')
     : [
-        'set -o pipefail',
-        `(bash scripts/sandbox-bootstrap.sh > bootstrap.log 2>&1) || { node scripts/job.mjs --id "$JOB_ID" --fail "$(tail -c 800 bootstrap.log)"; exit 1; }`,
+        `{ ${prelude(revision)}; } > bootstrap.log 2>&1`,
+        `(bash scripts/sandbox-bootstrap.sh >> bootstrap.log 2>&1) || { node scripts/job.mjs --id "$JOB_ID" --fail "$(tail -c 800 bootstrap.log)"; exit 1; }`,
         'set -a; [ -f .sandbox-env ] && . ./.sandbox-env; set +a',
         'node scripts/job.mjs --id "$JOB_ID" > job.log 2>&1',
       ].join('\n');
@@ -114,12 +123,16 @@ export async function startPrepare(store) {
   const name = `prepare-${Date.now().toString(36)}`;
   const sandbox = await Sandbox.create({
     name,
-    source: { type: 'git', url: REPO(), revision, depth: 1 },
+    source: { type: 'git', url: REPO(), revision: BRANCH(), depth: 1 },
     image: process.env.SANDBOX_IMAGE || 'vercel/sandbox/node:22',
     resources: RESOURCES(),
     timeout: 30 * 60 * 1000,
   });
-  await sandbox.runCommand({ cmd: 'bash', args: ['-lc', 'bash scripts/sandbox-bootstrap.sh > bootstrap.log 2>&1; echo "exit $?" >> bootstrap.log'], detached: true });
+  const script = [
+    `{ ${prelude(revision)}; } > bootstrap.log 2>&1`,
+    'bash scripts/sandbox-bootstrap.sh >> bootstrap.log 2>&1; echo "exit $?" >> bootstrap.log',
+  ].join('\n');
+  await sandbox.runCommand({ cmd: 'bash', args: ['-lc', script], detached: true });
   const pending = { name, revision, startedAt: new Date().toISOString() };
   await store.putJson(PENDING_KEY, pending);
   return pending;
