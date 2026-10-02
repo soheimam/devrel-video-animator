@@ -9,6 +9,7 @@
 //   node scripts/job.mjs --local videos/<file>.mp4 [--notes "…"] [--from-out out/<existing>] [--no-agent]
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { ROOT, slugFor } from '../lib/paths.js';
 import { createStore, readState, writeState, newJobId } from '../lib/store.js';
 import { buildReview } from '../lib/review.js';
@@ -31,7 +32,10 @@ export async function runJob(id, { store = createStore(), log = console.log, age
   const round = job.rounds[job.rounds.length - 1];
   const name = job.name;
   const outDir = path.join(ROOT, 'out', name);
-  const video = path.join(ROOT, 'videos', `${name}.mp4`);
+  // A recording already on this machine (a local run) is used where it is; anything else is
+  // fetched to videos/<name>.mp4. No copies left behind in videos/.
+  const local = job.sourceUrl.startsWith('file://') ? fileURLToPath(job.sourceUrl) : null;
+  const video = local && fs.existsSync(local) ? local : path.join(ROOT, 'videos', `${name}.mp4`);
   const events = [];
   const state = async (status, extra = {}) => {
     log(`job ${id}: ${status}${extra.message ? ' · ' + extra.message : ''}`);
@@ -41,7 +45,10 @@ export async function runJob(id, { store = createStore(), log = console.log, age
 
   try {
     await state('fetching', { message: 'getting the recording' });
-    if (!fs.existsSync(video)) await download(job.sourceUrl, video);
+    if (!fs.existsSync(video)) {
+      if (local) fs.copyFileSync(local, video);
+      else await download(job.sourceUrl, video);
+    }
 
     if (round.n > 1) {
       await state('restoring', { message: `picking up round ${round.n - 1}` });
@@ -105,8 +112,7 @@ export async function runLocal(videoPath, { notes = '', fromOut = null, agent = 
   const store = createStore({ JOBS_DIR: path.join(ROOT, '.jobs') });
   const name = slugFor(videoPath);
   const id = newJobId();
-  const target = path.join(ROOT, 'videos', `${name}.mp4`);
-  if (path.resolve(videoPath) !== target) fs.copyFileSync(videoPath, target);
+  const target = path.resolve(videoPath);
   const source = await probe(target);
   await store.putJson(`jobs/${id}/job.json`, { id, name, sourceUrl: `file://${target}`, notes, createdAt: new Date().toISOString(), duration: source.duration, rounds: [{ n: 1, mode: 'suggest', picks: null }] });
   if (fromOut) {
