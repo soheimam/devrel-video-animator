@@ -49,7 +49,8 @@ export default function Uploader({ localStore }) {
             access: 'public',
             handleUploadUrl: '/api/upload',
             multipart: true,
-            onUploadProgress: (p) => { lastMove = Date.now(); setError(''); setPct(Math.round(p.percentage)); },
+            // Parts upload in parallel and a retried part restarts, so the raw total can dip; show the high-water mark.
+            onUploadProgress: (p) => { lastMove = Date.now(); setError(''); setPct((prev) => Math.max(prev, Math.round(p.percentage))); },
           });
           sourceUrl = blob.url;
         } finally {
