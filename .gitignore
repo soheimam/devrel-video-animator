@@ -4,3 +4,9 @@ out/
 .cache/
 .env
 public/
+
+.jobs/
+web/node_modules
+web/.next
+web/.env*.local
+.env.local

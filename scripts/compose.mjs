@@ -15,7 +15,9 @@ import { loadRules } from '../lib/rules.js';
 import { zoomExpressions } from '../lib/zoom.js';
 import { FFMPEG, run } from '../lib/ffmpeg.js';
 import { isMain } from '../lib/cli.js';
-import { sourceVideo } from '../lib/paths.js';
+import { sourceVideo, ROOT } from '../lib/paths.js';
+
+const FONTS_DIR = path.join(ROOT, 'fonts');
 
 export function buildCommand({ source, edl, rules, outDir, output, captionsFile }) {
   const { width: W, height: H, fps } = source;
@@ -44,7 +46,8 @@ export function buildCommand({ source, edl, rules, outDir, output, captionsFile 
   const cuts = sortedCuts(edl.cuts);
   const audio = [];
   // Captions are timed to the edited video, so they are drawn after the cuts.
-  const burn = captionsFile ? `ass=filename='${captionsFile.replace(/'/g, "\\'")}',` : '';
+  // fontsdir: the caption font ships with the repo, so a machine without system fonts renders the same.
+  const burn = captionsFile ? `ass=filename='${captionsFile.replace(/'/g, "\\'")}':fontsdir='${FONTS_DIR}',` : '';
   if (cuts.length) {
     // Half-open [start, end): between() includes both ends and drops one extra frame per
     // cut, which makes the audio drift behind the picture.

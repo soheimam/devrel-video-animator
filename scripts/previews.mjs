@@ -16,9 +16,10 @@ import { FFMPEG, run, probe } from '../lib/ffmpeg.js';
 import { isMain } from '../lib/cli.js';
 import { loadRules } from '../lib/rules.js';
 import { formatTime } from '../lib/time.js';
+import { ROOT } from '../lib/paths.js';
 
 const ENTER_SECONDS = 0.55; // templates/motion.js ENTER
-const FONT = '/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf';
+const FONT = path.join(ROOT, 'fonts', 'LiberationSans-Regular.ttf');
 
 // The three moments worth looking at, in source time.
 export function stripMoments(cue, lead) {
