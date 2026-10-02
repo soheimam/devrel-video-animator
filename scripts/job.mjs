@@ -37,8 +37,10 @@ export async function runJob(id, { store = createStore(), log = console.log, age
   const local = job.sourceUrl.startsWith('file://') ? fileURLToPath(job.sourceUrl) : null;
   const video = local && fs.existsSync(local) ? local : path.join(ROOT, 'videos', `${name}.mp4`);
   const events = [];
+  let current = 'starting';
   const state = async (status, extra = {}) => {
     log(`job ${id}: ${status}${extra.message ? ' · ' + extra.message : ''}`);
+    if (!['done', 'failed'].includes(status)) current = status;
     return writeState(store, id, { status, round: round.n, mode: round.mode, log: events.slice(-30), ...extra });
   };
   const onEvent = (e) => events.push(e);
@@ -102,7 +104,8 @@ export async function runJob(id, { store = createStore(), log = console.log, age
     return review;
   } catch (e) {
     const plain = (t) => String(t).replace(/\x1b\[[0-9;]*m/g, '');
-    await state('failed', { message: plain(e.message).split('\n')[0].slice(0, 300), error: plain(e.stack || e).slice(0, 4000) });
+    const where = { fetching: 'getting the recording', restoring: 'restoring the last round', transcribing: 'transcribing', suggesting: 'suggesting (the model call)', applying: 'applying your picks (the model call)', rendering: 'rendering', publishing: 'publishing' }[current] || current;
+    await state('failed', { message: `Failed while ${where}: ${plain(e.message).split('\n')[0].slice(0, 280)}`, error: plain(e.stack || e).slice(0, 4000) });
     throw e;
   }
 }

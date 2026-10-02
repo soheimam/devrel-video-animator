@@ -56,7 +56,7 @@ async function launchSandbox(id, { store } = {}) {
     JOB_ID: id,
     AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY || '',
     BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN || '',
-    AGENT_MODEL: process.env.AGENT_MODEL || 'anthropic/claude-opus-5-5',
+    AGENT_MODEL: process.env.AGENT_MODEL || 'anthropic/claude-opus-5.5',
     CI: '1',
   };
   for (const k of ['OPENAI_API_KEY', 'DEEPGRAM_API_KEY', 'TRANSCRIBE_PROVIDER']) if (process.env[k]) env[k] = process.env[k];

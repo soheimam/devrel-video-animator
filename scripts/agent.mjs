@@ -165,7 +165,7 @@ export function makeTools(name, { onEvent = () => {} } = {}) {
   };
 }
 
-export async function runAgent({ name, mode = 'suggest', notes = '', picks = null, model = process.env.AGENT_MODEL || 'anthropic/claude-opus-5-5', maxSteps = 80, onEvent = () => {}, log = console.log }) {
+export async function runAgent({ name, mode = 'suggest', notes = '', picks = null, model = process.env.AGENT_MODEL || 'anthropic/claude-opus-5.5', maxSteps = 80, onEvent = () => {}, log = console.log }) {
   const tools = makeTools(name, { onEvent });
   log(`  agent: ${mode} for ${name} with ${typeof model === 'string' ? model : 'injected model'}, up to ${maxSteps} steps`);
   const result = await generateText({
