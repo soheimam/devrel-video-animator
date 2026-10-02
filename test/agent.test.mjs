@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { MockLanguageModelV3 } from 'ai/test';
-import { allowedCommand, makeTools, runAgent, systemPrompt } from '../scripts/agent.mjs';
+import { allowedCommand, makeTools, runAgent, systemPrompt, gatewayModelId } from '../scripts/agent.mjs';
 import { ROOT } from '../lib/paths.js';
 
 describe('the headless agent', () => {
@@ -30,6 +30,13 @@ describe('the headless agent', () => {
     const look = await tools.look.execute({ path: 'editorial/references/base-explainer-1-schedule.jpg' }, {});
     assert.equal(look.mediaType, 'image/jpeg');
     assert.ok(look.data.length > 1000);
+  });
+
+  test('model ids are sent in the gateway spelling', () => {
+    assert.equal(gatewayModelId('anthropic/claude-opus-5-5'), 'anthropic/claude-opus-5.5');
+    assert.equal(gatewayModelId('anthropic/claude-opus-5.5'), 'anthropic/claude-opus-5.5');
+    assert.equal(gatewayModelId('anthropic/claude-sonnet-5-5-fast'), 'anthropic/claude-sonnet-5.5-fast');
+    assert.equal(gatewayModelId(' anthropic/claude-opus-5 '), 'anthropic/claude-opus-5');
   });
 
   test('the system prompt carries the skill and the editorial pages', () => {

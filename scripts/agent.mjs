@@ -165,8 +165,16 @@ export function makeTools(name, { onEvent = () => {} } = {}) {
   };
 }
 
+// The gateway spells versions with a dot (anthropic/claude-opus-5.5); the Anthropic API spells
+// them with a dash. Accept either, send the gateway's form.
+export function gatewayModelId(id) {
+  return String(id || '').trim().replace(/^(anthropic\/claude-[a-z]+-\d)-(\d)(-fast)?$/, '$1.$2$3');
+}
+
 export async function runAgent({ name, mode = 'suggest', notes = '', picks = null, model = process.env.AGENT_MODEL || 'anthropic/claude-opus-5.5', maxSteps = 80, onEvent = () => {}, log = console.log }) {
+  if (typeof model === 'string') model = gatewayModelId(model);
   const tools = makeTools(name, { onEvent });
+  onEvent({ type: 'model', detail: typeof model === 'string' ? model : 'injected', at: Date.now() });
   log(`  agent: ${mode} for ${name} with ${typeof model === 'string' ? model : 'injected model'}, up to ${maxSteps} steps`);
   const result = await generateText({
     model,
