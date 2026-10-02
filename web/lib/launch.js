@@ -34,7 +34,9 @@ const prelude = (revision) => [
   'echo "cwd: $PWD"; ls -la | head -20',
   'if [ ! -f scripts/sandbox-bootstrap.sh ]; then for d in */; do [ -f "$d/scripts/sandbox-bootstrap.sh" ] && cd "$d" && break; done; fi',
   `if [ ! -f scripts/sandbox-bootstrap.sh ]; then echo "repo not here; cloning"; rm -rf repo; git clone --depth 1 --branch ${BRANCH()} ${REPO()} repo && cd repo; fi`,
-  `(git fetch --depth 1 origin ${revision} && git checkout -q FETCH_HEAD && echo "at commit $(git rev-parse --short HEAD)") || echo "could not move to ${revision}; staying on $(git rev-parse --short HEAD 2>/dev/null || echo unknown)"`,
+  // Forced: a prepared snapshot may have modified files (lockfile, installed extras) that would
+  // otherwise block the checkout and leave the machine silently on old code.
+  `(git fetch --depth 1 origin ${revision} && git reset -q --hard FETCH_HEAD && git clean -qfd -e node_modules -e .sandbox-env -e bootstrap.log && echo "at commit $(git rev-parse --short HEAD)") || echo "could not move to ${revision}; staying on $(git rev-parse --short HEAD 2>/dev/null || echo unknown)"`,
 ].join('\n');
 const SNAPSHOT_KEY = 'machine/snapshot.json';
 const PENDING_KEY = 'machine/pending.json';

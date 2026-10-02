@@ -115,6 +115,7 @@ export default function JobView({ id }) {
         {state.status === 'failed' ? (
           <div className="failed">
             <b>Couldn't finish.</b> {state.message}
+            {state.commit ? <div className="hint">Pipeline commit {state.commit}</div> : null}
             <div style={{ marginTop: 10 }}><button className="btn secondary" onClick={remove}>Delete this job</button></div>
           </div>
         ) : null}

@@ -38,10 +38,16 @@ export async function runJob(id, { store = createStore(), log = console.log, age
   const video = local && fs.existsSync(local) ? local : path.join(ROOT, 'videos', `${name}.mp4`);
   const events = [];
   let current = 'starting';
+  // Which pipeline this machine is actually running, recorded on every update.
+  let commit = 'unknown';
+  try {
+    const { execFileSync } = await import('node:child_process');
+    commit = execFileSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).trim();
+  } catch { /* not a git checkout */ }
   const state = async (status, extra = {}) => {
     log(`job ${id}: ${status}${extra.message ? ' · ' + extra.message : ''}`);
     if (!['done', 'failed'].includes(status)) current = status;
-    return writeState(store, id, { status, round: round.n, mode: round.mode, log: events.slice(-30), ...extra });
+    return writeState(store, id, { status, round: round.n, mode: round.mode, commit, log: events.slice(-30), ...extra });
   };
   const onEvent = (e) => events.push(e);
 
@@ -105,7 +111,7 @@ export async function runJob(id, { store = createStore(), log = console.log, age
   } catch (e) {
     const plain = (t) => String(t).replace(/\x1b\[[0-9;]*m/g, '');
     // Gateway errors carry the HTTP status, a generation id and the provider's own reason.
-    const detail = [];
+    const detail = [`pipeline commit ${commit}`];
     if (e.statusCode) detail.push(`status ${e.statusCode}`);
     if (e.generationId) detail.push(`generation ${e.generationId}`);
     const cause = e.cause;
