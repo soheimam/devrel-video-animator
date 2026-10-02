@@ -50,7 +50,7 @@ cues:
 
   - id: beat-3
     at: 00:31.8                      # "go live here first… weeks before they even reach Sepolia or Mainnet"
-    duration: 8s
+    duration: 10.9s
     template: slide
     params:
       title: "Hard fork features go live"
@@ -70,8 +70,8 @@ cues:
     rationale: "She describes the order in words over a static page. STYLE.md: an idea that needs a diagram gets a slide, in the style of reference 1 (three numbered steps, one pill, a takeaway line). Columns land on 'Sepolia' and 'Mainnet'; the takeaway lands last. Replaces the round-3 flow overlay that sat against the browser chrome."
 
   - id: beat-4
-    at: 00:40.1                      # "200 millisecond blocks… running on Vibenet today, while Sepolia is planned for later in October"
-    duration: 8s
+    at: 00:43.0                      # "…while Sepolia is planned for later in October" (the slide before it runs to 0:42.5)
+    duration: 5.1s
     template: comparison
     params:
       left: { title: "Vibenet", items: ["200 ms blocks: live today"] }
@@ -79,7 +79,7 @@ cues:
     anchor: { x: 620, y: 50 }
     gap: relationship-not-visible
     objective: 1
-    rationale: "Her concrete example is a contrast between two networks; the right column appears when she gets to Sepolia. Ends exactly at cut-2."
+    rationale: "Her concrete example is a contrast between two networks; the right column appears when she gets to Sepolia. Starts after the slide, which now stays long enough for its takeaway to be read."
 
   - id: beat-5
     at: 00:55.6                      # "point it at Vibenet"
@@ -147,7 +147,7 @@ cues:
 
   - id: beat-11
     at: 02:12.0                      # "Cobalt", then the 6.7s pause (2:12.4–2:19.1)
-    duration: 7.2s
+    duration: 8.4s
     template: slide
     params:
       title: "Validity Transactions"

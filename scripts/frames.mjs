@@ -14,6 +14,7 @@ import { FFMPEG, run } from '../lib/ffmpeg.js';
 import { readJson, writeJson } from '../lib/files.js';
 import { designSpace } from '../lib/design.js';
 import { parseTime, formatTime } from '../lib/time.js';
+import { sourceVideo } from '../lib/paths.js';
 import { isMain, parseArgs } from '../lib/cli.js';
 
 export const GRID_DESIGN_PX = 240;
@@ -29,6 +30,7 @@ export async function sceneChanges(video, threshold) {
 
 export async function captureFrames(outDir, { every = 10, scene = 0.3, at = [], log = console.log } = {}) {
   const source = readJson(path.join(outDir, 'source.json'));
+  const video = sourceVideo(source);
   const dir = path.join(outDir, 'frames');
   fs.mkdirSync(dir, { recursive: true });
   const indexFile = path.join(dir, 'index.json');
@@ -38,7 +40,7 @@ export async function captureFrames(outDir, { every = 10, scene = 0.3, at = [], 
   const wanted = [];
   if (!index.length) {
     for (let t = 0; t < source.duration; t += every) wanted.push({ t, reason: 'sample' });
-    for (const t of await sceneChanges(source.path, scene)) wanted.push({ t, reason: 'scene-change' });
+    for (const t of await sceneChanges(video, scene)) wanted.push({ t, reason: 'scene-change' });
   }
   for (const t of at) wanted.push({ t, reason: 'requested' });
   wanted.sort((a, b) => a.t - b.t);
@@ -56,7 +58,7 @@ export async function captureFrames(outDir, { every = 10, scene = 0.3, at = [], 
     const file = path.join(dir, `${name}.jpg`);
     const grid = path.join(dir, `${name}.grid.jpg`);
     const seek = Math.min(t, Math.max(0, source.duration - 0.05)).toFixed(3);
-    await run(FFMPEG, ['-y', '-loglevel', 'error', '-ss', seek, '-i', source.path, '-frames:v', '1', '-q:v', '3', file]);
+    await run(FFMPEG, ['-y', '-loglevel', 'error', '-ss', seek, '-i', video, '-frames:v', '1', '-q:v', '3', file]);
     await run(FFMPEG, ['-y', '-loglevel', 'error', '-i', file, '-vf', `drawgrid=w=${cell}:h=${cell}:t=2:c=white@0.45`, grid]);
     const entry = { t, time: formatTime(t), reason, file: path.relative(outDir, file), grid: path.relative(outDir, grid) };
     index.push(entry);

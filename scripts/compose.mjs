@@ -15,6 +15,7 @@ import { loadRules } from '../lib/rules.js';
 import { zoomExpressions } from '../lib/zoom.js';
 import { FFMPEG, run } from '../lib/ffmpeg.js';
 import { isMain } from '../lib/cli.js';
+import { sourceVideo } from '../lib/paths.js';
 
 export function buildCommand({ source, edl, rules, outDir, output, captionsFile }) {
   const { width: W, height: H, fps } = source;
@@ -93,7 +94,8 @@ export function writeCaptions(outDir, { source, edl, rules }) {
 }
 
 export async function compose(outDir, { log = console.log } = {}) {
-  const source = readJson(path.join(outDir, 'source.json'));
+  const source = { ...readJson(path.join(outDir, 'source.json')) };
+  source.path = sourceVideo(source);
   const edl = normalizeEdl(readYaml(path.join(outDir, 'edits.yaml')), loadRules().timing.lead_seconds);
   const rules = loadRules();
   const output = path.join(outDir, 'edited.mp4');

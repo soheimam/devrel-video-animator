@@ -1,0 +1,206 @@
+# Vibenet demo 2, eval round 1. Three minutes of narration over one static page (the Overview),
+# so the animations carry the structure. Source-video time; design px (1662x1080 = source × 1.5).
+# `at` is the word's time from the word-level transcript; the renderer leads by 0.25s.
+# Webcam: round bubble bottom-right, about {1400,825,215,215}. The page body is never discussed
+# until 1:50 (Connect panel), so panels may sit over the Demos cards before then.
+video: vibenet_demo_2.mp4
+
+objectives:
+  - "Know what a hard fork is and what Vibenet is: Base's experimental preview network, weeks ahead of Sepolia and Mainnet"
+  - "Know how to test your app on Vibenet and how to get on it in under a minute"
+  - "Know that Vibenet is experimental, that feedback still changes the features, and where to report what breaks"
+
+captions:
+  burn: true
+  avoid: { x: 1400, y: 825, w: 262, h: 255 }
+
+cuts:
+  - id: cut-1
+    from: 00:30.7
+    to: 00:31.4
+    kind: dead-air
+    reason: "The pause after 'validity transactions' (−45 dB). beat-2 fills it; the pause ends with the animation."
+  - id: cut-2
+    from: 02:57.0
+    to: 02:57.43
+    kind: dead-air
+    reason: "After 'Bye': reaching for the recorder."
+
+cues:
+  - id: beat-1
+    at: 00:14.3                      # "what is a hard fork"
+    duration: 6.5s
+    template: term-definition
+    params:
+      term: "Hard fork"
+      gloss: "Changes how the chain works, or adds new features"
+    gap: said-once-then-gone
+    objective: 1
+    rationale: "She asks the question at 0:14 and answers it at 0:16–0:21; the card shows the answer in her words while she gives it."
+
+  - id: beat-2
+    at: 00:24.0                      # "Cobalt"
+    duration: 6.5s
+    template: step-list
+    params:
+      title: "Cobalt brought"
+      steps:
+        - { text: "B20 tokens", at: 00:26.4 }
+        - { text: "Validity transactions", at: 00:28.8 }
+    anchor: { x: 1000, y: 490 }
+    gap: said-once-then-gone
+    objective: 1
+    rationale: "Two named features, spoken once; each lands on its word. Ends in the pause, which cut-1 then closes."
+
+  - id: beat-3
+    at: 00:51.5                      # "VibeNet is experimental preview network"
+    duration: 5s
+    template: term-definition
+    params:
+      term: "Vibenet"
+      gloss: "Base's experimental preview network"
+    gap: said-once-then-gone
+    objective: 1
+    rationale: "The definition, at the moment it is given."
+
+  - id: beat-4
+    at: 00:56.9                      # "hard fork features go live on VibeNet… weeks prior to Sepolia or Mainnet"
+    duration: 12.5s
+    template: slide
+    params:
+      title: "Hard fork features go live"
+      columns:
+        - heading: "Vibenet"
+          pill: "FIRST"
+          lines: ["Weeks, even months, ahead"]
+        - heading: "Sepolia"
+          lines: ["Testnet, next"]
+          at: 01:03.9
+        - heading: "Mainnet"
+          lines: ["Last"]
+          at: 01:04.9
+      summary: "VIBENET → SEPOLIA → MAINNET"
+    gap: said-not-shown
+    objective: 1
+    rationale: "The order she describes, never drawn. Slide in the style of reference 1; columns land on 'Sepolia' and 'Mainnet', the takeaway last. Stays through 'months prior' and the start of the Denim example, so the takeaway has time to be read (reviewer: it left too quickly)."
+
+  - id: beat-5
+    at: 01:11.8                      # "Denim… 200 millisecond blocks… test 200 millisecond blocks today… on VibeNet"
+    duration: 11.5s
+    template: comparison
+    params:
+      left: { title: "Denim (next hard fork)", items: ["200 ms blocks"] }
+      right: { title: "Vibenet", items: ["200 ms blocks: test today"], at: 01:20.1 }
+    anchor: { x: 1000, y: 330 }
+    gap: relationship-not-visible
+    objective: 2
+    rationale: "Her example is a contrast: what Denim will bring vs what Vibenet already runs. The right column lands on 'today'."
+
+  - id: beat-6
+    at: 01:25.0                      # "test with your own app"
+    duration: 13.5s
+    template: step-list
+    params:
+      title: "Test your own app"
+      steps:
+        - { text: "Point it at the Vibenet RPC", at: 01:26.8 }
+        - { text: "Deploy contracts and transactions", at: 01:29.8 }
+        - { text: "Check your indexers", at: 01:32.4 }
+        - { text: "Run your user flows", at: 01:35.6 }
+    anchor: { x: 60, y: 520 }
+    gap: said-once-then-gone
+    objective: 2
+    rationale: "A four-step checklist spoken quickly over a static page; each line lands on its word and the list stays up through 'user flows'."
+
+  - id: beat-7
+    at: 01:39.7                      # "8130"
+    duration: 4.5s
+    template: callout
+    params:
+      text: "EIP-8130 · Accounts"
+    anchor: { x: 780, y: 188 }
+    gap: shown-not-findable
+    objective: 2
+    rationale: "The page's own banner says 'New! EIP-8130: Accounts' in 13 px; the callout ties the number she says to it."
+
+  - id: beat-8
+    at: 01:46.8                      # "Getting on VibeNet takes less than a minute"
+    duration: 14.5s
+    template: step-list
+    params:
+      title: "Get on Vibenet in under a minute"
+      steps:
+        - { text: "chain.base.org/vibenet", at: 01:50.5 }
+        - { text: "Add the network: Chain ID 84538453, RPC", at: 01:54.6 }
+        - { text: "Testnet ETH from the faucet", at: 01:57.7 }
+    anchor: { x: 1000, y: 490 }
+    source: screen
+    gap: said-not-shown
+    objective: 2
+    rationale: "The three things to do, next to the Connect panel they refer to. Chain ID quoted from the panel (never spoken in full)."
+
+  - id: beat-9
+    at: 02:04.9                      # "install the VibeNet skill"
+    duration: 4.5s
+    template: term-definition
+    params:
+      term: "Vibenet skill"
+      gloss: "For AI agents. Links below."
+    gap: said-once-then-gone
+    objective: 2
+    rationale: "Named once; the link is in the description, not on screen. Short card so it doesn't run into the next thought."
+
+  - id: beat-10
+    at: 02:13.5                      # "experiments… still in progress… can reset without notice"
+    duration: 7s
+    template: term-definition
+    params:
+      term: "Experimental"
+      gloss: "Features still in progress. The network can reset without notice."
+    gap: said-once-then-gone
+    objective: 3
+    rationale: "The caveat every tester needs, spoken once. Her wording."
+
+  - id: beat-11
+    at: 02:30.4                      # "If you hit something unexpected… Base Discord… transaction hash, what you expected, the exact error"
+    duration: 10s
+    template: step-list
+    params:
+      title: "Hit something? Base Discord"
+      steps:
+        - { text: "Your transaction hash", at: 02:35.3 }
+        - { text: "What you expected", at: 02:36.7 }
+        - { text: "The exact error", at: 02:38.1 }
+    anchor: { x: 60, y: 520 }
+    gap: said-once-then-gone
+    objective: 3
+    rationale: "The feedback channel and the three things to include, spoken once and never shown. Each line lands on its word."
+
+  - id: beat-12
+    at: 02:43.7                      # "Test early, tell us what breaks, and be ready for day one"
+    duration: 5s
+    template: term-definition
+    params:
+      term: "Test early. Tell us what breaks."
+      gloss: "Be ready for day one"
+    gap: said-once-then-gone
+    objective: 3
+    rationale: "Her closing line, as the sign-off card. Same card as the first video, so the series reads as one."
+
+rejected:
+  - id: cand-post-below
+    kind: cue
+    summary: "Card 'Post what you build below' at 2:51"
+    rule: "Two sign-off cards in eight seconds; the first one carries the message. Suggest it back if you want the call to action on screen."
+  - id: cand-tagline-zoom
+    kind: cue
+    summary: "Zoom on the tagline 'Vibenet is an ephemeral Base developer network…' at 0:49"
+    rule: "Largest text on the page; the term card at 0:51 says it in her words instead."
+  - id: cand-gap-cuts
+    kind: cut
+    summary: "Cuts in the transcript gaps at 1:06.4–1:07.4, 1:56.6–1:57.7, 2:38.7–2:39.9, 2:49.9–2:51.0"
+    rule: "Measured: −35 (peak −15), −15, −23 and −20 dB mean. Three contain speech or loud clicks; the first peaks on a click. None is silence."
+  - id: cand-slide-get-on
+    kind: cue
+    summary: "Full-frame slide for 'Get on Vibenet in under a minute'"
+    rule: "The Connect panel with the real values is on screen; a step-list beside it keeps them visible. A slide would hide the thing she is pointing at."

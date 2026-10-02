@@ -8,13 +8,14 @@
 //   summary?: "SIGN → WAIT → INCLUDE"   // the bracketed takeaway line under the columns (reference 3)
 // }
 // Columns appear in order (on their `at` word if given). No anchor: it is the whole frame.
-import { el, appear, pop, equalize, STEP } from './motion.js';
+import { el, appear, pop, equalize, hidden, STEP } from './motion.js';
 
 export function build(ctx) {
   const { root, params, tl, at } = ctx;
   const slide = el('div', 'slide');
   const head = el('div', 'slide-head');
-  head.append(el('div', 'slide-title', params.title));
+  const title = el('div', 'slide-title', params.title);
+  head.append(title);
   const mark = el('div', 'wordmark');
   mark.append(el('span', 'sq'), el('span', '', 'base'));
   head.append(mark);
@@ -51,6 +52,10 @@ export function build(ctx) {
   // The field fades up, the header drops in, columns follow one by one and their pills pop.
   appear(tl, slide, 0, { y: 0, scale: 1, duration: 350, ease: 'outQuad' });
   appear(tl, head, 120, { y: -40, scale: 1, duration: 650, ease: 'outExpo' });
+  // Overlapping action: the band lands, then the title slides into it and the mark follows.
+  hidden(title, mark);
+  tl.add(title, { opacity: [0, 1], translateX: [-28, 0], duration: 520, ease: 'outQuint' }, 320);
+  tl.add(mark, { opacity: [0, 1], duration: 400, ease: 'outQuad' }, 520);
   let last = 0;
   params.columns.slice(0, 3).forEach((c, i) => {
     const t = at(c.at, 600 + i * STEP);
