@@ -18,7 +18,7 @@ export async function POST(req) {
   await store.putJson(`jobs/${id}/job.json`, job);
   await writeState(store, id, { status: 'queued', round: 1, mode: 'suggest', message: 'starting a machine' });
   try {
-    const launched = await launchJob(id);
+    const launched = await launchJob(id, { store });
     await store.putJson(`jobs/${id}/job.json`, { ...job, launched });
   } catch (e) {
     await writeState(store, id, { status: 'failed', round: 1, message: `Could not start: ${e.message}` });

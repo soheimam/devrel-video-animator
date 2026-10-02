@@ -13,6 +13,10 @@ drop MP4 ──▶ Blob ──▶ job.json ──▶ Sandbox runs scripts/job.mj
 2. Environment variables, from `.env.example`: `APP_PASSCODE`, `AUTH_SECRET`, `AI_GATEWAY_API_KEY`, optionally `AGENT_MODEL`.
 3. Sandboxes authenticate with the deployment's own identity; nothing to add. The Sandbox clones this repository at the deployed commit, so the pipeline the app runs is the one in git.
 
+## The prepared machine
+
+A cold Sandbox installs ffmpeg, the dependencies and Chromium before every job (several minutes). The front door has a **Prepare the machine now** link: it bootstraps one sandbox, snapshots it, and every job from then on starts from the snapshot in seconds, pulling only the deployed commit. Prepare again after dependency changes; the app does not detect those on its own yet.
+
 ## Run locally
 
 ```bash

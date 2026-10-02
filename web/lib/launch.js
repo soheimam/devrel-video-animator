@@ -8,9 +8,9 @@ import path from 'node:path';
 const ROOT = path.resolve(process.cwd(), '..');
 const useLocal = () => process.env.LOCAL_RUNNER === '1' || !process.env.BLOB_READ_WRITE_TOKEN;
 
-export async function launchJob(id) {
+export async function launchJob(id, { store } = {}) {
   if (useLocal()) return launchLocal(id);
-  return launchSandbox(id);
+  return launchSandbox(id, { store });
 }
 
 function launchLocal(id) {
@@ -22,17 +22,27 @@ function launchLocal(id) {
   return { runner: 'local', pid: child.pid };
 }
 
-async function launchSandbox(id) {
+const REVISION = () => process.env.REPO_REVISION || process.env.VERCEL_GIT_COMMIT_SHA || 'main';
+const REPO = () => process.env.REPO_URL || 'https://github.com/soheimam/devrel-video-animator.git';
+const RESOURCES = () => ({ vcpus: Number(process.env.SANDBOX_VCPUS || 4) });
+const SNAPSHOT_KEY = 'machine/snapshot.json';
+const PENDING_KEY = 'machine/pending.json';
+
+async function launchSandbox(id, { store } = {}) {
   const { Sandbox } = await import('@vercel/sandbox');
-  const revision = process.env.REPO_REVISION || process.env.VERCEL_GIT_COMMIT_SHA || 'main';
-  const url = process.env.REPO_URL || 'https://github.com/soheimam/devrel-video-animator.git';
-  const sandbox = await Sandbox.create({
-    name: `job-${id}-${Date.now().toString(36)}`,
-    source: { type: 'git', url, revision, depth: 1 },
-    image: process.env.SANDBOX_IMAGE || 'vercel/sandbox/node:22',
-    resources: { vcpus: Number(process.env.SANDBOX_VCPUS || 4) },
-    timeout: Number(process.env.SANDBOX_TIMEOUT_MS || 45 * 60 * 1000),
-  });
+  const revision = REVISION();
+  const snapshot = store ? await store.getJson(SNAPSHOT_KEY) : null;
+  const name = `job-${id}-${Date.now().toString(36)}`;
+  // From a prepared snapshot when there is one (seconds), else a cold machine (minutes).
+  const sandbox = snapshot
+    ? await Sandbox.create({ name, source: { type: 'snapshot', snapshotId: snapshot.snapshotId }, resources: RESOURCES(), timeout: Number(process.env.SANDBOX_TIMEOUT_MS || 45 * 60 * 1000) })
+    : await Sandbox.create({
+        name,
+        source: { type: 'git', url: REPO(), revision, depth: 1 },
+        image: process.env.SANDBOX_IMAGE || 'vercel/sandbox/node:22',
+        resources: RESOURCES(),
+        timeout: Number(process.env.SANDBOX_TIMEOUT_MS || 45 * 60 * 1000),
+      });
   const env = {
     JOB_ID: id,
     AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY || '',
@@ -41,15 +51,23 @@ async function launchSandbox(id) {
     CI: '1',
   };
   for (const k of ['OPENAI_API_KEY', 'DEEPGRAM_API_KEY', 'TRANSCRIBE_PROVIDER']) if (process.env[k]) env[k] = process.env[k];
-  const script = [
-    'set -o pipefail',
-    `(bash scripts/sandbox-bootstrap.sh > bootstrap.log 2>&1) || { node scripts/job.mjs --id "$JOB_ID" --fail "$(tail -c 800 bootstrap.log)"; exit 1; }`,
-    'set -a; [ -f .sandbox-env ] && . ./.sandbox-env; set +a',
-    'node scripts/job.mjs --id "$JOB_ID" > job.log 2>&1',
-  ].join('\n');
+  const script = snapshot
+    ? [
+        // Prepared machine: bring the pipeline to the deployed commit, refresh deps only if needed.
+        'set -o pipefail',
+        `(git fetch --depth 1 origin ${revision} && git checkout -q FETCH_HEAD && npm ci --prefer-offline --no-audit --no-fund --loglevel=error) > bootstrap.log 2>&1 || echo "update failed, running with the snapshot's copy" >> bootstrap.log`,
+        'set -a; [ -f .sandbox-env ] && . ./.sandbox-env; set +a',
+        'node scripts/job.mjs --id "$JOB_ID" > job.log 2>&1',
+      ].join('\n')
+    : [
+        'set -o pipefail',
+        `(bash scripts/sandbox-bootstrap.sh > bootstrap.log 2>&1) || { node scripts/job.mjs --id "$JOB_ID" --fail "$(tail -c 800 bootstrap.log)"; exit 1; }`,
+        'set -a; [ -f .sandbox-env ] && . ./.sandbox-env; set +a',
+        'node scripts/job.mjs --id "$JOB_ID" > job.log 2>&1',
+      ].join('\n');
   await sandbox.runCommand({ cmd: 'bash', args: ['-lc', script], env, detached: true });
   // This SDK identifies a sandbox by name; keep it so the app can look in and stop it later.
-  return { runner: 'sandbox', sandboxId: sandbox.name, sandboxName: sandbox.name };
+  return { runner: 'sandbox', sandboxId: sandbox.name, sandboxName: sandbox.name, fromSnapshot: Boolean(snapshot) };
 }
 
 const getSandbox = async (name) => {
@@ -84,4 +102,59 @@ export async function peekSandbox(name) {
   } catch (e) {
     return { status: 'unknown', error: e.message };
   }
+}
+
+// Preparing a machine: bootstrap once on a cold sandbox, then snapshot it. Jobs start from the
+// snapshot in seconds instead of installing ffmpeg, dependencies and Chromium every time.
+// Two steps, because a bootstrap can outlive one request: start it, then finish it on a later
+// status check once bootstrap.log says "bootstrap ok".
+export async function startPrepare(store) {
+  const { Sandbox } = await import('@vercel/sandbox');
+  const revision = REVISION();
+  const name = `prepare-${Date.now().toString(36)}`;
+  const sandbox = await Sandbox.create({
+    name,
+    source: { type: 'git', url: REPO(), revision, depth: 1 },
+    image: process.env.SANDBOX_IMAGE || 'vercel/sandbox/node:22',
+    resources: RESOURCES(),
+    timeout: 30 * 60 * 1000,
+  });
+  await sandbox.runCommand({ cmd: 'bash', args: ['-lc', 'bash scripts/sandbox-bootstrap.sh > bootstrap.log 2>&1; echo "exit $?" >> bootstrap.log'], detached: true });
+  const pending = { name, revision, startedAt: new Date().toISOString() };
+  await store.putJson(PENDING_KEY, pending);
+  return pending;
+}
+
+export async function machineStatus(store) {
+  const snapshot = await store.getJson(SNAPSHOT_KEY);
+  const pending = await store.getJson(PENDING_KEY);
+  if (!pending) return { snapshot, pending: null };
+  const peek = await peekSandbox(pending.name);
+  const log = peek.bootstrap || '';
+  const done = /bootstrap ok[\s\S]*exit 0/.test(log);
+  const failed = /exit [1-9]/.test(log) || ['stopped', 'failed', 'aborted'].includes(peek.status);
+  if (done) {
+    try {
+      const sandbox = await getSandbox(pending.name);
+      const snap = await sandbox.snapshot({ expiration: 0 });
+      const record = { snapshotId: snap.snapshotId, revision: pending.revision, createdAt: new Date().toISOString() };
+      await store.putJson(SNAPSHOT_KEY, record);
+      await store.del([PENDING_KEY]);
+      try { await sandbox.stop(); } catch { /* fine */ }
+      return { snapshot: record, pending: null, justFinished: true };
+    } catch (e) {
+      await store.del([PENDING_KEY]);
+      return { snapshot, pending: null, error: `Snapshot failed: ${e.message}`, log: log.slice(-1500) };
+    }
+  }
+  if (failed) {
+    await store.del([PENDING_KEY]);
+    try { await stopSandbox(pending.name); } catch { /* fine */ }
+    return { snapshot, pending: null, error: 'Bootstrap failed on the prepare machine.', log: log.slice(-2500) };
+  }
+  return { snapshot, pending: { ...pending, machine: peek.status, log: log.slice(-1200) } };
+}
+
+export async function forgetSnapshot(store) {
+  await store.del([SNAPSHOT_KEY]);
 }
