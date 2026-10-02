@@ -1,6 +1,6 @@
 import { isAuthed, unauthorized } from '../../../../lib/auth';
 import { createStore, readState, writeState } from '../../../../lib/store';
-import { launchJob, stopSandbox, peekSandbox } from '../../../../lib/launch';
+import { launchJob, stopSandbox, peekSandbox, ensurePrepared } from '../../../../lib/launch';
 
 const safeId = (id) => /^[\w-]{6,40}$/.test(id);
 
@@ -12,6 +12,8 @@ export async function GET(_req, { params }) {
   const job = await store.getJson(`jobs/${id}/job.json`);
   if (!job) return Response.json({ error: 'No such job.' }, { status: 404 });
   let state = (await readState(store, id)) || { status: 'queued' };
+  // Polling a job is also when a pending machine preparation gets finished and snapshotted.
+  await ensurePrepared(store);
   // Before the job reports anything, show what the machine itself is doing.
   if (state.status === 'queued' && job.launched) {
     const machine = job.launched.sandboxId ? await peekSandbox(job.launched.sandboxId) : { status: 'unknown', error: 'no machine id was recorded' };

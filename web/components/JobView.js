@@ -94,7 +94,10 @@ export default function JobView({ id }) {
         ) : null}
         {working ? (
           <p className="hint">
-            Usually about ten minutes for a three-minute recording. You can close this tab; the job keeps going and the page remembers it.
+            {status === 'queued' && data.job.launched && data.job.launched.fromSnapshot === false
+              ? 'First run on a fresh machine: setting up its tools first, which adds a few minutes this once. Then about ten minutes for a three-minute recording. '
+              : 'Usually about ten minutes for a three-minute recording. '}
+            You can close this tab; the job keeps going and the page remembers it.
             {' '}<button className="jump" onClick={remove}>Stop and delete this job</button>
           </p>
         ) : null}

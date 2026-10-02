@@ -171,3 +171,20 @@ export async function machineStatus(store) {
 export async function forgetSnapshot(store) {
   await store.del([SNAPSHOT_KEY]);
 }
+
+// Keeps the prepared machine current without anyone asking: prepares one the first time it is
+// needed, finishes a pending preparation when its bootstrap is done, and prepares a fresh one
+// after a deploy changes the commit. Cheap when nothing is pending.
+export async function ensurePrepared(store) {
+  if (useLocal()) return { local: true };
+  try {
+    const status = await machineStatus(store);
+    const outdated = status.snapshot && status.snapshot.revision !== REVISION();
+    if (!status.pending && (!status.snapshot || outdated)) {
+      status.pending = await startPrepare(store);
+    }
+    return status;
+  } catch (e) {
+    return { error: e.message };
+  }
+}

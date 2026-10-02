@@ -2,7 +2,6 @@ import { redirect } from 'next/navigation';
 import { isAuthed } from '../lib/auth';
 import { createStore, readState } from '../lib/store';
 import Uploader from '../components/Uploader';
-import Machine from '../components/Machine';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,7 +30,6 @@ export default async function Home() {
           ) : (
             <p className="err">Storage is not connected: this deployment has no <code>BLOB_READ_WRITE_TOKEN</code>. Connect a public Blob store to the project for the Production environment, then redeploy.</p>
           )}
-          <Machine />
           {jobs.length ? (
             <div className="recent">
               <h3>Recent</h3>

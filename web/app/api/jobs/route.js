@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { isAuthed, unauthorized } from '../../../lib/auth';
 import { createStore, writeState, newJobId } from '../../../lib/store';
-import { launchJob } from '../../../lib/launch';
+import { launchJob, ensurePrepared } from '../../../lib/launch';
 
 const slug = (file) => path.basename(file, path.extname(file)).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'recording';
 
@@ -18,6 +18,7 @@ export async function POST(req) {
   await store.putJson(`jobs/${id}/job.json`, job);
   await writeState(store, id, { status: 'queued', round: 1, mode: 'suggest', message: 'starting a machine' });
   try {
+    await ensurePrepared(store); // a snapshot for next time; this job uses it if it already exists
     const launched = await launchJob(id, { store });
     await store.putJson(`jobs/${id}/job.json`, { ...job, launched });
   } catch (e) {

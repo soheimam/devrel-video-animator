@@ -15,7 +15,7 @@ drop MP4 ──▶ Blob ──▶ job.json ──▶ Sandbox runs scripts/job.mj
 
 ## The prepared machine
 
-A cold Sandbox installs ffmpeg, the dependencies and Chromium before every job (several minutes). The front door has a **Prepare the machine now** link: it bootstraps one sandbox, snapshots it, and every job from then on starts from the snapshot in seconds, pulling only the deployed commit. Prepare again after dependency changes; the app does not detect those on its own yet.
+A cold Sandbox installs ffmpeg, the dependencies and Chromium before a job (several minutes). The app avoids that on its own: the first job after a deploy also starts a preparation sandbox in the background, snapshots it when its bootstrap finishes, and every later job starts from the snapshot in seconds, pulling only the deployed commit. A new deploy triggers a fresh snapshot the same way. Nothing to press. `GET /api/machine` shows the current state if you need to look.
 
 ## Run locally
 
