@@ -1,6 +1,6 @@
 import { isAuthed, unauthorized } from '../../../../lib/auth';
 import { createStore, readState, writeState } from '../../../../lib/store';
-import { launchJob, stopSandbox } from '../../../../lib/launch';
+import { launchJob, stopSandbox, peekSandbox } from '../../../../lib/launch';
 
 const safeId = (id) => /^[\w-]{6,40}$/.test(id);
 
@@ -11,7 +11,20 @@ export async function GET(_req, { params }) {
   const store = createStore();
   const job = await store.getJson(`jobs/${id}/job.json`);
   if (!job) return Response.json({ error: 'No such job.' }, { status: 404 });
-  const state = (await readState(store, id)) || { status: 'queued' };
+  let state = (await readState(store, id)) || { status: 'queued' };
+  // Before the job reports anything, show what the machine itself is doing.
+  if (state.status === 'queued' && job.launched?.sandboxId) {
+    const machine = await peekSandbox(job.launched.sandboxId);
+    const startedAt = Date.parse(job.rounds[job.rounds.length - 1]?.startedAt || job.createdAt);
+    const dead = ['stopped', 'failed', 'aborted'].includes(machine.status);
+    const stale = Date.now() - startedAt > 25 * 60 * 1000;
+    if (dead || stale) {
+      const why = dead ? `The machine ${machine.status} before the job reported anything.` : 'The machine has not reported in 25 minutes.';
+      state = await writeState(store, id, { status: 'failed', round: state.round, message: why, error: [machine.bootstrap, machine.job].filter(Boolean).join('\n---\n').slice(-3000) });
+    } else {
+      state = { ...state, machine };
+    }
+  }
   // A finished job's sandbox has nothing left to do; stop paying for it.
   if (['done', 'failed'].includes(state.status) && job.launched?.sandboxId && !job.launched.stopped) {
     if (await stopSandbox(job.launched.sandboxId)) await store.putJson(`jobs/${id}/job.json`, { ...job, launched: { ...job.launched, stopped: true } });

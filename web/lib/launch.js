@@ -60,3 +60,23 @@ export async function stopSandbox(sandboxId) {
     return false;
   }
 }
+
+// What a machine is doing while the job has not reported yet: its status and the tail of its
+// logs. Lets the page show progress during bootstrap, and lets us fail a job whose machine died.
+export async function peekSandbox(sandboxId) {
+  try {
+    const { Sandbox } = await import('@vercel/sandbox');
+    const sandbox = await Sandbox.get({ sandboxId });
+    const tail = async (file) => {
+      try {
+        const buf = await sandbox.readFileToBuffer({ path: file });
+        return buf ? buf.toString('utf8').slice(-1500) : '';
+      } catch {
+        return '';
+      }
+    };
+    return { status: sandbox.status, bootstrap: await tail('bootstrap.log'), job: await tail('job.log') };
+  } catch (e) {
+    return { status: 'unknown', error: e.message };
+  }
+}

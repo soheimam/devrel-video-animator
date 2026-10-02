@@ -96,6 +96,14 @@ export default function JobView({ id }) {
         {working && state.log?.length ? (
           <div className="log">{state.log.slice(-8).map((e, i) => <div key={i}>{e.type === 'summary' ? '' : `${e.type}  ${e.detail}`}</div>)}</div>
         ) : null}
+        {working && state.machine ? (
+          <div className="log">
+            machine: {state.machine.status || 'unknown'}{state.machine.error ? ` (${state.machine.error})` : ''}
+            {state.machine.bootstrap ? `\n\n# bootstrap.log\n${state.machine.bootstrap.split('\n').slice(-12).join('\n')}` : '\n\nbootstrap has not written anything yet (clone and install in progress)'}
+            {state.machine.job ? `\n\n# job.log\n${state.machine.job.split('\n').slice(-8).join('\n')}` : ''}
+          </div>
+        ) : null}
+        {state.status === 'failed' && state.error ? <details className="more"><summary>Details</summary><pre className="log">{state.error}</pre></details> : null}
         {state.status === 'failed' ? (
           <div className="failed">
             <b>Couldn't finish.</b> {state.message}

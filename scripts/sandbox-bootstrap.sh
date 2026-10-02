@@ -5,7 +5,10 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 : > .sandbox-env
+say() { echo "[$(date +%H:%M:%S)] $*"; }
+say "bootstrap: $(uname -a)"; say "node $(node -v), npm $(npm -v)"
 
+say "system packages"
 if ! command -v ffmpeg >/dev/null 2>&1; then
   if command -v apt-get >/dev/null 2>&1; then
     (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-liberation) >/dev/null 2>&1 || true
@@ -14,7 +17,9 @@ if ! command -v ffmpeg >/dev/null 2>&1; then
   fi
 fi
 
+say "npm ci"
 npm ci --no-audit --no-fund --loglevel=error
+say "ffmpeg: $(command -v ffmpeg || echo none)"
 
 if ! command -v ffmpeg >/dev/null 2>&1; then
   # No package manager had it: use the static builds.
@@ -23,10 +28,11 @@ if ! command -v ffmpeg >/dev/null 2>&1; then
   echo "FFPROBE_PATH=$(node -p "require('ffprobe-static').path")" >> .sandbox-env
 fi
 
+say "chromium"
 # Playwright's Chromium, with system libraries when the distro allows; otherwise the Lambda build.
 if ! (npx playwright install --with-deps chromium >/dev/null 2>&1 || npx playwright install chromium >/dev/null 2>&1); then
   npm install --no-save --no-audit --no-fund --loglevel=error @sparticuz/chromium
   echo "CHROMIUM_PATH=$(node -e "require('@sparticuz/chromium').executablePath().then(p=>console.log(p))")" >> .sandbox-env
 fi
 
-echo "bootstrap ok"; cat .sandbox-env
+say "bootstrap ok"; cat .sandbox-env
