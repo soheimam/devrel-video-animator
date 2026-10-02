@@ -21,6 +21,16 @@ loop          person comments picks ("drop beat-3", "beat-4 at 1:10") → same g
 done          person downloads edited.mp4 (and captions.srt) from the PR; merges to keep the edit list, or closes
 ```
 
+## As built (PR: `.github/workflows/animate.yml`, `scripts/pr-recording.mjs`, `scripts/publish.mjs`)
+
+Optimised for the uploader's experience, which changed three of the decisions below:
+
+- **No Git LFS, no allowlist file, no label.** The uploader drags the MP4 into the PR description (GitHub stores it as an attachment, up to 100 MB) or adds it under `videos/`. Only people with write access can start a run: the Claude Code action checks the triggering user itself, and fork PRs are skipped. Picks are a reply mentioning `@claude`, which people already know.
+- **All binaries go to one rolling GitHub Release** (`renders`), prefixed by video name and replaced each round: the edited MP4, captions, GIFs and strips. The source recording is not committed; `videos/<name>.yaml` records where it came from. Git history stays small.
+- **One review comment per video, updated in place**, built by `scripts/publish.mjs` from the edit list, so the format is the same on every PR and the agent only edits files and renders. It carries the download link, the pacing line, a GIF and a strip per beat with checkboxes, the cuts, and how to give notes.
+
+Still to do before it runs: repository secrets `ANTHROPIC_API_KEY` (or `CLAUDE_CODE_OAUTH_TOKEN`) and `AI_GATEWAY_API_KEY`; the Claude GitHub App installed on the repo; a first dry run on a test PR. The one-time history rewrite (section 1) is still worth doing.
+
 Three design decisions carry everything else: where the media lives, how a run is allowed to start, and what runs the agent.
 
 ## 1. Where the media lives
