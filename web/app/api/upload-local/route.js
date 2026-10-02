@@ -9,7 +9,7 @@ export async function POST(req) {
   const form = await req.formData();
   const file = form.get('file');
   if (!file || typeof file === 'string') return new Response('No file', { status: 400 });
-  const dir = path.join(process.env.JOBS_DIR || path.resolve(process.cwd(), '..', '.jobs'), 'uploads');
+  const dir = path.join(process.env.JOBS_DIR || path.resolve(/*turbopackIgnore: true*/ process.cwd(), '..', '.jobs'), 'uploads');
   fs.mkdirSync(dir, { recursive: true });
   const name = `${Date.now()}-${file.name.replace(/[^\w.-]+/g, '_')}`;
   fs.writeFileSync(path.join(dir, name), Buffer.from(await file.arrayBuffer()));

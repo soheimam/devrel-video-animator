@@ -13,7 +13,7 @@ export async function POST(req) {
   const id = newJobId();
   const name = slug(fileName);
   // Local uploads are stored on disk; the runner reads them by path.
-  const source = sourceUrl.startsWith('/local/') ? `file://${path.join(process.env.JOBS_DIR || path.resolve(process.cwd(), '..', '.jobs'), sourceUrl.replace('/local/', ''))}` : sourceUrl;
+  const source = sourceUrl.startsWith('/local/') ? `file://${path.join(process.env.JOBS_DIR || path.resolve(/*turbopackIgnore: true*/ process.cwd(), '..', '.jobs'), sourceUrl.replace('/local/', ''))}` : sourceUrl;
   const job = { id, name, fileName, sourceUrl: source, notes: String(notes).slice(0, 4000), size, createdAt: new Date().toISOString(), rounds: [{ n: 1, mode: 'suggest', picks: null, startedAt: new Date().toISOString() }] };
   await store.putJson(`jobs/${id}/job.json`, job);
   await writeState(store, id, { status: 'queued', round: 1, mode: 'suggest', message: 'starting a machine' });
