@@ -9,7 +9,7 @@ drop MP4 ──▶ Blob ──▶ job.json ──▶ Sandbox runs scripts/job.mj
 
 ## Deploy
 
-1. Vercel project with **Root Directory `web`**, framework Next.js. Link a **Blob** store (sets `BLOB_READ_WRITE_TOKEN`).
+1. Vercel project with **Root Directory `web`**, framework preset Next.js, and no Build/Output/Install overrides (a project that previously served the static review page keeps an `Output Directory: public` override; clear it). Link a **public Blob** store (sets `BLOB_READ_WRITE_TOKEN`).
 2. Environment variables, from `.env.example`: `APP_PASSCODE`, `AUTH_SECRET`, `AI_GATEWAY_API_KEY`, optionally `AGENT_MODEL`.
 3. Sandboxes authenticate with the deployment's own identity; nothing to add. The Sandbox clones this repository at the deployed commit, so the pipeline the app runs is the one in git.
 
