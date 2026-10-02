@@ -44,6 +44,25 @@ describe('the headless agent', () => {
     for (const needle of ['animate-video', 'Base style', 'Motion principles', 'What makes an animation worth adding', 'out/demo/']) assert.ok(s.includes(needle), needle);
   });
 
+  test('an image from the look tool reaches the provider in a shape the gateway accepts', async () => {
+    let n = 0;
+    let second;
+    const usage = { inputTokens: { total: 1, noCache: 1, cacheRead: undefined, cacheWrite: undefined }, outputTokens: { total: 1, text: 1, reasoning: undefined }, raw: undefined };
+    const model = new MockLanguageModelV3({
+      doGenerate: async (opts) => {
+        n += 1;
+        if (n === 1) return { content: [{ type: 'tool-call', toolCallId: 'c1', toolName: 'look', input: JSON.stringify({ path: 'editorial/references/base-explainer-1-schedule.jpg' }) }], finishReason: { unified: 'tool-calls', raw: 'tool_use' }, usage, warnings: [] };
+        second = opts.prompt;
+        return { content: [{ type: 'text', text: 'done' }], finishReason: { unified: 'stop', raw: 'end_turn' }, usage, warnings: [] };
+      },
+    });
+    await runAgent({ name: 'demo', model, maxSteps: 3, log: () => {} });
+    const result = second.flatMap((m) => (Array.isArray(m.content) ? m.content : [])).find((p) => p.type === 'tool-result');
+    const kinds = result.output.value.map((p) => p.type);
+    assert.ok(!kinds.includes('media'), `old 'media' part sent: ${kinds}`);
+    assert.ok(kinds.some((k) => ['file', 'file-data', 'image-data'].includes(k)), `no image part: ${kinds}`);
+  });
+
   test('a tool loop runs: the model calls a tool, then summarises', async () => {
     let calls = 0;
     const model = new MockLanguageModelV3({

@@ -157,7 +157,8 @@ export function makeTools(name, { onEvent = () => {} } = {}) {
       toModelOutput: ({ output }) =>
         output.error
           ? { type: 'text', value: output.error }
-          : { type: 'content', value: [{ type: 'text', text: output.path }, { type: 'media', data: output.data, mediaType: output.mediaType }] },
+          // The current tool-result file part; the older 'media' type is rejected by the gateway.
+          : { type: 'content', value: [{ type: 'text', text: output.path }, { type: 'file', mediaType: output.mediaType, data: { type: 'data', data: output.data } }] },
     }),
     run: tool({
       description: `Run one of the repo's own commands: \`npm run render -- out/${name}\`, \`npm run validate -- out/${name}\`, \`npm run frames -- out/${name} --at 00:42.0,01:10.5\`, an ffprobe query, or an ffmpeg volumedetect measurement (\`ffmpeg -ss S -t L -i videos/<file> -af volumedetect -f null -\`). Nothing else.`,
