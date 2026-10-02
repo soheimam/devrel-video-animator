@@ -30,7 +30,8 @@ fi
 
 say "chromium"
 # Playwright's Chromium, with system libraries when the distro allows; otherwise the Lambda build.
-if ! (npx playwright install --with-deps chromium >/dev/null 2>&1 || npx playwright install chromium >/dev/null 2>&1); then
+# Output kept in the log: when this fails, the reason is what we need.
+if ! (npx playwright install --with-deps chromium 2>&1 | tail -5 || npx playwright install chromium 2>&1 | tail -5); then
   npm install --no-save --no-audit --no-fund --loglevel=error @sparticuz/chromium
   echo "CHROMIUM_PATH=$(node -e "require('@sparticuz/chromium').executablePath().then(p=>console.log(p))")" >> .sandbox-env
 fi

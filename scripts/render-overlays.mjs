@@ -46,7 +46,7 @@ export async function renderOverlays(outDir, { log = console.log } = {}) {
   const results = [];
   if (cues.length) {
     const { server, url } = await startServer();
-    const browser = await launchBrowser();
+    const browser = await launchBrowser({ log });
     try {
       const { page, errors } = await openStage(browser, url, design, design.scale);
       for (const cue of cues) {
