@@ -22,7 +22,9 @@ function launchLocal(id) {
   return { runner: 'local', pid: child.pid };
 }
 
-const REVISION = () => process.env.REPO_REVISION || process.env.VERCEL_GIT_COMMIT_SHA || 'main';
+// Machines run the newest pipeline on the branch, not the commit the web app was built from:
+// pipeline-only changes don't redeploy the app (Vercel skips builds with no web/ changes).
+const REVISION = () => process.env.REPO_REVISION || process.env.REPO_BRANCH || 'main';
 const REPO = () => process.env.REPO_URL || 'https://github.com/soheimam/devrel-video-animator.git';
 const RESOURCES = () => ({ vcpus: Number(process.env.SANDBOX_VCPUS || 4) });
 const BRANCH = () => process.env.REPO_BRANCH || 'main';

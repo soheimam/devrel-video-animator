@@ -104,8 +104,15 @@ export async function runJob(id, { store = createStore(), log = console.log, age
     return review;
   } catch (e) {
     const plain = (t) => String(t).replace(/\x1b\[[0-9;]*m/g, '');
+    // Gateway errors carry the HTTP status, a generation id and the provider's own reason.
+    const detail = [];
+    if (e.statusCode) detail.push(`status ${e.statusCode}`);
+    if (e.generationId) detail.push(`generation ${e.generationId}`);
+    const cause = e.cause;
+    if (cause) detail.push(`cause: ${plain(cause.responseBody || cause.message || JSON.stringify(cause)).slice(0, 1500)}`);
+    if (process.env.AGENT_MODEL) detail.push(`AGENT_MODEL=${process.env.AGENT_MODEL}`);
     const where = { fetching: 'getting the recording', restoring: 'restoring the last round', transcribing: 'transcribing', suggesting: 'suggesting (the model call)', applying: 'applying your picks (the model call)', rendering: 'rendering', publishing: 'publishing' }[current] || current;
-    await state('failed', { message: `Failed while ${where}: ${plain(e.message).split('\n')[0].slice(0, 280)}`, error: plain(e.stack || e).slice(0, 4000) });
+    await state('failed', { message: `Failed while ${where}: ${plain(e.message).split('\n')[0].slice(0, 280)}`, error: [detail.join('\n'), plain(e.stack || e)].filter(Boolean).join('\n\n').slice(0, 5000) });
     throw e;
   }
 }

@@ -176,7 +176,9 @@ export async function runAgent({ name, mode = 'suggest', notes = '', picks = nul
   const tools = makeTools(name, { onEvent });
   onEvent({ type: 'model', detail: typeof model === 'string' ? model : 'injected', at: Date.now() });
   log(`  agent: ${mode} for ${name} with ${typeof model === 'string' ? model : 'injected model'}, up to ${maxSteps} steps`);
-  const result = await generateText({
+  let result;
+  try {
+    result = await generateText({
     model,
     system: systemPrompt(name, mode),
     prompt: userPrompt({ name, mode, notes, picks }),
@@ -188,7 +190,11 @@ export async function runAgent({ name, mode = 'suggest', notes = '', picks = nul
         log(`  agent → ${call.toolName} ${input.path || input.dir || input.command || ''}`.trimEnd());
       }
     },
-  });
+    });
+  } catch (e) {
+    e.message = `${e.message} (model ${typeof model === 'string' ? model : 'injected'})`;
+    throw e;
+  }
   const summary = result.text?.trim() || '(no summary)';
   log(`  agent: done in ${result.steps.length} step(s)`);
   onEvent({ type: 'summary', detail: summary, at: Date.now() });
