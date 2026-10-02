@@ -13,7 +13,7 @@ import { loadRules } from '../lib/rules.js';
 
 const cell = (s) => String(s ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
 
-function describe(cue) {
+export function describe(cue) {
   const p = cue.params;
   switch (cue.template) {
     case 'callout': return `“${p.text}”`;
@@ -21,6 +21,7 @@ function describe(cue) {
     case 'step-list': return (p.steps || []).map((s) => (typeof s === 'string' ? s : s.text)).join(' → ');
     case 'flow-diagram': return (p.nodes || []).map((n) => (typeof n === 'string' ? n : n.label)).join(' → ');
     case 'comparison': return `${p.left?.title} vs ${p.right?.title}`;
+    case 'slide': return `**${p.title}**: ${(p.columns || []).map((c) => c.heading).filter(Boolean).join(' · ')}`;
     default: return p.label ? `“${p.label}”` : '';
   }
 }

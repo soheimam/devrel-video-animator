@@ -27,9 +27,9 @@ The first version let agents edit autonomously, with an analyst, an editor, an a
 
 ## Next
 
-1. First real run on `videos/vibetnet.mp4` with a proper transcript, and a review PR with GIFs.
-2. Adjust the suggestion guidance from what the reviewer keeps and drops.
-3. Then, if wanted: a watch loop over `videos/`, chapter markers, short clips.
+1. ~~First real run on `videos/vibetnet.mp4` with a proper transcript, and a review PR with GIFs.~~ Done: PR #17 (four rounds) and #18.
+2. ~~Adjust the suggestion guidance from what the reviewer keeps and drops.~~ Ongoing: every review note becomes a rule (STYLE.md, MOTION.md, the validator).
+3. **A recording arrives as a PR and the agents do the rest**: `plans/pr-workflow.md`.
 
 ## Open
 
