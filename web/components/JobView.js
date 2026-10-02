@@ -92,7 +92,12 @@ export default function JobView({ id }) {
             ))}
           </div>
         ) : null}
-        {working ? <p className="hint">Usually about ten minutes for a three-minute recording. You can close this tab; the job keeps going and the page remembers it.</p> : null}
+        {working ? (
+          <p className="hint">
+            Usually about ten minutes for a three-minute recording. You can close this tab; the job keeps going and the page remembers it.
+            {' '}<button className="jump" onClick={remove}>Stop and delete this job</button>
+          </p>
+        ) : null}
         {working && state.log?.length ? (
           <div className="log">{state.log.slice(-8).map((e, i) => <div key={i}>{e.type === 'summary' ? '' : `${e.type}  ${e.detail}`}</div>)}</div>
         ) : null}

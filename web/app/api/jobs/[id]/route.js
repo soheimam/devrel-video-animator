@@ -44,6 +44,7 @@ export async function POST(req, { params }) {
   if (body.action === 'delete') {
     if (job.launched?.sandboxId && !job.launched.stopped) await stopSandbox(job.launched.sandboxId);
     await store.del([`jobs/${id}/`]);
+    // Nothing else should ever find this job again, even if a delete of some file fails.
     if (job.sourceUrl?.startsWith('http') && !/^file:/.test(job.sourceUrl)) {
       try { await store.del([new URL(job.sourceUrl).pathname.replace(/^\//, '')]); } catch { /* best effort */ }
     }
