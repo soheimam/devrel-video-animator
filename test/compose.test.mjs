@@ -49,7 +49,7 @@ test('zoom eases in and out around the region centre', () => {
 test('captions are burned in after the cuts, on the edited timeline', () => {
   const edl = normalizeEdl({ cuts: [{ id: 'c', from: 10, to: 12 }] });
   const g = filter(buildCommand({ source, edl, rules, outDir: '/o', output: '/o/e.mp4', captionsFile: '/o/captions.ass' }));
-  assert.match(g, /select='not\(gte\(t,10\.0000\)\*lt\(t,12\.0000\)\)',setpts=N\/\(30\*TB\),ass=filename='\/o\/captions\.ass',format=yuv420p\[vout\]/);
+  assert.match(g, /select='not\(gte\(t,10\.0000\)\*lt\(t,12\.0000\)\)',setpts=N\/\(30\*TB\),ass=filename='\/o\/captions\.ass':fontsdir='[^']+',format=yuv420p\[vout\]/);
   const noCuts = filter(buildCommand({ source, edl: normalizeEdl({}), rules, outDir: '/o', output: '/o/e.mp4', captionsFile: '/o/captions.ass' }));
-  assert.match(noCuts, /\[base\]ass=filename='\/o\/captions\.ass',format=yuv420p\[vout\]/);
+  assert.match(noCuts, /\[base\]ass=filename='\/o\/captions\.ass':fontsdir='[^']+',format=yuv420p\[vout\]/);
 });

@@ -1,0 +1,18 @@
+{
+  "name": "devrel-video-animator-web",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.8.0",
+    "@vercel/sandbox": "^3.5.1",
+    "next": "^16.3.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "private": true,
+  "type": "module"
+}

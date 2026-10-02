@@ -10,7 +10,7 @@ you:     "keep cue-1, drop cue-3, cue-2 a second later"
 agent:   re-renders → out/my-talk/edited.mp4 with captions burned in
 ```
 
-No app, no server. A Claude Code skill, a dozen scripts, and seven anime.js templates.
+Two ways in: a Claude Code skill for anyone with the repo, and a small web app (`web/`) where you sign in with a passcode, drop the file, and review the result with checkboxes. The web app runs the same scripts in a Vercel Sandbox, with one AI Gateway key for transcription and the agent.
 
 ## Quick start
 
@@ -35,7 +35,8 @@ Then open Claude Code in this repo and say:
 | `.claude/skills/animate-video/SKILL.md` | The whole flow, and how to suggest well |
 | `editorial/` | `STANDARD.md` (when a visual helps), `STYLE.md` (the Base look, with references), `MOTION.md` (the animation principles) |
 | `templates/` | anime.js templates, the theme, and the stage they render on |
-| `scripts/` | `doctor`, `ingest` (transcribe + frames), `validate`, `render` (overlays, compose, captions, previews, report), `site` (static review page for Vercel), `demo` |
+| `scripts/` | `doctor`, `ingest` (transcribe + frames), `validate`, `render` (overlays, compose, captions, previews, report), `agent` (the skill run headless, via the AI SDK), `job` (one upload start to finish), `site`, `demo` |
+| `web/` | The front door on Vercel: passcode, drop zone, progress, review with checkboxes and notes. See `web/README.md` |
 | `lib/` | timeline maths, validation, captions, ffmpeg helpers |
 | `examples/demo/edits.yaml` | Reference edit list |
 | `videos/` | Upload recordings here |
