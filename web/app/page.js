@@ -25,7 +25,11 @@ export default async function Home() {
       <div className="card-wrap">
         <div className="card">
           <div className="brand"><span className="sq" /> Base video edit</div>
-          <Uploader localStore={!process.env.BLOB_READ_WRITE_TOKEN} />
+          {process.env.BLOB_READ_WRITE_TOKEN || process.env.NODE_ENV !== 'production' ? (
+            <Uploader localStore={!process.env.BLOB_READ_WRITE_TOKEN} />
+          ) : (
+            <p className="err">Storage is not connected: this deployment has no <code>BLOB_READ_WRITE_TOKEN</code>. Connect a public Blob store to the project for the Production environment, then redeploy.</p>
+          )}
           {jobs.length ? (
             <div className="recent">
               <h3>Recent</h3>

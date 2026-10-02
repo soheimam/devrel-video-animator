@@ -5,7 +5,7 @@ import { isAuthed } from '../../../lib/auth';
 
 export async function POST(req) {
   if (!(await isAuthed())) return Response.json({ error: 'Sign in first.' }, { status: 401 });
-  if (process.env.BLOB_READ_WRITE_TOKEN) return Response.json({ error: 'Not available with a Blob store.' }, { status: 400 });
+  if (process.env.BLOB_READ_WRITE_TOKEN || process.env.NODE_ENV === 'production') return Response.json({ error: 'Local uploads are for development only.' }, { status: 400 });
   const form = await req.formData();
   const file = form.get('file');
   if (!file || typeof file === 'string') return new Response('No file', { status: 400 });
