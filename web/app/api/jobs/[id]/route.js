@@ -13,13 +13,13 @@ export async function GET(_req, { params }) {
   if (!job) return Response.json({ error: 'No such job.' }, { status: 404 });
   let state = (await readState(store, id)) || { status: 'queued' };
   // Before the job reports anything, show what the machine itself is doing.
-  if (state.status === 'queued' && job.launched?.sandboxId) {
-    const machine = await peekSandbox(job.launched.sandboxId);
+  if (state.status === 'queued' && job.launched) {
+    const machine = job.launched.sandboxId ? await peekSandbox(job.launched.sandboxId) : { status: 'unknown', error: 'no machine id was recorded' };
     const startedAt = Date.parse(job.rounds[job.rounds.length - 1]?.startedAt || job.createdAt);
     const dead = ['stopped', 'failed', 'aborted'].includes(machine.status);
     const stale = Date.now() - startedAt > 25 * 60 * 1000;
     if (dead || stale) {
-      const why = dead ? `The machine ${machine.status} before the job reported anything.` : 'The machine has not reported in 25 minutes.';
+      const why = dead ? `The machine ${machine.status} before the job reported anything.` : `The machine has not reported in 25 minutes${machine.error ? ` (${machine.error})` : ''}.`;
       state = await writeState(store, id, { status: 'failed', round: state.round, message: why, error: [machine.bootstrap, machine.job].filter(Boolean).join('\n---\n').slice(-3000) });
     } else {
       state = { ...state, machine };

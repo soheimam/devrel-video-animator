@@ -27,6 +27,7 @@ async function launchSandbox(id) {
   const revision = process.env.REPO_REVISION || process.env.VERCEL_GIT_COMMIT_SHA || 'main';
   const url = process.env.REPO_URL || 'https://github.com/soheimam/devrel-video-animator.git';
   const sandbox = await Sandbox.create({
+    name: `job-${id}-${Date.now().toString(36)}`,
     source: { type: 'git', url, revision, depth: 1 },
     image: process.env.SANDBOX_IMAGE || 'vercel/sandbox/node:22',
     resources: { vcpus: Number(process.env.SANDBOX_VCPUS || 4) },
@@ -47,13 +48,18 @@ async function launchSandbox(id) {
     'node scripts/job.mjs --id "$JOB_ID" > job.log 2>&1',
   ].join('\n');
   await sandbox.runCommand({ cmd: 'bash', args: ['-lc', script], env, detached: true });
-  return { runner: 'sandbox', sandboxId: sandbox.sandboxId };
+  // This SDK identifies a sandbox by name; keep it so the app can look in and stop it later.
+  return { runner: 'sandbox', sandboxId: sandbox.name, sandboxName: sandbox.name };
 }
 
-export async function stopSandbox(sandboxId) {
+const getSandbox = async (name) => {
+  const { Sandbox } = await import('@vercel/sandbox');
+  return Sandbox.get({ name });
+};
+
+export async function stopSandbox(name) {
   try {
-    const { Sandbox } = await import('@vercel/sandbox');
-    const sandbox = await Sandbox.get({ sandboxId });
+    const sandbox = await getSandbox(name);
     await sandbox.stop();
     return true;
   } catch {
@@ -63,10 +69,9 @@ export async function stopSandbox(sandboxId) {
 
 // What a machine is doing while the job has not reported yet: its status and the tail of its
 // logs. Lets the page show progress during bootstrap, and lets us fail a job whose machine died.
-export async function peekSandbox(sandboxId) {
+export async function peekSandbox(name) {
   try {
-    const { Sandbox } = await import('@vercel/sandbox');
-    const sandbox = await Sandbox.get({ sandboxId });
+    const sandbox = await getSandbox(name);
     const tail = async (file) => {
       try {
         const buf = await sandbox.readFileToBuffer({ path: file });
