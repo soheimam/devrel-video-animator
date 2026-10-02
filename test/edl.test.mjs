@@ -1,6 +1,6 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateEdl, normalizeEdl, keptRanges, mapTime, editedDuration, zoomFactor } from '../lib/edl.js';
+import { validateEdl, normalizeEdl, keptRanges, mapTime, editedDuration, zoomFactor, pacing } from '../lib/edl.js';
 import { rules, baseEdl, video1080 } from './helpers.mjs';
 
 const transcriptText = 'Every request goes from the client to the edge. We set the TTL to 300 seconds.';
@@ -190,5 +190,27 @@ describe('validation: accuracy', () => {
   test('without a transcript, numbers are not checked', () => {
     const cue = flow({ template: 'callout', gap: 'shown-not-findable', params: { text: 'Port 8787' }, anchor: { x: 400, y: 300 } });
     assert.ok(!rulesHit(validateEdl(baseEdl({ cues: [cue] }), ctx({ transcriptText: undefined })), 'nothing-new'));
+  });
+});
+
+describe('pacing', () => {
+  test('back-to-back overlays get a warning, a breath apart does not', () => {
+    const a = flow({ id: 'cue-1', at: '00:10.0', duration: '5s' });
+    const close = flow({ id: 'cue-2', at: '00:15.3', duration: '5s' });
+    const apart = flow({ id: 'cue-2', at: '00:16.5', duration: '5s' });
+    assert.ok(warned(validateEdl(baseEdl({ cues: [a, close] }), ctx()), 'pacing'));
+    assert.ok(!warned(validateEdl(baseEdl({ cues: [a, apart] }), ctx()), 'pacing'));
+  });
+
+  test('pacing reports edits per minute, coverage and the longest empty stretch in edited time', () => {
+    const edl = normalizeEdl({
+      cuts: [{ id: 'c', from: 0, to: 10 }],
+      cues: [flow({ at: 20, duration: '10s' }), flow({ id: 'cue-2', at: 50, duration: '10s' })],
+    });
+    const p = pacing(edl, 130); // edited length 120s
+    assert.equal(p.cues, 2);
+    assert.equal(p.perMinute, 1);
+    assert.equal(Math.round(p.coveredShare * 100), 17);
+    assert.deepEqual(p.longestGap, { start: 50, end: 120, seconds: 70 });
   });
 });

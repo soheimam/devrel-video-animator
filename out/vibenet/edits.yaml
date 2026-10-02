@@ -39,7 +39,7 @@ cues:
 
   - id: beat-2
     at: 00:26.8                      # "Vibenet is Base's experimental preview network"
-    duration: 5s
+    duration: 4s                     # leaves a breath before the slide
     template: term-definition
     params:
       term: "Vibenet"
@@ -50,7 +50,7 @@ cues:
 
   - id: beat-3
     at: 00:31.8                      # "go live here first… weeks before they even reach Sepolia or Mainnet"
-    duration: 10.9s
+    duration: 10.1s
     template: slide
     params:
       title: "Hard fork features go live"

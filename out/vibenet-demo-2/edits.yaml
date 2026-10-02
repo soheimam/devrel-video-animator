@@ -54,7 +54,7 @@ cues:
 
   - id: beat-3
     at: 00:51.5                      # "VibeNet is experimental preview network"
-    duration: 5s
+    duration: 4.4s                   # leaves a breath before the slide
     template: term-definition
     params:
       term: "Vibenet"

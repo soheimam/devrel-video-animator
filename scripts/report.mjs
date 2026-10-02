@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { readJson, readYaml } from '../lib/files.js';
-import { normalizeEdl, mapTime, editedDuration } from '../lib/edl.js';
+import { normalizeEdl, mapTime, editedDuration, pacing } from '../lib/edl.js';
 import { formatTime } from '../lib/time.js';
 import { isMain } from '../lib/cli.js';
 import { loadRules } from '../lib/rules.js';
@@ -25,12 +25,16 @@ function describe(cue) {
   }
 }
 
-export function buildReport({ source, edl, validation, captions, previewExists = () => false }) {
+export function buildReport({ source, edl, validation, captions, previewExists = () => false, stripExists = () => false }) {
   const kept = editedDuration(edl.cuts, source.duration);
   const removed = source.duration - kept;
   const L = [];
   L.push(`# Edit report: ${edl.video || path.basename(source.path)}`, '');
   L.push(`**${formatTime(source.duration)} → ${formatTime(kept)}** (${removed.toFixed(1)}s removed) · ${edl.cues.length} visual edit(s) · ${edl.cuts.length} cut(s) · ${edl.rejected.length} candidate(s) rejected`, '');
+  if (edl.cues.length) {
+    const p = pacing(edl, source.duration);
+    L.push(`**Pacing:** ${p.perMinute.toFixed(1)} visual edits per minute · something on screen ${Math.round(p.coveredShare * 100)}% of the time · longest stretch with nothing: ${p.longestGap.seconds.toFixed(0)}s (${formatTime(p.longestGap.start)}–${formatTime(p.longestGap.end)}, edited time)`, '');
+  }
 
   L.push('## Learning objectives', '', 'What the agents understood this video to teach. Every edit serves one of these.', '');
   edl.objectives.forEach((o, i) => L.push(`${i + 1}. ${o}`));
@@ -47,7 +51,10 @@ export function buildReport({ source, edl, validation, captions, previewExists =
     const previews = [...edl.cues].sort((a, b) => a.start - b.start).filter((c) => previewExists(c.id));
     if (previews.length) {
       L.push('### Previews', '');
-      for (const c of previews) L.push(`**${c.id}** · ${c.template} · ${formatTime(mapTime(c.start, edl.cuts))}`, '', `![${c.id}](preview/${c.id}.gif)`, '');
+      for (const c of previews) {
+        L.push(`**${c.id}** · ${c.template} · ${formatTime(mapTime(c.start, edl.cuts))}`, '', `![${c.id}](preview/${c.id}.gif)`, '');
+        if (stripExists(c.id)) L.push(`Landed · last reveal · one second before exit:`, '', `![${c.id} moments](preview/${c.id}.strip.jpg)`, '');
+      }
     }
   }
 
@@ -101,6 +108,7 @@ export function writeReport(outDir, { log = console.log } = {}) {
     validation: readJson(path.join(outDir, 'validation.json'), null),
     captions: readJson(path.join(outDir, 'captions.json'), null),
     previewExists: (id) => fs.existsSync(path.join(outDir, 'preview', `${id}.gif`)),
+    stripExists: (id) => fs.existsSync(path.join(outDir, 'preview', `${id}.strip.jpg`)),
   });
   const file = path.join(outDir, 'report.md');
   fs.writeFileSync(file, report);
