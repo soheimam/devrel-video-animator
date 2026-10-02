@@ -111,6 +111,7 @@ export async function runJob(id, { store = createStore(), log = console.log, age
     const cause = e.cause;
     if (cause) detail.push(`cause: ${plain(cause.responseBody || cause.message || JSON.stringify(cause)).slice(0, 1500)}`);
     if (process.env.AGENT_MODEL) detail.push(`AGENT_MODEL=${process.env.AGENT_MODEL}`);
+    if (e.probes) detail.push('probes:', ...e.probes);
     const where = { fetching: 'getting the recording', restoring: 'restoring the last round', transcribing: 'transcribing', suggesting: 'suggesting (the model call)', applying: 'applying your picks (the model call)', rendering: 'rendering', publishing: 'publishing' }[current] || current;
     await state('failed', { message: `Failed while ${where}: ${plain(e.message).split('\n')[0].slice(0, 280)}`, error: [detail.join('\n'), plain(e.stack || e)].filter(Boolean).join('\n\n').slice(0, 5000) });
     throw e;

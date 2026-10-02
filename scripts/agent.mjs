@@ -9,8 +9,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
-import { z } from 'zod';
-import { generateText, tool, stepCountIs } from 'ai';
+import { generateText, tool, stepCountIs, jsonSchema } from 'ai';
 import { ROOT } from '../lib/paths.js';
 import { isMain, parseArgs } from '../lib/cli.js';
 
@@ -100,12 +99,20 @@ function sh(cmd, { timeoutMs = 20 * 60 * 1000 } = {}) {
   });
 }
 
+// Plain JSON Schema with no $schema keyword: the most widely accepted form across providers.
+const obj = (fields) => jsonSchema({
+  type: 'object',
+  properties: Object.fromEntries(Object.entries(fields).map(([k, t]) => [k, { type: t }])),
+  required: Object.keys(fields),
+  additionalProperties: false,
+});
+
 export function makeTools(name, { onEvent = () => {} } = {}) {
   const note = (type, detail) => onEvent({ type, detail, at: Date.now() });
   return {
     list_files: tool({
       description: 'List a directory (relative to the repo root).',
-      inputSchema: z.object({ dir: z.string() }),
+      inputSchema: obj({ dir: 'string' }),
       execute: async ({ dir }) => {
         if (!insideAllowed(dir, name)) return `Refused: ${dir} is outside what this job may read.`;
         const full = path.join(ROOT, dir);
@@ -115,7 +122,7 @@ export function makeTools(name, { onEvent = () => {} } = {}) {
     }),
     read_file: tool({
       description: 'Read a text file (relative to the repo root).',
-      inputSchema: z.object({ path: z.string() }),
+      inputSchema: obj({ path: 'string' }),
       execute: async ({ path: rel }) => {
         if (!insideAllowed(rel, name)) return `Refused: ${rel} is outside what this job may read.`;
         const full = path.join(ROOT, rel);
@@ -126,7 +133,7 @@ export function makeTools(name, { onEvent = () => {} } = {}) {
     }),
     write_file: tool({
       description: `Write a text file. Only out/${name}/… and storyboards/${name}.md may be written.`,
-      inputSchema: z.object({ path: z.string(), content: z.string() }),
+      inputSchema: obj({ path: 'string', content: 'string' }),
       execute: async ({ path: rel, content }) => {
         if (!insideAllowed(rel, name, { write: true })) return `Refused: ${rel} is not writable in this job.`;
         const full = path.join(ROOT, rel);
@@ -138,7 +145,7 @@ export function makeTools(name, { onEvent = () => {} } = {}) {
     }),
     look: tool({
       description: 'Look at an image: a frame (out/<name>/frames/*.jpg or .grid.jpg), a strip (preview/*.strip.jpg) or a reference (editorial/references/*.jpg).',
-      inputSchema: z.object({ path: z.string() }),
+      inputSchema: obj({ path: 'string' }),
       execute: async ({ path: rel }) => {
         if (!insideAllowed(rel, name)) return { error: `Refused: ${rel} is outside what this job may read.` };
         const full = path.join(ROOT, rel);
@@ -154,7 +161,7 @@ export function makeTools(name, { onEvent = () => {} } = {}) {
     }),
     run: tool({
       description: `Run one of the repo's own commands: \`npm run render -- out/${name}\`, \`npm run validate -- out/${name}\`, \`npm run frames -- out/${name} --at 00:42.0,01:10.5\`, an ffprobe query, or an ffmpeg volumedetect measurement (\`ffmpeg -ss S -t L -i videos/<file> -af volumedetect -f null -\`). Nothing else.`,
-      inputSchema: z.object({ command: z.string() }),
+      inputSchema: obj({ command: 'string' }),
       execute: async ({ command }) => {
         if (!allowedCommand(command, name)) return `Refused: "${command}" is not one of the allowed commands.`;
         note('run', command);
@@ -169,6 +176,24 @@ export function makeTools(name, { onEvent = () => {} } = {}) {
 // them with a dash. Accept either, send the gateway's form.
 export function gatewayModelId(id) {
   return String(id || '').trim().replace(/^(anthropic\/claude-[a-z]+-\d)-(\d)(-fast)?$/, '$1.$2$3');
+}
+
+// When a real call is rejected, three tiny calls tell model, tools and account apart.
+async function probe(model, tools) {
+  const tryCall = async (label, args) => {
+    try {
+      await generateText({ prompt: 'Reply with the word ok.', maxOutputTokens: 5, ...args });
+      return `${label}: accepted`;
+    } catch (err) {
+      const why = err.cause?.responseBody || err.cause?.message || err.message;
+      return `${label}: rejected (${String(why).replace(/\s+/g, ' ').slice(0, 300)})`;
+    }
+  };
+  return [
+    await tryCall(`${model}, no tools`, { model }),
+    await tryCall(`${model}, with tools`, { model, tools, toolChoice: 'none' }),
+    await tryCall('anthropic/claude-sonnet-5.5, no tools', { model: 'anthropic/claude-sonnet-5.5' }),
+  ];
 }
 
 export async function runAgent({ name, mode = 'suggest', notes = '', picks = null, model = process.env.AGENT_MODEL || 'anthropic/claude-opus-5.5', maxSteps = 80, onEvent = () => {}, log = console.log }) {
@@ -193,6 +218,7 @@ export async function runAgent({ name, mode = 'suggest', notes = '', picks = nul
     });
   } catch (e) {
     e.message = `${e.message} (model ${typeof model === 'string' ? model : 'injected'})`;
+    if (typeof model === 'string') e.probes = await probe(model, tools);
     throw e;
   }
   const summary = result.text?.trim() || '(no summary)';
