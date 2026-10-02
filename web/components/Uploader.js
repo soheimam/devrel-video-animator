@@ -36,13 +36,25 @@ export default function Uploader({ localStore }) {
         setPct(100);
       } else {
         const { upload } = await import('@vercel/blob/client');
-        const blob = await upload(`uploads/${Date.now()}-${file.name}`, file, {
-          access: 'public',
-          handleUploadUrl: '/api/upload',
-          multipart: true,
-          onUploadProgress: (p) => setPct(Math.round(p.percentage)),
-        });
-        sourceUrl = blob.url;
+        // If nothing moves for a while, say so instead of sitting at 0%: on a VPN the direct
+        // upload to Blob storage can be blocked while the rest of the site works.
+        let lastMove = Date.now();
+        const watchdog = setInterval(() => {
+          if (Date.now() - lastMove > 45000) {
+            setError('The upload is not moving. If you are on a VPN, uploads to Vercel Blob (blob.vercel-storage.com) may be blocked; try off the VPN or from another network.');
+          }
+        }, 5000);
+        try {
+          const blob = await upload(`uploads/${Date.now()}-${file.name}`, file, {
+            access: 'public',
+            handleUploadUrl: '/api/upload',
+            multipart: true,
+            onUploadProgress: (p) => { lastMove = Date.now(); setError(''); setPct(Math.round(p.percentage)); },
+          });
+          sourceUrl = blob.url;
+        } finally {
+          clearInterval(watchdog);
+        }
       }
       const r = await fetch('/api/jobs', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ fileName: file.name, sourceUrl, notes, size: file.size }) });
       if (!r.ok) throw new Error((await r.json()).error || 'Could not start the job.');

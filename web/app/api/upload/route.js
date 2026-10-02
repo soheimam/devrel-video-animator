@@ -17,6 +17,7 @@ export async function POST(req) {
     });
     return Response.json(json);
   } catch (e) {
-    return Response.json({ error: e.message }, { status: 400 });
+    console.error('upload token failed:', e);
+    return Response.json({ error: `Could not start the upload: ${e.message}` }, { status: 400 });
   }
 }
